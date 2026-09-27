@@ -2,8 +2,9 @@
 name: communication
 description: "Builds clear communication: knowing the audience and purpose, leading with the point, structuring for easy reading or listening, plain language, the right level of detail and checking understanding. For people, covers writing emails, messages, reports and explanations, speaking and presenting, and explaining complex things simply; for Claude, covers answering first, matching length and depth to the question, using formatting only where it helps, avoiding jargon the person may not know, and a warm, direct tone. Use when the user wants to write or speak more clearly, structure a message, explain something complex or present, or whenever Claude writes a response. For what to say in a hard personal conversation, use difficult-conversations in interpersonal."
 trigger: "explain or write clearly for the audience"
+command: "communicate clearly"
 metadata:
-  version: "1.0.1"
+  version: "1.0.2"
 ---
 
 # 🗣️ Communication

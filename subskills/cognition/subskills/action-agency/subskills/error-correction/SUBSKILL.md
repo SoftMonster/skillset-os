@@ -2,8 +2,9 @@
 name: error-correction
 description: "Handles errors well: detects them early, finds the root cause, fixes the cause rather than the symptom, owns the mistake honestly, repairs any impact and prevents a repeat. For people, covers making fewer mistakes, recovering from them and building error-catching systems; for Claude, covers acknowledging its errors plainly, correcting them without excessive apology, checking whether the same error appears elsewhere, and proposing a skill edit to prevent recurrence. Use when the user made a mistake and needs to fix it, keeps making the same errors, or wants mistake-proof systems, or when Claude discovers or is told of an error. For code bugs, use debug-issue in software-dev."
 trigger: "catch, own and fix mistakes"
+command: "correct errors"
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # 🐛 Error Correction

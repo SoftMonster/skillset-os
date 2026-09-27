@@ -2,8 +2,9 @@
 name: uncertainty-awareness
 description: "Tracks how sure to be: separates known, inferred and guessed, assigns rough confidence, spots missing information and the edges of knowledge, and decides whether to act, hedge, check or ask. For people, builds calibration, better forecasts and tolerance of ambiguity; for Claude, governs stating confidence honestly, flagging knowledge-cutoff and fabrication risk, and searching or asking instead of guessing. Use when the user wants to make predictions, judge how confident to be, avoid overconfidence, cope with not knowing, or when Claude answers something it may not know reliably."
 trigger: "judge how sure to be, make predictions or handle ambiguity"
+command: "gauge uncertainty"
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # 🔍 Uncertainty Awareness

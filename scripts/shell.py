@@ -1104,12 +1104,16 @@ def catalogue(root: Path) -> list[dict]:
             elif _stem(noun)[:5] == verb[:5]:                          # negotiation -> negotiate <what the trigger names>
                 objects = [w for w in trig[1:] if w not in KNOWN_VERBS and w != "or"][:1]
                 noun = "-".join(objects) or noun
-        sections = []
+        sections, own = [], ""
         if m.kind != "skillset" and m.folder is not None:
             try:
-                sections = app_sections((m.folder / m.doc).read_text(encoding="utf-8"))
+                text = (m.folder / m.doc).read_text(encoding="utf-8")
+                sections = app_sections(text)
+                own = str(ss.read(m.folder / m.doc)[0].get("command") or "").strip()
             except OSError:
                 sections = []
+        if own:                                                       # a hand-picked command beats the generated one
+            verb, _, noun = own.partition(" ")
         if sections:                                                  # one sub-skill holding several apps
             for name, words, does in sections:
                 out.append({"command": words[0] if words else name, "how": f"open {m.path}, section {name}",
@@ -1190,11 +1194,16 @@ def resolve_verb_noun(text: str, state: dict, view: View | None = None, brief: b
                     f"one line; any number from the menu still overrides it.\n" + routed)
         if picked.startswith("pick:"):
             return picked
+        if picked.startswith("option: "):
+            return picked.split(": ", 1)[1]
         if (tokens(picked) or [""])[0].lower() in ALIASES:                    # a shell command such as `ls`
             sh = Shell(state)
             sh.view = view
             return f"> {picked}\n" + sh.one(picked, None)
         return resolve_verb_noun(picked, state, view, brief, menu=False)
+    asked = options_request(text, words, state, view)
+    if asked is not None:
+        return asked
     state.pop("menu", None)                                        # new input: an older menu no longer applies
     app = find_app(view.root, text.split())
     if app:
@@ -1254,6 +1263,7 @@ def resolve_verb_noun(text: str, state: dict, view: View | None = None, brief: b
     scored = []
     for c in cmds:
         cverb, _, cnoun = c["command"].partition(" ")
+        cverb = VERB_SYNONYMS.get(cverb, cverb)                      # "build habit" answers "make habit" too
         vscore = 3 if cverb == verb else (1 if verb in _words(c.get("trigger", "") + " " + c["description"])[:12] else 0)
         nwords = {_stem(w) for w in _words(cnoun.replace("-", " ") + " " + c.get("target", "").replace("/", " ").replace("-", " "))}
         dwords = {_stem(w) for w in _words(c.get("trigger", "") + " " + c["description"])}
@@ -1300,6 +1310,12 @@ def pick_from_menu(text: str, state: dict) -> str | None:
     """A bare number or ordinal answers the last menu: returns the chosen command, or a note when it can't."""
     word = " ".join(text.strip().lower().rstrip(".)!").split())
     menu = state.get("menu")
+    if menu and menu.get("kind") == "options":
+        chosen = options_pick(word, menu)
+        if chosen is not None:
+            if chosen.startswith("option: ") and "[why option" not in chosen and "[infer from" not in chosen:
+                state.pop("menu", None)                  # a menu answers once; `why N` and `0` keep it open
+            return chosen
     if not menu and word.isdigit():
         return "pick: there is no open numbered menu; ask the person what the number refers to"
     if not menu and word in INFER_WORDS:
@@ -1319,6 +1335,134 @@ def pick_from_menu(text: str, state: dict) -> str | None:
         state["menu"] = menu
         return f"pick: {word} is not on the menu for '{menu['for']}' (1-{len(options) + 1})"
     return options[n - 1]
+
+
+# ---------------------------------------------------------------- options menus: "<topic> options"
+
+OPTION_WORDS = {"options", "option", "choices", "choice", "menu"}
+OPTION_FILLER = {"what", "are", "is", "show", "give", "list", "any", "all", "which", "can", "do", "have", "i", "we",
+                 "there", "please", "get", "see", "available", "possible", "m", "s"}
+MODIFIERS = {"quick": "quick: the shortest useful version of each", "deep": "deep: the full version of each",
+             "fast": "quick: the shortest useful version of each", "full": "deep: the full version of each"}
+MAX_OPTIONS = 9
+
+
+def options_request(text: str, words: list[str], state: dict, view: View) -> str | None:
+    """`training options`, `options for habits`, `what are my options`, `options 2`: a described numbered menu."""
+    if not words or not set(words) & OPTION_WORDS or not (words[0] in OPTION_WORDS or words[-1] in OPTION_WORDS):
+        return None
+    if words == ["menu"]:
+        return None                                                # the opener menu owns a bare `menu`
+    noun = [w for w in words if w not in OPTION_WORDS | OPTION_FILLER]
+    menu = state.get("menu")
+    if len(noun) == 1 and noun[0].isdigit() and menu and menu.get("kind") == "options":   # drill into option N
+        n = int(noun[0])
+        targets = menu.get("targets") or []
+        if not 1 <= n <= len(targets):
+            return f"options: {n} is not on the menu for '{menu['for']}' (1-{len(targets)})"
+        if not targets[n - 1]:
+            return (f"options: option {n} ({menu['options'][n - 1]}) has no options of its own; describe it in a few "
+                    f"lines with its trade-offs, then offer to start it")
+        return options_menu(view.root, targets[n - 1], text, state)
+    target = options_target(view.root, noun)
+    if target is None:
+        return (f"{text}: nothing in the skillset matches '{' '.join(noun)}'. Offer options from general knowledge in the "
+                f"same shape (numbered, one line each, a rapid-reply line), or ask what the options are for")
+    return options_menu(view.root, target, text, state)
+
+
+def options_target(root: Path, noun: list[str]) -> str | None:
+    """The member a topic names: the top for no topic, then a member name, then the best trigger or description."""
+    if not noun:
+        return ""
+    found = find_member(root, noun)
+    if found:
+        return found
+    stems = {_stem(w) for w in noun}
+    best, best_score = None, 0
+    for _d, m in skillset().walk(root):
+        if m.error or not m.path:
+            continue
+        text = {_stem(w) for w in _words(m.trigger + " " + m.description)}
+        score = len(stems & text) + (0.1 if m.kind == "skillset" else 0)
+        if score > best_score:
+            best, best_score = m.path, score
+    return best if best_score >= 1 else None
+
+
+def member_options(root: Path, target: str) -> list[tuple[str, str, str | None]]:
+    """(label, description, member it opens or None): the member's "## Options" list, else its members."""
+    ss = skillset()
+    members = [m for _d, m in ss.walk(root) if not m.error]
+    here = next((m for m in members if m.path == target), None) if target else None
+    folder = here.folder if here else root
+    doc = next((folder / d for d in ("SUBSKILL.md", "SKILLSET.md", "SKILL.md") if folder and (folder / d).is_file()),
+               None)
+    if doc:
+        body = doc.read_text(encoding="utf-8")
+        section = re.search(r"^## Options\n(.*?)(?=^## |\Z)", body, re.MULTILINE | re.DOTALL)
+        if section:
+            rows = re.findall(r"^\d+\.\s+\*\*(.+?)\*\*[:.]?\s*(.*)$", section.group(1), re.MULTILINE)
+            if rows:
+                return [(label.rstrip(":"), desc.strip(), None) for label, desc in rows]
+    children = [m for m in members if m.path and (m.path.rsplit("/", 1)[0] if "/" in m.path else "") == target]
+    return [(m.name, m.trigger or ss.shorten(" ".join(m.description.split()), 90), m.path) for m in children]
+
+
+def options_menu(root: Path, target: str, text: str, state: dict) -> str:
+    everything = member_options(root, target)
+    options, hidden = everything[:MAX_OPTIONS], len(everything) - MAX_OPTIONS
+    where = target or "skillset-os"
+    if not options:
+        state.pop("menu", None)
+        return (f"> {text}\n→ {where}  [options]\n  it lists no options and holds no members; describe its main "
+                f"choices from its instructions in the same shape, or just do the task with it")
+    state["menu"] = {"for": text, "kind": "options", "target": target,
+                     "options": [label for label, _d, _t in options], "targets": [t for _l, _d, t in options]}
+    n = len(options)
+    lines = [f"> {text}", f"→ {where}  [options: {n}]"]
+    lines += [f"  {i}. {label}: {desc}" if desc else f"  {i}. {label}" for i, (label, desc, _t) in enumerate(options, 1)]
+    if hidden > 0:
+        lines.append(f"  (+{hidden} more: `ls {where}` lists them all; name one to use it)")
+    lines.append("  0. infer: Claude picks the likeliest, says which and why in one line")
+    rapid = ["1"] + (["1 3"] if n >= 3 else []) + ["2 quick" if n >= 2 else "1 quick", f"{min(n, 4)} deep", "0",
+                                                   f"why {min(n, 2)}"]
+    if any(t for _l, _d, t in options):
+        rapid.append("options 1")
+    lines.append("  rapid: " + " · ".join(rapid))
+    drill = ", options N opens an option's own options" if any(t for _l, _d, t in options) else ""
+    lines.append(f"  power: combine numbers (1 3, 1+3), add quick or deep, why N explains one{drill}, 0 hands the "
+                 "choice back, or type anything else")
+    lines.append("  how: show every option with its description, then the rapid and power lines; where the chat has a "
+                 "tap-to-choose tool, also offer up to four options there as short labels. Act on the reply at once")
+    return "\n".join(lines)
+
+
+def options_pick(word: str, menu: dict) -> str | None:
+    """Answers to an options menu: `2`, `1 3`, `1+3 quick`, `why 2`, `0`. None when the reply is something else."""
+    labels, targets = menu["options"], menu.get("targets") or [None] * len(menu["options"])
+    where = menu.get("target") or "skillset-os"
+    if word in INFER_WORDS:
+        listed = "; ".join(f"{i}. {label}" for i, label in enumerate(labels, 1))
+        return (f"option: → {where}  [infer from '{menu['for']}']\n  pick the likeliest of: {listed}. Say which and "
+                f"why in one line, then do it now; the person can still type another number")
+    m = re.fullmatch(r"(why\s+)?(\d+(?:\s*[ ,+&]\s*\d+)*)(?:\s+(quick|deep|fast|full))?", word)
+    if not m:
+        return None
+    nums = [int(x) for x in re.findall(r"\d+", m.group(2))]
+    bad = [x for x in nums if not 1 <= x <= len(labels)]
+    if bad:
+        return f"pick: {bad[0]} is not on the menu for '{menu['for']}' (1-{len(labels)}, or 0 to infer)"
+    if m.group(1):
+        x = nums[0]
+        return (f"option: → {targets[x - 1] or where}  [why option {x}: {labels[x - 1]}]\n  explain in two or three "
+                f"lines what it involves, what it gives and what it costs; the menu stays open")
+    mod = MODIFIERS.get(m.group(3) or "", "")
+    picks = [f"{x}. {labels[x - 1]}" + (f" → {targets[x - 1]}" if targets[x - 1] else "") for x in nums]
+    return (f"option: > {word}\n→ {where}  [chosen from '{menu['for']}': " + "; then ".join(picks) + "]\n"
+            + (f"  {mod}\n" if mod else "")
+            + "  how: open the member" + ("s" if len({targets[x - 1] for x in nums} - {None}) > 1 else "") + " and do "
+            + ("these now, in that order" if len(nums) > 1 else "it now") + "; no further confirmation needed")
 
 
 OPENER_WORDS = {"hi", "hello", "hey", "start", "menu", "bored", "suggest", "suggestions", "begin"}
@@ -1451,8 +1595,8 @@ def save_changes_text(state: dict) -> str:
 
 def commands_text(root: Path, top: int | None) -> str:
     cmds = rank(root, catalogue(root))
-    if top:
-        cmds = cmds[:top]
+    if top:                                   # the shell itself is not a command to suggest from inside the shell
+        cmds = [c for c in cmds if c.get("target") != "command-line"][:top]
     width = max(len(c["command"]) for c in cmds)
     head = ("Most useful commands, generated from the installed skills, built-in skills, self-memory and routing "
             "evidence:" if top else "Every command:")

@@ -2,8 +2,9 @@
 name: intent-inference
 description: "Infers intent: the literal request, the immediate aim, the deeper goal and the unstated standards behind it, using context and evidence, and checking rather than assuming. For people, covers understanding what others want from them, reading between the lines and clarifying requests; for Claude, covers interpreting requests neither too literally nor too liberally, asking only when it matters, and weighing intent signals fairly without assuming bad intent from thin cues. Use when the user is unsure what someone wants or means, gets requests wrong, or when a request to Claude is ambiguous or could be read several ways."
 trigger: "work out what someone actually wants or means"
+command: "read intent"
 metadata:
-  version: "1.1.0"
+  version: "1.1.1"
 ---
 
 # 🧭 Intent Inference

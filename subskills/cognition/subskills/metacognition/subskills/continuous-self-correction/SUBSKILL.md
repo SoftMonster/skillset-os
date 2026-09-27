@@ -2,8 +2,9 @@
 name: continuous-self-correction
 description: "Keeps work on track and improving: sets checkpoints, monitors for drift and errors during work, corrects course early and small, and feeds lessons from each task into the next through a light retrospective and a lasting change. For people, covers noticing and correcting mid-task, building personal feedback loops and continuous improvement at work; for Claude, covers checking its output against the goal at intervals during long tasks, correcting itself unprompted when it spots a problem, and turning recurring lessons into proposed skill edits. Use when the user wants to catch mistakes earlier or build a habit of steady improvement, or when Claude is partway through a long task or reviewing how a task went. For fixing an error already found, use error-correction in action-agency."
 trigger: "catch drift and errors as I go and keep improving"
+command: "correct course"
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # 🔄 Continuous Self-Correction

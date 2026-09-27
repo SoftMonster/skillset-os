@@ -2,8 +2,9 @@
 name: planning
 description: "Builds the planning faculty: defining the end state, working backwards, decomposing into steps, finding dependencies and the critical path, estimating realistically, and building in checkpoints and contingencies. For people, covers planning projects, events and anything with many moving parts; for Claude, covers planning multi-step and agentic tasks before acting, sharing the plan when it helps, and re-planning as it learns. Use when the user needs to plan a project, trip, event, move or complex task, or when Claude starts a task with several steps. Do not use for a weekly schedule (plan-and-prioritise in self-improvement) or a software feature (plan-feature in software-dev)."
 trigger: "structure how to get from here to a goal"
+command: "plan steps"
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # 🗺️ Planning

@@ -2,8 +2,9 @@
 name: action-selection
 description: "Chooses the next action well: lists the real options, weighs value, cost, risk, reversibility and what each would teach, picks one and commits, and knows when to stop. For people, covers deciding what to do next when stuck or overloaded and the choice between acting, waiting and gathering information; for Claude, covers choosing between answering directly, searching, running code, using a tool, asking a question or stopping, and preferring reversible steps. Use when the user does not know what to do next or is stuck between doing and thinking, or when Claude must choose its next step in a task. Do not use for big life decisions; use decision-making in self-improvement."
 trigger: "decide what to do next"
+command: "choose action"
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # 🏃 Action Selection

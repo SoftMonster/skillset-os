@@ -2,8 +2,9 @@
 name: cognitive-offloading
 description: "Guides offloading thinking onto notes, tools and AI: what offloading frees up, what it risks (lost skills, lost understanding, over-trust), which tasks to offload and which to keep, and how to offload reliably. For people, covers second-brain systems, reminders, calculators, navigation and AI; for Claude, covers holding and organising information for the person reliably, being honest that it cannot remember across chats or act later on its own unless a tool allows it, and helping the person keep the understanding they need. Use when the user wonders if relying on AI or tools is making them worse at things, wants a system to hold what they cannot remember, or asks Claude to keep track of something."
 trigger: "decide what to keep in my head and what to hand to tools or AI"
+command: "offload memory"
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # 🧠🤝 Cognitive Offloading

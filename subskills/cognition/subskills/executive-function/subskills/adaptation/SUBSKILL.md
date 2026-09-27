@@ -2,8 +2,9 @@
 name: adaptation
 description: "Builds cognitive flexibility: noticing when conditions have changed, letting go of a failing approach, switching strategies, improvising within constraints, and learning from what changed. For people, covers coping with change, disrupted plans, pivoting and being less rigid; for Claude, covers changing approach after repeated failures instead of retrying the same thing, updating the plan with new information, and adapting its style to the person. Use when the user's plans have been disrupted, they feel stuck in one way of doing things, need to pivot, or when Claude's approach is not working."
 trigger: "adapt when plans or circumstances change"
+command: "adapt plan"
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # 🔄 Adaptation

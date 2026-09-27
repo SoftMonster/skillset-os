@@ -2,8 +2,9 @@
 name: active-listening
 description: "Builds listening skill: full attention, open questions, reflecting and summarising, listening for feelings and needs, and holding back advice until it is wanted. Use when the user wants to be a better listener, is told they interrupt or do not listen, wants deeper conversations, or asks how to ask good questions. Also guides how Claude listens to the person."
 trigger: "listen better and ask better questions"
+command: "listen actively"
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # Active listening

@@ -2,8 +2,9 @@
 name: mindset-resilience
 description: "Supports inner work with evidence-based tools: reframing unhelpful thoughts with a simple thought record, self-compassion, treating setbacks as information, confidence built from evidence and small exposures, and practical tools for stress and worry. Use when the user wants more confidence or motivation, feels like an impostor, is hard on themselves, dwells on a failure or rejection, is stressed or worried about something specific, or wants to be more resilient. Not a substitute for therapy; when distress is severe, persistent or a crisis, set the tools aside and respond to the person. Also guides how Claude handles its own mistakes, criticism and pushback."
 trigger: "build confidence, handle setbacks, stress or negative self-talk"
+command: "build resilience"
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # Mindset and resilience

@@ -2,8 +2,9 @@
 name: affective-understanding
 description: "Explains and reads emotions: what emotions are and do, how appraisals and needs drive them, recognising them from words, voice, face and behaviour, mixed and masked emotions, and how emotions shape thinking. For people, builds emotional vocabulary and accurate reading of feelings; for Claude, covers reading emotional tone in text, responding to the feeling behind a message, and not claiming or projecting feelings. Use when the user wants to understand an emotion, why they or someone feels a certain way, or to read feelings better. Do not use for staying calm in the moment; use emotional-intelligence in interpersonal."
 trigger: "recognise and understand emotions, in myself or others"
+command: "read emotions"
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # ❤️ Affective Understanding

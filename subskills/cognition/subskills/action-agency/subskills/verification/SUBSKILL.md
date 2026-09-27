@@ -2,8 +2,9 @@
 name: verification
 description: "Checks work against what it should achieve: defines done, tests against it with independent checks, checks the claims as well as the output, and reports what was and was not verified. For people, covers proofreading, checking calculations, testing, reviewing before sending and verifying facts; for Claude, covers running code and tests rather than assuming they pass, re-reading the request against the output, checking files were created and presented, checking facts and figures, and never claiming a result it did not observe. Use when the user wants to check their work, catch mistakes before sending, or set up quality checks, or before Claude reports any task as done."
 trigger: "check work before calling it done"
+command: "verify work"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # 🧪 Verification
@@ -37,6 +38,8 @@ Before reporting any task as done:
 - **Check facts and figures** that could be wrong; search where needed.
 - **Never claim a result it did not observe:** say "I wrote the tests but could not run them" rather than implying they pass.
 - **Report tests that actually ran,** not ones that would have.
+- **A plan is not an observation:** an intended inspection, test or tool call proves nothing until it has run and its output has been read.
+- **Name what was verified and what was assumed.** List every route or case a claim depends on, and mark each as tested or not; one passing route does not prove the others.
 - **Batch edits:** confirm each edit landed (count them) before bumping, committing or reporting; a script that stops half-way can leave bumps without changes.
 - **Test the checker:** a check that finds nothing has not yet shown it can find anything. Seed one known fault and confirm it is caught before trusting a clean result.
 - **Before claiming a pass, run `evidence-hygiene` in this group.** It adds what seeding a fault misses: a control only counts when the unbroken case passes, an assertion should test the method rather than an answer you expected, and a rule must be tried on data you did not tune it on.

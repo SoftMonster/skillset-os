@@ -2,8 +2,9 @@
 name: emotional-intelligence
 description: "Develops emotional intelligence in interactions: naming one's own emotions precisely, calming down in the moment before responding, reading other people's cues, and taking another perspective. Use when the user reacts in ways they regret, gets defensive or snappy, cannot tell what others feel, wants more empathy or emotional intelligence, or wants to stay calm in heated moments. Do not use for a planned hard talk; use difficult-conversations. Also guides how Claude reads and responds to the person's emotions."
 trigger: "understand and manage emotions in myself and others"
+command: "manage emotions"
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # Emotional intelligence

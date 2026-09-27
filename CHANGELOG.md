@@ -1,7 +1,133 @@
 # Changelog
 
-## Unreleased
+## 1.5.0 — 2026-09-27
 
+- Harvested another session's memory: nine screened lessons, a limitation and a maintenance item, carried into verification, research, skill-composition and training-skills.
+- Updated `self-improvement/training-skills` to 1.3.0.
+- Updated `cognition/action-agency/skill-composition` to 1.1.0.
+- Updated `cognition/reasoning/research` to 1.1.0.
+- Updated `cognition/action-agency/verification` to 1.1.0.
+
+## 1.4.0 — 2026-09-27
+
+- Shared fixes flow back: 'upstream' carries fixes from a shared copy into the personal source in its own wording, as a standing sync-skillset step; pull and package warn in an edition copy.
+- Updated `skillset-tools/publish-plugin` to 1.1.0.
+- Updated `sync-skillset` to 1.3.0.
+
+## 1.3.0 — 2026-09-27
+
+- Outstanding fixes: every member has a hand-picked command (no generic 'use' commands, the broken 'remember long-term-memory' replaced), the shell leaves itself out of its top list, options menus work without code execution, and the top description has headroom again.
+- Updated `cognition/action-agency/tool-use` to 1.0.1.
+- Updated `sync-skillset` to 1.2.2.
+- Updated `software-dev/time-bounded-file-improvement` to 1.0.1.
+- Updated `software-dev/software-dev-best-practices` to 1.0.1.
+- Updated `software-dev/performance-tuning` to 1.0.1.
+- Updated `software-dev/git-workflow` to 1.0.1.
+- Updated `software-dev/codebase-orientation` to 1.0.1.
+- Updated `software-dev/ci-cd-pipeline` to 1.0.1.
+- Updated `skillset-tools/self-memory` to 1.1.1.
+- Updated `skillset-tools/publish-plugin` to 1.0.2.
+- Updated `self-improvement/training-skills` to 1.2.1.
+- Updated `self-improvement/reflect-and-review` to 1.0.1.
+- Updated `self-improvement/plan-and-prioritise` to 1.0.1.
+- Updated `self-improvement/money-habits` to 1.0.1.
+- Updated `self-improvement/mindset-resilience` to 1.0.1.
+- Updated `self-improvement/life-vision` to 1.0.1.
+- Updated `self-improvement/goal-setting` to 1.0.1.
+- Updated `self-improvement/energy-and-wellbeing` to 1.0.1.
+- Updated `self-improvement/decision-making` to 1.0.1.
+- Updated `self-improvement/career-growth` to 1.0.1.
+- Updated `interpersonal/workplace-relationships` to 1.0.1.
+- Updated `interpersonal/social-confidence` to 1.0.1.
+- Updated `interpersonal/influence-persuasion` to 1.0.1.
+- Updated `interpersonal/friendships-connection` to 1.0.1.
+- Updated `interpersonal/emotional-intelligence` to 1.0.1.
+- Updated `interpersonal/difficult-conversations` to 1.0.1.
+- Updated `interpersonal/close-relationships` to 1.0.1.
+- Updated `interpersonal/boundaries-assertiveness` to 1.0.1.
+- Updated `interpersonal/apologies-repair` to 1.0.1.
+- Updated `interpersonal/active-listening` to 1.0.1.
+- Updated `command-line` to 1.4.0.
+- Updated `cognition/social-intelligence/social-cognition` to 1.0.1.
+- Updated `cognition/social-intelligence/relationship-modelling` to 1.0.1.
+- Updated `cognition/social-intelligence/intent-inference` to 1.1.1.
+- Updated `cognition/social-intelligence/cultural-intelligence` to 1.0.1.
+- Updated `cognition/social-intelligence/affective-understanding` to 1.0.1.
+- Updated `cognition/safety-governance/transparency` to 1.0.1.
+- Updated `cognition/safety-governance/threat-detection` to 1.0.1.
+- Updated `cognition/safety-governance/safety-regulation` to 1.0.1.
+- Updated `cognition/safety-governance/privacy-stewardship` to 1.0.1.
+- Updated `cognition/safety-governance/manipulation-detection` to 1.0.1.
+- Updated `cognition/safety-governance/human-escalation` to 1.0.1.
+- Updated `cognition/safety-governance/ethical-skill-evolution` to 1.0.1.
+- Updated `cognition/safety-governance/ethical-reasoning` to 1.0.1.
+- Updated `cognition/safety-governance/boundary-management` to 1.0.1.
+- Updated `cognition/reasoning/simulation` to 1.0.1.
+- Updated `cognition/reasoning/second-order-reasoning` to 1.0.1.
+- Updated `cognition/reasoning/reasoning` to 1.0.1.
+- Updated `cognition/reasoning/creativity` to 1.0.1.
+- Updated `cognition/reasoning/bias-detection` to 1.0.1.
+- Updated `cognition/reasoning/adversarial-thinking` to 1.0.1.
+- Updated `cognition/perception-sensing/uncertainty-awareness` to 1.0.1.
+- Updated `cognition/perception-sensing/perception` to 1.0.1.
+- Updated `cognition/perception-sensing/feedback-processing` to 1.0.1.
+- Updated `cognition/metacognition/universal-skill-curriculum-exam` to 1.2.1.
+- Updated `cognition/metacognition/metacognition` to 1.0.1.
+- Updated `cognition/metacognition/exam-regression-battery` to 1.0.2.
+- Updated `cognition/metacognition/continuous-self-correction` to 1.0.1.
+- Updated `cognition/memory-context/working-memory` to 1.0.1.
+- Updated `cognition/memory-context/semantic-understanding` to 1.0.1.
+- Updated `cognition/memory-context/self-model` to 1.0.1.
+- Updated `cognition/memory-context/long-term-memory` to 1.0.1.
+- Updated `cognition/memory-context/context-awareness` to 1.0.1.
+- Updated `cognition/human-ai-augmentation/scaffolding` to 1.0.1.
+- Updated `cognition/human-ai-augmentation/human-ai-collaboration` to 1.0.1.
+- Updated `cognition/human-ai-augmentation/cognitive-offloading` to 1.0.1.
+- Updated `cognition/executive-function/proportionality` to 1.0.1.
+- Updated `cognition/executive-function/planning` to 1.0.1.
+- Updated `cognition/executive-function/long-term-orientation` to 1.0.1.
+- Updated `cognition/executive-function/goal-alignment` to 1.0.1.
+- Updated `cognition/executive-function/adaptation` to 1.0.1.
+- Updated `cognition/executive-function/action-selection` to 1.0.1.
+- Updated `cognition/communication-regulation/memetic-ethics` to 1.0.4.
+- Updated `cognition/communication-regulation/emoji-list-generator` to 1.0.1.
+- Updated `cognition/communication-regulation/communication` to 1.0.2.
+- Updated `cognition/action-agency/verification` to 1.0.2.
+- Updated `cognition/action-agency/skill-composition` to 1.0.1.
+- Updated `cognition/action-agency/skill-acquisition` to 1.0.1.
+- Updated `cognition/action-agency/evidence-hygiene` to 1.0.3.
+- Updated `cognition/action-agency/error-correction` to 1.0.1.
+- Updated `cognition/action-agency/agentic-execution` to 1.0.1.
+- Updated `apps` to 1.1.1.
+
+## 1.2.0 — 2026-09-27
+
+- Options menus: '<topic> options' gives a described numbered menu with rapid replies and power moves; training has its own option list.
+- Updated `self-improvement/training-skills` to 1.2.0.
+- Updated `command-line` to 1.3.0.
+
+## 1.1.1 — 2026-09-27
+
+- Fix: a version already released in this working copy now bumps when new changes arrive.
+- The shared edition zip is the Claude plugin: install it at Customize > Plugins, not Skills (the Skills page rejects plugin manifests).
+- Updated `skillset-tools/publish-plugin` to 1.0.1.
+- Updated `sync-skillset` to 1.2.1.
+
+## 1.1.0 — 2026-09-27
+
+- Fix: a release cut earlier in the same working copy now counts, so later packages bump.
+- Zips are storage, never skills: over the limit, uploads split into plain-folder part skills; the shared edition is also the Claude plugin, in one download; other AIs can adopt the skillset; new skillset-tools/publish-plugin.
+- Updated `command-line` to 1.2.0.
+- Updated `software-dev/repo-adoption/adopt-repository` to 1.1.0.
+- Updated `sync-skillset` to 1.2.0.
+- Updated `skillset-tools/import-skill` to 1.1.0.
+- Updated `skillset-tools/organise-skillsets` to 1.1.0.
+- Added sub-skill `skillset-tools/publish-plugin` 1.0.0: Publishes the skillset as a Claude plugin and lists it in the Claude directory: checks the current directory rules, builds the shared edition (which doubles as the plugin), validates it with Claude Code's own validator, test-installs it, sets up the plugin repository, cuts the release and hands over the submission steps.
+
+## 1.0.0 — 2026-09-27
+
+- Release 1.0.0; the plugin is gated to equal the shared edition plus its manifests.
+- Add the Claude plugin build: skillset-os-plugin.zip from the shared edition.
 - Enhancement loop: skill enhancements offer exam, self-marking (pre-authorisation allowed), then forming and harvesting memories.
 - Updated `skillset-tools/self-memory` to 1.1.0: Enhancement loop: exam, self-mark with pre-authorisation, form and harvest memories
 - Updated `skillset-tools/find-skills` to 1.1.0: Enhancement loop: exam, self-mark with pre-authorisation, form and harvest memories

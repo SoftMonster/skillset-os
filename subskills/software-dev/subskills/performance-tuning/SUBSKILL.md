@@ -2,8 +2,9 @@
 name: performance-tuning
 description: "Speeds up code and systems by measuring first: establishes a benchmark, profiles to find the real hotspot, applies the fix with the best payoff (algorithm, I/O batching, caching, concurrency), and proves the gain with before and after numbers. Use when the user says something is slow, times out, uses too much memory or CPU, wants to optimise or profile code, reduce latency, or improve load time or throughput. Do not use for a single slow SQL query; use database-design."
 trigger: "make code, a query or an app faster or use less memory"
+command: "tune performance"
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # Performance tuning

@@ -2,8 +2,9 @@
 name: money-habits
 description: "Builds healthier personal money habits: tracks where money goes, sets up a simple budget, plans savings toward goals, an emergency fund and paying down debt, and curbs impulse spending, giving facts and frameworks rather than recommendations of specific products or investments. Use when the user wants to budget, save, stop overspending, get out of debt, plan for a big purchase, or feel more in control of their money. Also covers how Claude spends the person's time and usage."
 trigger: "build better money habits, budget or save toward a goal"
+command: "manage money"
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # Money habits

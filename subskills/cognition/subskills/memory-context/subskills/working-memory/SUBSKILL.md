@@ -2,8 +2,9 @@
 name: working-memory
 description: "Manages information held in mind right now: chunks it, externalises it, reduces load and keeps a running state. For people, covers losing track mid-task, mental overload, following complex conversations or instructions, and mental arithmetic; for Claude, covers keeping a written state of goals, decisions and open items in long tasks, using notes, checklists and scratch files instead of relying on a crowded context, and summarising at milestones. Use when the user feels overloaded or keeps losing track, or when Claude runs a long, multi-step or multi-file task."
 trigger: "keep track of several things at once or think with less overload"
+command: "hold context"
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # 🧠 Working Memory

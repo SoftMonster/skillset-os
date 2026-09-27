@@ -2,8 +2,9 @@
 name: apologies-repair
 description: "Helps the user repair relationships: writes a real apology that names the harm, takes responsibility without excuses and offers amends, plans how to rebuild trust through consistent action, and helps when they are the one deciding whether to forgive. Use when the user messed up, hurt or let someone down, needs to say sorry, wants to reconnect after a falling out, or is weighing whether and how to forgive. Also guides how Claude apologises for its own mistakes."
 trigger: "apologise or rebuild trust after hurting someone"
+command: "repair trust"
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # Apologies and repair

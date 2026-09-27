@@ -2,8 +2,9 @@
 name: boundaries-assertiveness
 description: "Helps the user speak up for their needs: defines the boundary, words it clearly and kindly without over-explaining, plans what to do when it is pushed, and builds assertiveness through practice. Use when the user struggles to say no, over-commits, feels taken advantage of, wants to stop people-pleasing, needs to stand up for themselves, or wants to push back at work or in the family. Also guides how Claude states its own limits."
 trigger: "set boundaries, say no or stop people-pleasing"
+command: "set boundaries"
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # Boundaries and assertiveness

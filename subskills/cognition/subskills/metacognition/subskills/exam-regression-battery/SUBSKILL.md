@@ -2,8 +2,9 @@
 name: exam-regression-battery
 description: "Reruns every earlier self-examination check in seconds and reports PASS, FAIL or KNOWN with evidence, so each new exam run starts from reproduced evidence instead of losing it. Use when starting a curriculum exam run or after changing the skillset. Do not use to run the timed exam itself; use universal-skill-curriculum-exam."
 trigger: "rerun my earlier exam checks as a quick regression battery"
+command: "rerun exam"
 metadata:
-  version: "1.0.1"
+  version: "1.0.2"
 ---
 
 # Exam regression battery

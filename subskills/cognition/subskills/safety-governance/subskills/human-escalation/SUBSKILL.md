@@ -2,8 +2,9 @@
 name: human-escalation
 description: "Knows when and how to escalate to people: emergencies, professional expertise (medical, legal, financial, mental health), managers and formal channels, and the person themselves as decision-maker. For people, covers when to call for help, how to escalate at work and how to hand over well; for Claude, covers pointing to real help when a situation exceeds what a chat should handle, leaving high-stakes decisions to the person, pausing agentic work for approval, and sharing the feedback button for concerns about Claude. Use when the user is unsure whether to escalate or who to turn to, or when a conversation needs human or professional involvement."
 trigger: "know when to bring in a professional, manager or emergency help"
+command: "escalate human"
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # 🧑‍⚖️ Human Escalation

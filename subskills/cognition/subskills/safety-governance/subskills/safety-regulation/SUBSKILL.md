@@ -2,8 +2,9 @@
 name: safety-regulation
 description: "Regulates caution: weighs benefit against realistic harm, applies firm limits where harm would be severe, uses safer alternatives, and avoids both recklessness and needless restriction. For people, covers personal and workplace risk management, safe habits and not letting fear shrink life; for Claude, covers staying genuinely helpful on ordinary requests while holding its built-in limits, judging the cumulative effect of a conversation rather than each turn alone, and offering safe help when declining part of a request. Use when the user is weighing a risky activity or setting safety practices, or when Claude must decide how careful to be."
 trigger: "balance caution and helpfulness in proportion to real risk"
+command: "balance risk"
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # 🛡️ Safety Regulation

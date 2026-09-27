@@ -2,8 +2,9 @@
 name: reflect-and-review
 description: "Guides reflection that leads to change: journaling prompts matched to the moment, and structured weekly, monthly, quarterly and yearly reviews covering wins, misses, lessons and energy, which feed adjustments back into goals, habits and plans. Use when the user wants journaling prompts, to reflect on a day, week or year, run a personal retrospective or annual review, look back before planning ahead, or make sense of how things are going. Also runs Claude's own retrospective after a task, a mistake or a correction."
 trigger: "journal, reflect, or run a weekly, monthly or yearly review"
+command: "reflect weekly"
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # Reflect and review

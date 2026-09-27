@@ -2,8 +2,9 @@
 name: influence-persuasion
 description: "Helps the user persuade honestly: understands the audience's concerns, builds a clear case with evidence and a specific ask, uses trust, reciprocity and framing ethically, and handles objections. Refuses manipulation, deception and pressure tactics. Use when the user wants to convince a boss, partner, team or group, pitch an idea, win support, change someone's mind or be more influential. Do not use for a negotiation over terms; use negotiation. Also guides how Claude makes a case to the person."
 trigger: "persuade people or make a case ethically"
+command: "persuade people"
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # Influence and persuasion

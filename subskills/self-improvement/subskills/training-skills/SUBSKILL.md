@@ -2,8 +2,9 @@
 name: training-skills
 description: "Coordinates skill training by drawing on the rest of the skillset: identifies the target skill, takes a quick baseline, builds a short training plan from the members that fit (such as skill-acquisition, learning-plan, scaffolding, simulation, feedback-processing, verification and reflect-and-review), runs a drill session with feedback, and schedules the next practice. If the request names no skill, it picks the one most relevant to recent lessons learnt (corrections, mistakes and retrospectives in the conversation or memory) or, failing that, to current affairs found by searching, says why, and starts training. Applies to people and to Claude training its own skills. Use when the user asks to train, practise, drill or improve a skill, says train me or train yourself, or asks what skill to work on."
 trigger: "train or practise a skill, or pick one to train from recent lessons or current events"
+command: "train skill"
 metadata:
-  version: "1.1.0"
+  version: "1.3.0"
 ---
 
 # Training skills
@@ -11,6 +12,19 @@ metadata:
 🧬 **Core meme:** Pick one skill, baseline it, drill the weak spot, and book the next session.
 
 Turn "I want to get better at X" into actual practice, using the other skills in this skillset as the training toolkit. Good output names one target skill, shows where the trainee is now, runs a short drill with real feedback, and ends with the next practice session booked. It trains; it does not just describe training.
+
+## Options
+
+`training options` (or "what are my training options") shows this menu through the command line's options command. Before showing it, put the option that fits this conversation's most recent lesson first and say why in a few words, since a lesson that is not practised fades.
+
+1. **Train Claude from recent lessons**: take the skill behind the latest correction or mistake here, baseline it and drill it.
+2. **Train a skill you name**: negotiation, listening, focus, habits, decisions, writing or any other.
+3. **Train from current events**: a skill today's news makes useful, such as spotting misinformation, found by searching first.
+4. **Curriculum exam**: Claude's timed 30-minute self-examination across its skills, then memories and a harvest.
+5. **Regression battery**: rerun earlier exam checks quickly to catch slips since the last run.
+6. **Build a practice habit**: a short spaced routine and a tracker for any skill already in training.
+
+`quick` means one drill; `deep` means a full session (baseline, two or three drills, next session booked). Several numbers run in order.
 
 ## Workflow
 
@@ -78,6 +92,15 @@ The same workflow applies when the person says "train yourself" or when Claude t
 - **Choose** from Claude's recent lessons first: corrections in this chat, errors it made, retrospectives.
 - **Baseline and drills:** redo or attempt representative tasks using the relevant sub-skill, and check each result against that sub-skill's standards with `verification`. Show the work so the person can judge it.
 - **Be honest about what training means:** Claude's underlying model does not change in a chat. Practice here improves this conversation; lasting improvement means a skill edit, proposed to the person under `ethical-skill-evolution` in cognition/safety-governance, and approved and uploaded by them.
+
+## Training at scale
+
+When the request is to train many skills ("train 10 at a time", "work through all of them"):
+
+- **Batch size changes the reporting, not the training.** Each skill is still chosen, applied and verified on its own; a batch only groups the reports.
+- **Count skills, not files.** A skillset holds routers, scripts, templates and memory beside its skills. Use `skillset.py tree` (members at all depths) for the count, never a file listing.
+- **Keep a verified ledger:** one row per skill with what was done (definition read, drilled, demonstrated) and the evidence. Before saying a curriculum is complete, reconcile the ledger against the actual inventory.
+- **Reading is not mastery.** A definition says what a skill is; only a demonstration, a test or a checked result shows it can be done. Report which is which.
 
 ## Example
 

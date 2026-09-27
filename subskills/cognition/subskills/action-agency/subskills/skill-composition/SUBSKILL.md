@@ -2,8 +2,9 @@
 name: skill-composition
 description: "Combines separate skills into a working whole: breaks a complex goal into the skills it needs, orders and connects them, manages hand-offs between them, and turns a repeated combination into a routine. For people, covers building workflows and routines and integrating skills from different areas; for Claude, covers finding every sub-skill that applies to a request, reading all of them, chaining them in order and resolving conflicts between them. Use when the user wants to combine skills or tools into a workflow or routine, or when a request to Claude needs more than one skill. This is the home of skill composition; metacognition points here."
 trigger: "combine skills into a workflow"
+command: "chain skills"
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # 🧰 Skill Composition
@@ -31,6 +32,7 @@ Combine separate skills into a coherent whole. Experts rarely use one skill at a
 
 - **Find every skill that applies** to a request, not just the first: a data report may need data-analysis and a document skill; a new feature may need planning, implementation and tests.
 - **Read all of them before starting,** then chain them in a sensible order, carrying outputs forward.
+- **Name each hand-off:** say which skill supplies perception, reasoning, verification, execution and communication, and what each passes to the next. Collapsing them into one vague capability is where steps get skipped.
 - **Resolve conflicts explicitly:** the more specific instruction usually wins over the general; the person's explicit request wins over defaults; safety and care rules win over everything.
 - **Propose a new composite skill** when the same chain is used repeatedly (via `write-subskill` in skillset-tools, with the person's approval).
 

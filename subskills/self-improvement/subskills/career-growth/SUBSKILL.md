@@ -2,8 +2,9 @@
 name: career-growth
 description: "Plans career moves: assesses strengths and gaps against a target role, builds a development plan, prepares promotion and pay conversations, plans a career change or job search, and structures networking, feedback requests and visibility. Use when the user asks how to get promoted, ask for a raise, change careers, find a new job, grow into leadership, get useful feedback, build a professional network, or feels stuck at work. Do not use for learning one specific skill; use learning-plan. Also plans the growth of this skillset as Claude's own development."
 trigger: "grow my career, change jobs or ask for a promotion or raise"
+command: "grow career"
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # Career growth

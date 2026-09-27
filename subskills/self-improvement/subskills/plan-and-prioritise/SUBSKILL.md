@@ -2,8 +2,9 @@
 name: plan-and-prioritise
 description: "Turns a messy pile of commitments into a realistic plan: captures everything, picks the few priorities that matter, sizes and time-blocks them against real capacity, and handles procrastination and overwhelm by shrinking the next step. Use when the user asks to plan their day or week, prioritise a to-do list, manage their time, focus, stop procrastinating, feels overwhelmed by too much to do, or wants a personal productivity system. Do not use for long-range goals; use goal-setting. Also plans and prioritises Claude's own multi-part work."
 trigger: "plan my day or week, prioritise tasks or beat procrastination"
+command: "prioritise tasks"
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # Plan and prioritise

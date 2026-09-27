@@ -6,7 +6,7 @@ A personal set of Agent Skills packaged as **one skill**, `skillset-os` (Skillse
 
 Donationware: free under MIT, donations welcome. See [Licence and support](#licence-and-support).
 
-> **Early access.** Skillset-OS is in early access: version 1.0.0 is being prepared but not yet released, and no GitHub release or tag exists. It works and is tested, but members, commands and file layout may still change without notice, and upgrades may need a fresh install. Feedback and issues are welcome. See [Early access](#early-access).
+> **Status: released.** Skillset-OS is stable (first release 1.0.0; the current version is in `SKILL.md` and the [changelog](CHANGELOG.md)), available as a Claude skill upload and as a Claude plugin. Versions follow semantic versioning. See [Status](#status).
 
 ## How it works
 
@@ -16,7 +16,7 @@ A skillset is a folder with a router and a `subskills/` folder of members. Each 
 |---|---|
 | Sub-skill | `subskills/<name>/SUBSKILL.md` plus its files |
 | Nested skillset | `subskills/<name>/SKILLSET.md` plus its own `subskills/` |
-| Packed member | `subskills/<name>.zip`, holding a skill, a skillset or a whole repository, zips inside it included |
+| Packed member | `subskills/<name>.zip`, holding a skill, a skillset or a whole repository, zips inside it included. Storage only: Claude cannot load a zip as a skill, so it is read with `skillset.py open` where code execution is on |
 | Linked repository | a packed (or folder) member pinned to a GitHub commit, recorded in `skillsets.json` |
 
 - **Routing.** Claude sees one description, generated from the top-level members' triggers. It then follows the router tables down: `SKILL.md` at the top, `SKILLSET.md` in each nested skillset. A nested skillset contributes only one trigger to its parent, so grouping keeps the description within its 1024 characters.
@@ -94,7 +94,7 @@ If you change the skillset on GitHub directly, attach GitHub's zip (Code → Dow
 ## Limits
 
 - **Description**: 1024 characters, shared by the top-level members' triggers; the current top uses about 910, just over the warning. `check` warns at 900 and fails beyond 1024. Group members into nested skillsets to free room.
-- **Files**: uploads reportedly fail above 200 files, so up to 190 files ship as they are. Beyond that, `package` still writes one upload: it zips the largest groups inside it, and `skillset.py open` unzips them with Python when a member is read (code execution must be on). The repository stays plain folders, `pull` unpacks the zips, and `PACKED.json` lets `check` confirm every zip is exact. `package --split` instead writes separate part skills plus `<name>-repo.zip`, for setups without code execution. A zip counts as one file.
+- **Files**: uploads reportedly fail above 200 files, so up to 190 files ship as they are. Beyond that, `package` splits the upload into separate part skills, each a plain folder (`<name>-<folder>.zip`, with a generated `SKILL.md` and a shared `PARTS.json`), plus `<name>-repo.zip` for GitHub. Zips are never used to get under the limit by default, because Claude's skill system cannot load anything inside a zip. `package --pack-groups` still zips groups inside one upload for setups that knowingly rely on code execution.
 - **Linked repositories** must be public; for private ones, download the zip and import it packed.
 - **All or nothing**: members cannot be switched on and off one at a time in Claude.
 
@@ -109,30 +109,49 @@ ruff check .
 
 CI runs the same three commands. `.gitignore`, `.github/workflows/ci.yml` and `.github/FUNDING.yml` are generated from `scripts/templates/` (uploads may drop hidden files), so edit the templates and run `python scripts/skillset.py index`.
 
-## Early access
+## Status
 
-Status: **early access (pre-release)**, working towards 1.0.0.
+Status: **released** (first stable release 1.0.0; see the changelog for the current version).
 
-- **What works:** the whole skillset installs as one skill, routes requests to its members, and passes its checks and tests.
-- **What may change:** member names, commands, triggers and folder layout, so a later upload can behave differently from this one.
-- **Upgrading:** remove the old `skillset-os` skill in Claude and upload the new zip; don't rely on keeping local edits between versions.
-- **Changes so far:** listed under "Unreleased" in [CHANGELOG.md](CHANGELOG.md).
-- **1.0.0:** will be published as a GitHub release with the upload zip attached, and the changelog section will be dated. Until then, the version in `SKILL.md` stays 1.0.0 and means "the version being prepared".
+- **What works:** the whole skillset installs as one skill (upload or plugin), routes requests to its members, and passes its checks and tests.
+- **Versioning:** semantic. Patch releases fix things, minor releases add members or behaviour, major releases rename or remove them, so only a major version should need you to relearn anything.
+- **Upgrading:** remove the old `skillset-os` skill in Claude and upload the new zip, or update the plugin; don't rely on keeping local edits between versions.
+- **Changes:** listed by version in [CHANGELOG.md](CHANGELOG.md).
 
-Sponsoring is open during early access. It supports the work towards 1.0.0 and is never required.
+Sponsoring supports continued development and is never required.
 
 ## Editions
 
-Every package writes two uploads from this one repository:
+Every package writes two downloads from this one repository: the personal skill upload, and the shared edition as a Claude plugin:
 
 | Upload | Who it's for | How it behaves |
 |---|---|---|
 | `skillset-os.zip` | The author, and anyone who wants everything | The full personal edition: greeting menu, numbered next steps and menus, emoji lists, and at most one optional support suggestion per conversation. |
-| `skillset-os-shared.zip` | Everyone else | Quiet by default: plain replies, no greeting menu, apps only on their command words (Claude's built-in tools handle plain weather, picture, place and score requests), Claude's own care guidance first, and no donation prompts in chat. |
+| `skillset-os-shared.zip` | Everyone else, as a Claude plugin | Quiet by default: plain replies, no greeting menu, apps only on their command words (Claude's built-in tools handle plain weather, picture, place and score requests), Claude's own care guidance first, and no donation prompts in chat. It is a plugin: install it at Customize → Plugins → Add → Upload plugin, or from the plugin repository. The Skills page refuses it, because a skill cannot contain a plugin manifest. |
 
 Install only one of them. In the shared edition, say **"Skillset-OS full mode"** in a chat (or put it in your Claude preferences) to switch on the numbered lists, menus, emoji lists and greeting menu; **"Skillset-OS quiet mode"** switches back. Donation prompts stay off either way.
 
 The repository itself is the personal edition. `editions/shared/edition.json` holds the shared edition as small, exact text patches with a reason for each. `package` applies them to a copy, regenerates the routers, checks and verifies the result, and refuses if a patch no longer matches, so the two editions can't silently drift apart. To build just the shared upload: `python scripts/skillset.py build --edition shared`.
+
+## Shared fixes flow back
+
+The personal edition in this repository is the source; the shared edition and plugin are built from it. A fix made in a shared copy (the plugin repository, a pulled shared zip, a contributor's change) is carried back with `python3 scripts/skillset.py --root <shared copy> upstream --into <this working copy>`. It reverses the edition's patches on both sides, so the fix lands in personal wording and edition-only text never leaks in. Then package here, which rebuilds the shared edition. Never copy a shared build over this repository.
+
+## Plugin
+
+The shared edition is the Claude plugin, in one download. `skillset-os-shared.zip` holds the shared edition's tree plus a generated `.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json`, inside one top folder, `skillset-os/`. Its root holds `SKILL.md` with no `skills/` folder, so Claude loads the plugin as that one skill. Install it in claude.ai at Customize → Plugins → Add → Upload plugin; the Skills page rejects it, because a skill cannot contain a plugin manifest. `editions/shared/plugin.json` holds the manifest fields; the name and version always come from `SKILL.md`, and a test proves the plugin is the shared edition byte for byte plus those two files. To build just it: `python scripts/skillset.py build --plugin`.
+
+The plugin lives in its own repository (for example `skillset-os-plugin`), because this repository is the personal edition. Unzip `skillset-os-shared.zip`, put the contents of its `skillset-os/` folder at that repository's root, and push. Then:
+
+- **Claude Code:** `/plugin marketplace add OWNER/skillset-os-plugin`, then `/plugin install skillset-os@skillset-os`.
+- **Claude directory:** submit the repository through Anthropic's directory submission portal (paid plans). Anthropic reviews every submission before listing it.
+- **Checking it:** `claude plugin validate --strict .claude-plugin/plugin.json` in the plugin repository.
+
+Install the plugin or the personal upload, not both, or the skill triggers twice.
+
+## Other AIs
+
+Skillset-OS is plain Markdown and Python, so other AIs can adopt it when it is shared with them, as far as each one's competence goes. Reading files is enough for routing and every member's instructions; running Python adds checks, zip opening, packaging and the self-memory tools; writing files adds changing the skillset. The Claude-specific parts (uploads, the plugin, claude.ai tools) are optional. Point the AI at `SKILL.md` first and `memory/SELF.md` second.
 
 ## Disclaimers
 

@@ -2,8 +2,9 @@
 name: emoji-list-generator
 description: "Transform information into a concise, structured emoji list that maximises clarity, information density and memorability, using emojis as semantic markers rather than decoration. Use this skill whenever the user asks for an emoji list, emoji summary, information explained with emojis, a concise visual summary, a \"memetically clear\" list, or a complex topic simplified into an emoji-based structure, even if they only say something like \"summarise this with emojis\" or \"make it scannable\"."
 trigger: "summarise information as a clear emoji list"
+command: "list emojis"
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # Emoji List Generator

@@ -2,8 +2,9 @@
 name: semantic-understanding
 description: "Builds real understanding of meaning: concepts and how they relate, definitions, examples and non-examples, jargon, ambiguity, figurative language and implied meaning. For people, covers understanding a hard idea rather than memorising it and explaining it simply; for Claude, covers resolving ambiguous terms, domain-specific senses, and checking that it and the person mean the same thing instead of matching surface words. Use when the user is confused by a concept, wants to understand deeply or explain something simply, or when a request hinges on what a word or phrase means."
 trigger: "understand concepts deeply or pin down what something means"
+command: "parse meaning"
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # 🧩 Semantic Understanding

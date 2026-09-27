@@ -1,0 +1,21 @@
+{
+  "note": "Builds <name>-plugin.zip from this edition: its tree plus .claude-plugin/plugin.json and marketplace.json. name and version come from SKILL.md; everything under manifest is copied as it is. The plugin root holds SKILL.md and no skills/ folder, so it loads as one skill.",
+  "manifest": {
+    "displayName": "Skillset-OS",
+    "description": "One skill holding nested skillsets: software engineering, personal growth, people skills, thinking tools and in-chat apps, with tools to extend and sync it.",
+    "author": {
+      "name": "Andrew Wright",
+      "url": "https://github.com/Softmonster"
+    },
+    "homepage": "https://github.com/Softmonster/skillset-os-plugin",
+    "repository": "https://github.com/Softmonster/skillset-os-plugin",
+    "license": "MIT",
+    "keywords": ["skills", "skillset", "software-development", "productivity", "coaching", "communication"]
+  },
+  "marketplace": {
+    "owner": {
+      "name": "Andrew Wright"
+    },
+    "category": "productivity"
+  }
+}

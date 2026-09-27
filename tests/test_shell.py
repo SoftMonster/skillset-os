@@ -314,3 +314,71 @@ def test_phone_autocorrect_is_offered_as_a_reading_not_guessed(sh):
     assert sh("1").startswith("> ls")
     assert "autocorrect" not in sh("review skillset is")                        # both readings agree: no menu
     assert "no open numbered menu" in sh("7")                                   # stray number: never guessed
+
+
+# ---------------------------------------------------------------- options menus
+
+def _do(sh, words):
+    state = sh.mod.load_state()
+    out = sh.mod.resolve_verb_noun(words, state)
+    sh.mod.save_state(state)
+    return out
+
+
+@pytest.mark.parametrize("words", ["training options", "what are my training options", "options for training"])
+def test_training_options_is_a_described_menu_with_rapid_and_power_lines(sh, words):
+    out = _do(sh, words)
+    assert "→ self-improvement/training-skills  [options: 6]" in out
+    assert "  1. Train Claude from recent lessons: " in out and "  4. Curriculum exam: " in out   # descriptions kept
+    assert "  0. infer" in out and "  rapid: 1 · 1 3 · 2 quick" in out and "  power: combine numbers" in out
+    assert "tap-to-choose" in out
+
+
+def test_options_picks_take_several_numbers_modifiers_why_and_infer(sh):
+    _do(sh, "training options")
+    out = _do(sh, "why 4")
+    assert "[why option 4: Curriculum exam]" in out
+    out = _do(sh, "1+3 quick")                                  # why kept the menu open
+    assert "1. Train Claude from recent lessons; then 3. Train from current events" in out
+    assert "quick:" in out and "no further confirmation" in out
+    assert "no open numbered menu" in _do(sh, "2")               # a menu answers once
+    _do(sh, "training options")
+    out = _do(sh, "0")
+    assert "[infer from 'training options']" in out and "6. Build a practice habit" in out
+    assert "not on the menu" in _do(sh, "9")
+
+
+def test_skillset_options_list_members_and_drill_down(sh):
+    out = _do(sh, "options")
+    assert "→ skillset-os  [options: 8]" in out and "  1. apps: " in out and "options 1" in out
+    out = _do(sh, "interpersonal options")
+    assert "[options: 9]" in out and "(+5 more: `ls interpersonal`" in out
+    out = _do(sh, "options 7")                                   # drill into a nested skillset's option
+    assert out.startswith("> options 7") and "→ interpersonal/" in out
+
+
+def test_bare_menu_stays_the_opener_and_unrelated_words_are_not_options(sh):
+    assert "Some things to do here" in _do(sh, "menu")
+    assert "[options" not in _do(sh, "review code")
+    assert "nothing in the skillset matches" in _do(sh, "zyxwv options")
+
+
+# ---------------------------------------------------------------- hand-picked commands
+
+@pytest.mark.parametrize(("words", "target"), [
+    ("retain knowledge", "cognition/memory-context/long-term-memory"),
+    ("verify work", "cognition/action-agency/verification"),
+    ("detect bias", "cognition/reasoning/bias-detection"),
+    ("set goals", "self-improvement/goal-setting"),
+    ("make habit", "self-improvement/habit-building"),            # command verbs take synonyms too
+])
+def test_hand_picked_commands_route(sh, words, target):
+    assert f"[skill: {target}]" in _do(sh, words)
+
+
+def test_no_generic_use_commands_remain_and_the_shell_is_not_in_its_own_top_list(sh):
+    cmds = sh.mod.catalogue(sh.top)
+    generic = [c["command"] for c in cmds if c["kind"] == "skill" and c["command"].startswith("use ")]
+    assert generic == []
+    top = sh.mod.commands_text(sh.top, 20)
+    assert "shell mode" not in top and "shell mode" in sh.mod.commands_text(sh.top, None)

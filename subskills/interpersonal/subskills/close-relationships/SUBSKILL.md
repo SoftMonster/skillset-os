@@ -2,8 +2,9 @@
 name: close-relationships
 description: "Supports partner and family relationships: communicating needs, handling recurring arguments, repair after fights, appreciation and connection habits, dating as an adult, and navigating parents, siblings, in-laws and family dynamics. Use when the user wants a better relationship with a partner, spouse, date, parent, sibling, child or in-law, keeps fighting with them, feels disconnected, or is unsure about a relationship. Treats control, fear, threats or violence as a safety matter with specialist support."
 trigger: "improve a relationship with a partner or family member"
+command: "improve relationship"
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # Close relationships

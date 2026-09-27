@@ -351,6 +351,40 @@
       "id": 66,
       "prompt": "what is an RSS feed, in simple terms?",
       "expect": null
+    },
+    {
+      "id": 67,
+      "prompt": "how do I submit skillset OS to the Claude directory",
+      "expect": "skillset-tools/publish-plugin"
+    },
+    {
+      "id": 68,
+      "prompt": "make the skillset into a plugin I can list in the marketplace",
+      "expect": "skillset-tools/publish-plugin"
+    },
+    {
+      "id": 69,
+      "prompt": "cut the 1.0.0 release so I can publish the plugin",
+      "expect": "skillset-tools/publish-plugin",
+      "also": [
+        "sync-skillset"
+      ]
+    },
+    {
+      "id": 70,
+      "prompt": "training options",
+      "expect": "command-line",
+      "also": [
+        "self-improvement/training-skills"
+      ]
+    },
+    {
+      "id": 71,
+      "prompt": "what are my options for building habits",
+      "expect": "command-line",
+      "also": [
+        "self-improvement/habit-building"
+      ]
     }
   ]
 }

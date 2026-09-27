@@ -1,9 +1,10 @@
 ---
 name: command-line
-description: "Runs Skillset-OS as a command line as well as in plain English: navigates the skills as a file system in bash, PowerShell or cmd syntax (ls, cd, cat, dir, type, Get-ChildItem, grep, tree...), remembers edits without applying them until an updated repository is requested, turns verb-noun commands like review code, plan feature or create spreadsheet into the skill, built-in skill or tool that does them, generates the most useful commands from what the skillset knows, and keeps a person's own command list only for the session or in a file they hold. Use when a message is a shell command or a short verb-noun command, when a chat opens with a greeting, \"start\" or \"I am bored\" (it offers numbered suggestions, one a review of Skillset-OS), or when asked for commands, a command list or command-line mode. Do not use for running programs on the computer; this shell never executes anything."
-trigger: "use a shell (ls, cd, dir) or commands like review code; say hi, start or I am bored"
+description: "Runs Skillset-OS as a command line as well as in plain English: navigates the skills as a file system in bash, PowerShell or cmd syntax (ls, cd, cat, dir, type, Get-ChildItem, grep, tree...), remembers edits without applying them until an updated repository is requested, turns verb-noun commands like review code, plan feature or create spreadsheet into the skill, built-in skill or tool that does them, generates the most useful commands from what the skillset knows, and keeps a person's own command list only for the session or in a file they hold. Use when a message is a shell command or a short verb-noun command, when a chat opens with a greeting, \"start\" or \"I am bored\" (it offers numbered suggestions, one a review of Skillset-OS), when asked for the options for something (\"training options\", \"what are my options\"), or when asked for commands, a command list or command-line mode. Do not use for running programs on the computer; this shell never executes anything."
+trigger: "use a shell (ls, cd), commands like review code or X options; say hi, start or I am bored"
+command: "shell mode"
 metadata:
-  version: "1.1.0"
+  version: "1.4.0"
 ---
 
 # Command line
@@ -63,6 +64,21 @@ The `apps` sub-skill holds twenty mimic apps in one file: short commands that be
 
 The ranking uses the routing fixture (what realistic requests ask for) and self-memory evidence, so it improves as the skillset does. Synonyms are understood (`check`, `audit` → `review`; `fix` → `debug`; `make`, `build` → `create`; `x` → `examine`; `i` → `inventory`). When two commands fit almost equally, the shell shows a numbered menu of them (plus "something else") instead of guessing: show it to the person, and the next bare number or `first`/`last` picks that command. An unknown command with a near-miss name gets a numbered "did you mean" menu the same way. A greeting or "I am bored" (`hi`, `start`, `menu`) opens with numbered suggestions: explore (`look`), `apps`, train a skill, and `review skillset` (audit Skillset-OS for issues, version and pending edits). A word phone autocorrect likes to swap in (`is` for `ls`, `so` for `os`) gets a menu with the repaired reading first and the literal one second, unless both readings land in the same place. A bare number with no open menu is never guessed at. Every menu also offers `0. infer`: the person hands the choice back, so Claude answers its own question with the likeliest option, says in one line which it chose and why, and carries on; the menu stays open so a number still overrides. `0`, "infer", "you decide" and "your call" all pick it. Otherwise a menu answers once and expires when anything else is typed.
 
+## Options menus
+
+`<topic> options` is a quick command for choosing fast: `training options`, `interpersonal options`, `options for habits`, `what are my options`, or plain `options` for the whole skillset. Run `shell.py do "<words>"`; it finds the member and prints its menu: the member's own `## Options` list when it has one, otherwise its members, up to nine, with a note when there are more.
+
+Show it like this, keeping every description, because the descriptions are what make a fast choice possible:
+
+1. The numbered options, one line each: label, then what it does.
+2. `0. infer`: the person hands the choice back and Claude picks the likeliest, saying which and why in one line.
+3. A **rapid** line of replies that work as typed, such as `1 · 1 3 · 2 quick · 4 deep · 0 · why 2`.
+4. A **power** line: combine numbers (`1 3`, `1+3`), add `quick` or `deep`, `why N` to explain one without closing the menu, `options N` to open an option's own options, or type anything else.
+
+Where the chat has a tap-to-choose tool (such as claude.ai's multiple-choice buttons), also offer up to four of the options there as short labels, after the described list; the typed replies still work. Act on the answer at once, with no second confirmation.
+
+**Without code execution** (or in an AI that cannot run Python), build the same menu by hand: read the member's `## Options` section, or list its members from the `## Members` section of its `SKILLSET.md`, and show them in the same shape with the same rapid and power lines. Picks work the same way; only the automatic parsing is missing. An options request is the person asking for a menu, so it gets one in every edition and mode. To give a member its own menu, add a `## Options` section of `1. **Label**: what it does` lines; the shell reads it directly.
+
 ## The person's own command list
 
 A list of someone's favourite commands is **information about them**, so it never goes into self-memory. Offer these ways to keep it, and let them choose:
@@ -75,11 +91,11 @@ If they ask Skillset-OS to "just remember" their list permanently, explain why i
 
 ## Gotchas
 
-- `shell.py` reads the installed skill through `skillset.py`, so zipped groups in a large upload open transparently. That needs code execution; without it, answer the command in words from what you can read.
+- `shell.py` reads the installed skill through `skillset.py`, so part skills and any zipped member open transparently. Zips need code execution, because Claude cannot load a zip as a skill; without it, answer the command in words from what you can read.
 - Keep command output honest: show what `shell.py` printed. Don't invent listings or file contents.
 - A command that is also an English word (`find`, `type`, `open`, `more`, `display`, `view`) is run as a shell command when its argument is a path, and as a verb-noun command otherwise ("find skills" → `skillset-tools/find-skills`). Member names count as paths, so `open research` opens the member; `open a pull request` is a verb-noun command.
 - An unknown verb is never guessed: unless the noun alone strongly matches a command, the shell says it doesn't know the command rather than picking the nearest one.
-- Known gaps, for a later release: generated names pair a verb with the member's folder name and can read awkwardly (`set goal-setting`, `plan and-prioritise`), about 45 fall back to a generic `use`, and `use command-line` ranks in the top 20 although it names the shell itself. Hand-picked verbs in each member's front matter would fix all three.
+- **Hand-picked commands:** a member's front matter may set `command: "verb noun"` (one verb and one to three lowercase words). It replaces the generated name, `check` refuses duplicates and words the shell reserves (`options`, `menu`, `infer`, and verbs such as `remember`, `recall`, `start`, `go`), and command verbs go through the same synonyms as typed ones, so `make habit` finds `build habit`. The top list leaves out this skill itself; `commands all` still shows it.
 
 <!-- folder:start -->
 ## This folder

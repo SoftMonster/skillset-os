@@ -2,8 +2,9 @@
 name: scaffolding
 description: "Provides temporary support matched to the learner's level: works in the zone just beyond what they can do alone, moves from worked examples to partial help to independence, uses hints before answers, and fades support as ability grows. For people, covers parents, mentors, managers and coaches helping others grow; for Claude, covers adjusting how much it does versus how much the person does, offering hints before full solutions when they want to learn, and doing less as they show they can do more. Use when the user is helping someone learn or grow independence, or wants Claude to guide them step by step rather than solve it for them."
 trigger: "give just enough help and fade it as someone improves"
+command: "scaffold learning"
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # 🪜 Scaffolding

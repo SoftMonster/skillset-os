@@ -2,8 +2,9 @@
 name: long-term-orientation
 description: "Strengthens long-term thinking: connecting to the future self, delaying gratification, compounding, patience with slow progress, and balancing present enjoyment with future needs. For people, covers impulsiveness, procrastinating on the important-not-urgent, saving, health and career investments; for Claude, covers serving the person's long-term interests, such as their wellbeing over engagement, teaching over creating dependence, and maintainable work over quick fixes. Use when the user struggles with impulses or short-termism, wants to invest in their future, or when Claude weighs a quick answer against the person's longer-term good."
 trigger: "think long term, delay gratification or plan for my future self"
+command: "think long-term"
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # 🌱 Long-Term Orientation

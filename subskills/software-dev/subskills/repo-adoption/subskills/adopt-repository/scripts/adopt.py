@@ -35,7 +35,7 @@ TEMPLATES = HERE / "templates"
 CLUTTER = {".git", ".hg", ".svn", "node_modules", "__pycache__", ".venv", "venv", ".pytest_cache", ".ruff_cache",
            ".mypy_cache", ".DS_Store", "Thumbs.db", ".idea", ".vscode"}
 SKILL_FILES = {"SKILL.md", "SUBSKILL.md", "SKILLSET.md"}
-SPLIT_AT = 190  # over this many files the upload zips its largest groups inside itself (skillset.py)
+SPLIT_AT = 190  # over this many files the upload splits into plain-folder part skills (skillset.py)
 GITHUB_RE = re.compile(r"^(?:https://github\.com/)?([\w.-]+)/([\w.-]+?)(?:\.git)?/?$")
 
 
@@ -142,7 +142,7 @@ def adopt(args, top: Path) -> None:
         if stack.is_file():
             print(subprocess.run([sys.executable, str(stack), str(src)], capture_output=True, text=True, check=False).stdout.strip())
         if total > SPLIT_AT:
-            print(f"NOTE the skillset will hold {total} files, so its upload zips its largest groups inside itself")
+            print(f"NOTE the skillset will hold {total} files, so its upload splits into plain-folder part skills")
         script = args.name.replace("-", "") + ".py"
         print(f"PLAN {member}: {len(files)} files → app/, scripts/{script}, tests/test_{args.name.replace('-', '_')}.py")
         if args.dry_run:

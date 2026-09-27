@@ -2,8 +2,9 @@
 name: friendships-connection
 description: "Helps the user build and keep friendships: finds where to meet people, turns acquaintances into friends through repeated contact, keeps in touch with rhythms, deepens connection, handles drifting and friendship breakups, and eases loneliness. Use when the user is lonely, moved somewhere new, has lost touch with friends, wants closer friendships, or feels a friendship changing. Do not use for first-meeting nerves; use social-confidence."
 trigger: "make new friends or keep and deepen friendships"
+command: "deepen friendships"
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # Friendships and connection

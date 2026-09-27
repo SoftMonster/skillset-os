@@ -2,8 +2,9 @@
 name: social-confidence
 description: "Builds social ease: conversation starters and small talk that goes somewhere, joining groups, remembering names, networking events, ending conversations gracefully, and gradual practice to ease shyness or social nerves. Use when the user feels awkward, shy or anxious in social situations, dreads parties, networking or meeting new people, runs out of things to say, or wants more charisma or presence. Do not use for building lasting friendships; use friendships-connection."
 trigger: "feel more confident socially or get better at small talk"
+command: "boost confidence"
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # Social confidence

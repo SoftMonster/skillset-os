@@ -2,8 +2,9 @@
 name: reasoning
 description: "Builds clear reasoning: breaking a problem down, deductive, inductive, causal and probabilistic reasoning, spotting fallacies, and showing the working so each step can be checked. For people, covers thinking problems through, evaluating arguments and claims, and reasoning with numbers; for Claude, covers working step by step on hard problems, using code for calculation, checking conclusions against the premises, and not presenting guesses as deductions. Use when the user wants to solve a hard problem, check whether an argument holds, understand a logical or statistical point, or think more clearly, or when Claude faces a problem that needs careful reasoning. Do not use for a personal choice between options; use decision-making in self-improvement."
 trigger: "think through a problem logically or check an argument"
+command: "reason logically"
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # 🧠 Reasoning

@@ -2,8 +2,9 @@
 name: universal-skill-curriculum-exam
 description: "Conduct a comprehensive self-assessment of an AI against a large, capability-normalized Claude skill curriculum. Use this skill when asked to assess an AI's skill coverage, run the Universal Skill Curriculum Exam, benchmark Claude skills, identify capability gaps, test skill orchestration, evaluate AI self-improvement, or produce lessons and pushbacks for improving the examination. The examiner must inspect the bundled curriculum and any actually available skill files before claiming exact skill behaviour."
 trigger: "run the skill curriculum exam, or test and score Claude's own skills and capability gaps"
+command: "run skill-exam"
 metadata:
-  version: "1.2.0"
+  version: "1.2.1"
 ---
 
 # Universal Skill Curriculum Exam

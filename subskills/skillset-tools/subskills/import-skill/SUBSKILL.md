@@ -3,7 +3,7 @@ name: import-skill
 description: "Brings existing skills into the skillset: a standalone skill, another skillset, a whole repository, or a collection of skills. Each can come from a folder, a zip or .skill file (zips inside zips included), an installed skill, or a GitHub repository that stays linked and can be refreshed. Use when the user asks to import, add, merge, consolidate, nest or link an existing skill, skillset, zip or repository, or to replace standalone skills with the skillset. Do not use for writing a skill from scratch; use the write-subskill sub-skill."
 trigger: "import, nest or link an existing skill, skillset, zip or GitHub repository"
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # Import a skill, skillset or repository
@@ -21,7 +21,7 @@ Work in the working copy from `sync-skillset`. `<wc>` below is that folder, usua
 - **Never import Anthropic built-in skills.** Every account already has them, and several licences forbid copying. They live under `/mnt/skills/public` and `/mnt/skills/examples`.
 - **Check the licence.** The person's own skills are fine. Third-party skills keep their licence file; do not import one whose licence forbids copying. If a third-party skill has no licence, ask first.
 - **Change as little as possible.** An import only adapts names, adds a trigger and removes the standalone version note. Improvements are a separate edit.
-- **Pack repositories; unpack skills.** A repository, or any source with more than one `SKILL.md`, must be imported packed (`--packed`): it stays sealed and counts as one file. A single skill reads most easily unpacked.
+- **Unpack skills; pack only what is kept sealed.** A skill meant to be used imports unpacked, because Claude cannot load a zip as a skill. A repository, or any source with more than one `SKILL.md`, must be imported packed (`--packed`) or its skills imported one by one; a packed import is storage, readable only with `skillset.py open` where code execution is on, so tell the person which skills that leaves unusable without it.
 - **One copy afterwards.** Once uploaded, standalone copies must be deleted or switched off, or they compete with the skillset.
 
 ## What the source can be

@@ -2,8 +2,9 @@
 name: difficult-conversations
 description: "Prepares the user for a conversation they dread: clarifies the goal, separates facts from story, drafts an opener, anticipates the other person's view and reactions, and rehearses through role-play with realistic pushback. Use when the user needs to raise a problem, confront someone, deliver bad news, end something, ask for something hard, or talk about a sensitive topic with a partner, family member, friend, colleague or manager. Do not use for an ongoing dispute between parties; use conflict-resolution. Also guides how Claude raises hard things with the person."
 trigger: "prepare for or handle a difficult conversation"
+command: "prepare conversation"
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # Difficult conversations

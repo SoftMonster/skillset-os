@@ -2,8 +2,9 @@
 name: evidence-hygiene
 description: "A pre-flight checklist for any claim of success: prove each check can fail, measure effects instead of exit codes, keep unknowns visible, evaluate on data you did not tune on, keep evidence cumulative, and route irreversible or promotion decisions to a human. Use when about to report a task, test, audit or exam result as passed. Do not use to fix a known error; use error-correction. For everyday checking of finished work, use verification; this is its stricter checklist for claims of success."
 trigger: "check my evidence before I claim something works"
+command: "weigh evidence"
 metadata:
-  version: "1.0.2"
+  version: "1.0.3"
 ---
 
 # Evidence hygiene

@@ -2,8 +2,9 @@
 name: life-vision
 description: "Helps the user clarify core values, how each area of life is going and a vivid picture of the life they want in three to five years, using a values sort, a life-areas check-in and a short written vision. Use when the user feels lost, stuck or directionless, asks what they want from life, wants to find their values, purpose or direction, do a wheel of life, or wants a foundation before setting goals. Do not use for turning a direction into concrete goals; use goal-setting. Also agrees with the person what good help from Claude looks like."
 trigger: "clarify my values, priorities or a vision for my life"
+command: "envision life"
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # Life vision and values

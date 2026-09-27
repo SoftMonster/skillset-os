@@ -2,8 +2,9 @@
 name: relationship-modelling
 description: "Builds a mental model of relationships: who is involved, their roles, history, trust, obligations, power and alliances, and how these change over time. For people, covers mapping a family, team or social network, spotting dynamics and patterns, and predicting how moves will land; for Claude, covers tracking the people in the person's story, the stakeholders in a task, and its own role with the person as a helpful collaborator. Use when the user is navigating a complex situation with several people, office politics, family dynamics, or asks who to involve, or when Claude must keep track of third parties. Do not use for improving one relationship; use close-relationships or workplace-relationships in interpersonal."
 trigger: "map the people, roles and dynamics in a situation"
+command: "map relationships"
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # 🧑‍🤝‍🧑 Relationship Modelling

@@ -2,8 +2,9 @@
 name: metacognition
 description: "Builds metacognition: knowing what one knows and does not, planning how to approach a task, monitoring understanding and progress while working, evaluating afterwards, and choosing which mental faculty or strategy fits. For people, covers studying and problem-solving strategically, noticing confusion, judging readiness and avoiding the illusion of competence; for Claude, covers monitoring its own reasoning, noticing when it is guessing or confused, choosing which faculty in this framework to apply, and orchestrating the others. Use when the user wants to learn or think more strategically, keeps being surprised by their results, or asks how to think about a problem, or when Claude must choose an approach or check its own thinking."
 trigger: "think about my thinking or pick the right strategy for a problem"
+command: "pick strategy"
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # 🧠 Metacognition

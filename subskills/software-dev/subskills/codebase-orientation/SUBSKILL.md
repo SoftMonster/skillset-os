@@ -2,8 +2,9 @@
 name: codebase-orientation
 description: "Maps an unfamiliar repository: detects languages, frameworks, package managers and the build, test and lint commands, then explains the architecture, entry points and data flow in a short orientation note. Use when the user uploads or links a repo and asks what it does or how it is organised, asks where something lives, is onboarding onto a project, or before any larger change in code Claude has not seen yet. Do not use for writing a design for new work; use plan-feature."
 trigger: "understand, explore or explain an unfamiliar codebase or repository"
+command: "orient codebase"
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # Codebase orientation

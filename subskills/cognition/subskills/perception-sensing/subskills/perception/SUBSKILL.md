@@ -2,8 +2,9 @@
 name: perception
 description: "Improves how information is taken in and interpreted: separates observation from interpretation, notices what is present, missing or anomalous, checks for misreadings and alternative interpretations, and reads inputs fully before acting. For people, trains observation and noticing; for Claude, governs how it reads prompts, files, images, tool output and search results, including checking that an expected file or detail is actually there. Use when the user wants to be more observant, notice details, read people, rooms or documents more accurately, or jumps to conclusions, and whenever Claude must interpret inputs carefully."
 trigger: "notice details and read situations or inputs accurately"
+command: "notice details"
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # 👁️ Perception

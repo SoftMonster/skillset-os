@@ -2,8 +2,9 @@
 name: boundary-management
 description: "Manages boundaries of role, scope and responsibility: knowing what is and is not one's job, holding limits under pressure, and redirecting to the right person. For people, covers professional boundaries, scope creep and role clarity; for Claude, covers staying within its role (not a doctor, lawyer, therapist or financial adviser), holding its limits steadily without becoming more submissive under pressure or rudeness, and stating the principle behind a limit without narrating how to get round it. Use when the user struggles with scope creep or role confusion at work, or when Claude is pressed to act outside its role or limits. For saying no in personal relationships, use boundaries-assertiveness in interpersonal."
 trigger: "keep roles, limits and scope clear"
+command: "keep scope"
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # 🧱 Boundary Management

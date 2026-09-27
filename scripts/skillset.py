@@ -23,7 +23,8 @@ Commands (run `skillset.py COMMAND --help` for options):
   add-source NAME --repo OWNER/REPO   Link a GitHub repository.   refresh [PATH]
   pull         Copy a skillset into a git working copy.
   package      Version, test, commit, and write the upload zip (also the GitHub copy) and a patch,
-               plus one extra upload per edition in editions/ (for example <name>-shared.zip).
+               plus one extra upload per edition in editions/ (for example <name>-shared.zip). An edition
+               with a plugin.json is the Claude plugin: its zip installs at Customize > Plugins.
 
 The top is the folder above this script unless --root is given.
 Exit codes: 0 success, 1 check failed or action refused, 2 bad arguments.
@@ -36,6 +37,7 @@ import hashlib
 import importlib.util
 import io
 import json
+import os
 import py_compile
 import re
 import shutil
@@ -43,6 +45,7 @@ import subprocess
 import sys
 import tempfile
 import urllib.error
+import urllib.parse
 import urllib.request
 import zipfile
 from dataclasses import dataclass, field
@@ -80,8 +83,8 @@ FOLDER_START, FOLDER_END = "<!-- folder:start -->", "<!-- folder:end -->"
 SPLIT_AT = 190
 PART_KEY = "part-of"
 # Kept short: it is part of the 1024-character description. The pattern also matches the older, longer wording.
-VERSION_NOTE = "(Version {v}; if several copies are listed, use the highest version; unnumbered is oldest.)"
-VERSION_NOTE_RE = re.compile(r"\s*\(Version [\d.]+; (?:prefer the copy|if several copies)[^)]*\)")
+VERSION_NOTE = "(Version {v}; with several copies, use the highest; unnumbered is oldest.)"
+VERSION_NOTE_RE = re.compile(r"\s*\(Version [\d.]+; (?:prefer the copy|if several copies|with several copies)[^)]*\)")
 SKIP_PARTS = {".git", "__pycache__", "node_modules", ".pytest_cache", ".ruff_cache", ".venv", "venv"}
 SKIP_FILES = {".DS_Store", "Thumbs.db", "desktop.ini"}
 DOTFILES = {"gitignore": ".gitignore", "ci.yml": ".github/workflows/ci.yml", "FUNDING.yml": ".github/FUNDING.yml"}
@@ -831,6 +834,12 @@ def check_member(m: Member, root: Path) -> tuple[list[str], list[str]]:
     return errors, warnings
 
 
+# words a hand-picked `command:` may not use: they open menus, answer menus or act directly in the shell
+COMMAND_RESERVED = {"options", "option", "choices", "choice", "menu", "infer"}
+COMMAND_RESERVED_VERBS = {"remember", "recall", "start", "hi", "hello", "look", "inventory", "stats", "quests", "go",
+                          "examine", "save", "commands", "apps", "cd", "ls", "cat", "open", "why"}
+
+
 def check_skillset(root: Path) -> tuple[list[str], list[str]]:
     errors, warnings = [], []
     top = root / TOP_ROUTER
@@ -866,11 +875,32 @@ def check_skillset(root: Path) -> tuple[list[str], list[str]]:
     if stale:
         errors.append("a router table or the top description is out of date; run `skillset.py index`")
 
+    commands: dict[str, str] = {}
+    for _, m in walk(root, manifest):
+        if m.error or m.folder is None or m.kind == "skillset":
+            continue
+        own = str(read(m.folder / m.doc)[0].get("command") or "").strip()
+        if not own:
+            continue
+        words = own.split()
+        if not re.fullmatch(r"[a-z][a-z-]*( [a-z0-9][a-z0-9-]*){1,3}", own):
+            errors.append(f"{m.path}: command {own!r} must be a verb and one to three lowercase words")
+        elif set(words) & COMMAND_RESERVED or words[0] in COMMAND_RESERVED_VERBS:
+            errors.append(f"{m.path}: command {own!r} uses a word the shell reserves "
+                          f"({', '.join(sorted((set(words) & COMMAND_RESERVED) | ({words[0]} & COMMAND_RESERVED_VERBS)))})")
+        elif own in commands:                     # still routes (best match wins), e.g. in an imported copy
+            warnings.append(f"{m.path}: command {own!r} is already {commands[own]}'s; the shell picks one")
+        commands[own] = m.path
     seen: dict[str, str] = {}
+    packed_upload = (root / "PACKED.json").is_file()
     for _, m in walk(root, manifest):
         e, w = check_member(m, root)
         errors += e
         warnings += w
+        if m.form == "zip" and not packed_upload and root in m.location.parents and "/" not in m.path:
+            warnings.append(f"{m.path} is a zip: Claude's skill system cannot load a zip as a skill, so it works only "
+                            "where code execution can run `skillset.py open`. Unpack it (organise-skillsets) to make "
+                            "it a usable skill")
         parent = m.path.rsplit("/", 1)[0] if "/" in m.path else ""
         key = f"{parent}/{m.name}"
         if key in seen:
@@ -1631,6 +1661,9 @@ def cmd_pull(args) -> int:
         git(dest, *ident(dest), "commit", "-q", "-m", f"baseline: {name} {version}")
         git(dest, "tag", "synced")
     print(f"pulled {name} {version} → {dest}")
+    if edition_of(dest):
+        print(f"note this is the {edition_of(dest)} edition. Fixes made here go back to the source with "
+              f"`skillset.py upstream --into <source working copy>`, then the source is packaged")
     for parent in sorted({p.parent for p in list(args.installed.glob("*/SKILL.md")) +
                           list(args.installed.glob("*/*/SKILL.md"))}):
         if (parent / MEMBERS).is_dir() and parent.resolve() != source.resolve():
@@ -2116,7 +2149,8 @@ def stage_edition(root: Path, edition: str, dest: Path, files: list[Path]) -> No
 
 
 def build_edition(root: Path, edition: str, out_dir: Path, files: list[Path] | None = None) -> tuple[Path, int]:
-    """Write <name>-<edition>.zip: the edition's tree as one upload, verified like the main one."""
+    """Write <name>-<edition>.zip: the edition's tree as one upload, verified like the main one. An edition with
+    a plugin.json is the Claude plugin instead: the zip carries .claude-plugin/ and installs as a plugin."""
     name, version = top_info(root)
     files = files if files is not None else committable_files(root)
     dest_zip = (out_dir / f"{name}-{edition}.zip").resolve()
@@ -2125,12 +2159,84 @@ def build_edition(root: Path, edition: str, out_dir: Path, files: list[Path] | N
     with tempfile.TemporaryDirectory() as tmp:
         stage = Path(tmp) / name
         stage_edition(root, edition, stage, files)
+        if (root / EDITIONS / edition / PLUGIN_SPEC).is_file():
+            add_plugin(root, edition, stage)
         staged = tree_files(stage)
-        uploads = write_uploads(stage, out_dir, name, version, staged, main_path=dest_zip)
+        uploads = write_uploads(stage, out_dir, name, version, staged, main_path=dest_zip, split=True)
         if len(uploads) != 1:
             raise Refused(f"edition {edition} would need {len(uploads)} uploads; editions must fit in one")
         verify_uploads(stage, staged, uploads)
     return uploads[0]
+
+
+# ================================================================ plugin
+
+# editions/<edition>/plugin.json makes that edition's zip a Claude plugin: the edition's tree with
+# .claude-plugin/plugin.json and .claude-plugin/marketplace.json added. It installs at Customize > Plugins >
+# Upload plugin, or from its repository; the Skills page rejects any zip holding a plugin manifest. The plugin root keeps SKILL.md and has no
+# skills/ folder, so Claude loads it as one skill; claude.ai and Cowork refuse plugins with a top-level bin/.
+PLUGIN_SPEC, PLUGIN_DIR = "plugin.json", ".claude-plugin"
+PLUGIN_OWNED = {"name", "version", "skills", "commands", "agents", "hooks", "mcpServers", "lspServers",
+                "outputStyles", "workflows", "experimental", "userConfig", "channels", "settings"}
+
+
+def plugin_editions(root: Path) -> list[str]:
+    """Editions that also build a plugin: editions/<edition>/plugin.json beside edition.json."""
+    return [e for e in edition_names(root) if (root / EDITIONS / e / PLUGIN_SPEC).is_file()]
+
+
+def plugin_manifests(root: Path, edition: str) -> tuple[dict, dict]:
+    """The plugin.json and marketplace.json for EDITION, with name and version taken from SKILL.md."""
+    where = f"{EDITIONS}/{edition}/{PLUGIN_SPEC}"
+    try:
+        spec = json.loads((root / where).read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise Refused(f"{where}: cannot read it as JSON ({exc})") from exc
+    manifest, market = spec.get("manifest") or {}, spec.get("marketplace") or {}
+    if not isinstance(manifest, dict) or not isinstance(market, dict):
+        raise Refused(f"{where}: manifest and marketplace must be JSON objects")
+    owned = sorted(PLUGIN_OWNED & set(manifest))
+    if owned:
+        raise Refused(f"{where}: remove {', '.join(owned)}; name and version come from SKILL.md, and the plugin "
+                      "holds only the skill, so it declares no components")
+    name, version = top_info(root)
+    if not re.fullmatch(r"[a-z0-9]+(-[a-z0-9]+)*", name):
+        raise Refused(f"plugin name {name!r} must be kebab-case")
+    for key in ("description",):
+        if not str(manifest.get(key) or "").strip():
+            raise Refused(f"{where}: manifest needs a {key}")
+    if not str((manifest.get("author") or {}).get("name") or "").strip():
+        raise Refused(f"{where}: manifest needs author.name")
+    if "homepage" in manifest:
+        url = urllib.parse.urlparse(str(manifest["homepage"]))
+        if url.scheme not in {"http", "https"} or not url.netloc:
+            raise Refused(f"{where}: homepage must be a full URL, or the plugin fails to load")
+    plugin = {"name": name, "version": version, **manifest}
+    entry = {"name": name, "source": "./", "description": manifest["description"], "version": version}
+    for key in ("author", "homepage", "repository", "license", "keywords", "category"):
+        if key in market or key in manifest:
+            entry[key] = market.get(key, manifest.get(key))
+    marketplace = {"name": name, "owner": market.get("owner") or manifest["author"],
+                   "metadata": {"description": manifest["description"], "version": version}, "plugins": [entry]}
+    return plugin, marketplace
+
+
+def add_plugin(root: Path, edition: str, dest: Path) -> None:
+    """Make the staged edition in DEST a Claude plugin: add the generated .claude-plugin/ files.
+
+    The zip is then the plugin in both forms: uploaded at Customize > Plugins (manifest inside its single top
+    folder) and, unzipped into a repository, the plugin repository. A root SKILL.md with no skills/ folder loads
+    as one skill. The Skills page rejects it, because a skill cannot contain a plugin manifest."""
+    plugin, marketplace = plugin_manifests(root, edition)
+    for folder, why in (("skills", "it would stop the root SKILL.md loading as the one skill"),
+                        ("bin", "claude.ai and Cowork refuse plugins with a top-level bin/")):
+        if (dest / folder).exists():
+            raise Refused(f"plugin: the edition has a top-level {folder}/ folder; {why}")
+    if (dest / PLUGIN_DIR).exists():
+        raise Refused(f"plugin: {PLUGIN_DIR}/ is generated; remove it from the skillset")
+    (dest / PLUGIN_DIR).mkdir()
+    for fname, data in (("plugin.json", plugin), ("marketplace.json", marketplace)):
+        (dest / PLUGIN_DIR / fname).write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
 
 def cmd_build(args) -> int:
@@ -2144,6 +2250,11 @@ def cmd_build(args) -> int:
     if errors:
         raise Refused(f"{len(errors)} check error(s); run `skillset.py check` and fix them before building")
     name, version = top_info(root)
+    if args.plugin:
+        choices = [args.edition] if args.edition else plugin_editions(root)
+        if len(choices) != 1 or not (root / EDITIONS / choices[0] / PLUGIN_SPEC).is_file():
+            raise Refused("--plugin needs exactly one edition with a plugin.json; name it with --edition")
+        args.edition = choices[0]
     if args.edition:
         out_dir = (args.out.parent if args.out else root).resolve()
         path, count = build_edition(root, args.edition, out_dir)
@@ -2155,7 +2266,7 @@ def cmd_build(args) -> int:
     files = [f for f in committable_files(root) if f.resolve() != out and not f.name.endswith(".zip.part")]
     if not (root / ".git").exists():
         print("note: no git repository here, so .gitignore could not be applied; check the file list", file=sys.stderr)
-    uploads = write_uploads(root, out.parent, name, version, files, main_path=out, split=args.split)
+    uploads = write_uploads(root, out.parent, name, version, files, main_path=out, split=not getattr(args, 'pack_groups', False))
     verify_uploads(root, [f for f in files if f.resolve() != out.resolve() and not is_part_zip(f)], uploads)
     for p, count in uploads:
         print(f"built {p} ({count} files, version {version}); upload it in Customize → Skills")
@@ -2164,8 +2275,162 @@ def cmd_build(args) -> int:
     return 0
 
 
+# ================================================================ upstream: shared-edition fixes into the source
+
+def edition_of(root: Path) -> str | None:
+    """The edition a tree was built as (SKILL.md metadata edition), or None for the source itself."""
+    data, _ = read(root / TOP_ROUTER)
+    value = (data.get("metadata") or {}).get("edition")
+    return str(value) if value else None
+
+
+def reverse_patch(text: str, new: str, old: str) -> str | None:
+    """TEXT with NEW turned back into OLD, or None. Whole-block first; then line by line, because indexing can
+    reorder front-matter keys (an added `edition:` line moves), which breaks the block but not its lines."""
+    if text.count(new) == 1:
+        return text.replace(new, old)
+    new_lines, old_lines = new.split("\n"), old.split("\n")
+    if len(new_lines) < len(old_lines) or len(new_lines) == 1:
+        return None
+    left, pairs = list(new_lines), []
+    for o in old_lines:                                 # pair each old line with the new line it grew from
+        best = max(left, key=lambda n: len(os.path.commonprefix([n, o])))
+        if len(os.path.commonprefix([best, o])) < 3:
+            return None
+        pairs.append((best, o))
+        left.remove(best)
+    lines = text.split("\n")
+    for extra in left:                                  # lines the edition added: drop them, each exactly once
+        if lines.count(extra) != 1:
+            return None
+        lines.remove(extra)
+    text = "\n".join(lines)
+    for n, o in pairs:
+        if text.count(n) != 1:
+            return None
+        text = text.replace(n, o)
+    return text
+
+
+def unpatch_tree(tree: Path, spec: dict, only: set[int] | None = None) -> set[int]:
+    """Turn an edition tree back into source wording, patch by patch (only the numbers in ONLY, if given).
+
+    Returns the numbers of the patches that could be reversed here."""
+    reversible = set()
+    for i, patch in enumerate(spec.get("patches", []), 1):
+        target = tree / patch["file"]
+        text = target.read_text(encoding="utf-8") if target.is_file() else ""
+        back = reverse_patch(text, patch["new"], patch["old"])
+        if back is None:
+            continue
+        reversible.add(i)
+        if only is None or i in only:
+            target.write_text(back, encoding="utf-8")
+    shutil.rmtree(tree / PLUGIN_DIR, ignore_errors=True)            # generated for the plugin, never in the source
+    return reversible
+
+
+def export_tree(src: Path, dest: Path, ref: str | None = None) -> None:
+    """Copy a skillset tree into DEST: git REF of SRC, or SRC's committable files (a folder or zip)."""
+    dest.mkdir(parents=True)
+    if ref:
+        for rel in git(src, "ls-tree", "-r", "--name-only", ref).splitlines():
+            out = dest / rel
+            out.parent.mkdir(parents=True, exist_ok=True)
+            out.write_bytes(subprocess.run(["git", "show", f"{ref}:{rel}"], cwd=src, capture_output=True,
+                                           check=True).stdout)
+        return
+    folder = locate_source(src) if src.is_file() else src
+    for f in committable_files(folder):
+        rel = f.relative_to(folder)
+        if rel.parts[0] in {".git"} or (f.suffix == ".zip" and f.parent == folder):
+            continue
+        (dest / rel).parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(f, dest / rel)
+
+
+def cmd_upstream(args) -> int:
+    """Carry fixes made in an edition copy (the shared plugin, its repository or a pulled shared zip) into the
+    source: both trees are un-patched into source wording, diffed, and the diff is applied to --into."""
+    root, into = args.root.resolve(), args.into.resolve()
+    edition = args.edition or edition_of(root)
+    if not edition:
+        raise Refused(f"{root} is not an edition copy (SKILL.md has no metadata edition); fixes made here already "
+                      "are in the source, so package it as usual")
+    if not (into / EDITIONS / edition / EDITION_SPEC).is_file() or edition_of(into):
+        raise Refused(f"--into {into} must be the source working copy, with {EDITIONS}/{edition}/{EDITION_SPEC}")
+    spec = load_edition(into, edition)
+    base_ref = None
+    base_src = Path(args.base).resolve() if args.base and Path(args.base).exists() else None
+    if not base_src:
+        base_ref = args.base or "synced"
+        if not ref_exists(root, base_ref):
+            raise Refused(f"no base to diff from: {base_ref} is not a commit here; pass --base <ref, folder or zip> "
+                          "holding the edition as it was before the fixes")
+    with tempfile.TemporaryDirectory() as tmp:
+        base, now = Path(tmp) / "base", Path(tmp) / "now"
+        export_tree(base_src or root, base, base_ref)
+        export_tree(root, now)
+        dry = Path(tmp) / "dry"                          # which patches reverse in both trees
+        shutil.copytree(base, dry / "b")
+        shutil.copytree(now, dry / "n")
+        both = unpatch_tree(dry / "b", spec) & unpatch_tree(dry / "n", spec)
+        unpatch_tree(base, spec, both)
+        unpatch_tree(now, spec, both)
+        numbered = list(enumerate(spec.get("patches", []), 1))
+        missed = [f"patch {i} ({p['file']}: {p.get('why', '')})" for i, p in numbered if i not in both]
+        for tree in (base, now):                       # regenerated blocks match what the source will generate
+            write_index(tree)
+        git(base, "init", "-q", "-b", "main")
+        git(base, "config", "core.fileMode", "false")       # uploads and pulls change modes; content is what counts
+        git(base, "add", "-A")
+        git(base, *ident(base), "commit", "-q", "-m", "base")
+        for f in tree_files(base):
+            if ".git" not in f.relative_to(base).parts:
+                f.unlink()
+        for f in tree_files(now):
+            (base / f.relative_to(now)).parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(f, base / f.relative_to(now))
+        git(base, "add", "-A")
+        diff = git(base, "diff", "--cached", "--binary")
+        files = git(base, "diff", "--cached", "--name-only").splitlines()
+    if not diff.strip():
+        print(f"nothing to push: the {edition} copy has no changes since its base")
+        return 0
+    patch_file = Path(tempfile.mkstemp(prefix="upstream-", suffix=".patch")[1])
+    patch_file.write_text(diff + ("" if diff.endswith("\n") else "\n"), encoding="utf-8")
+    ok = subprocess.run(["git", "apply", "--whitespace=nowarn", str(patch_file)], cwd=into, capture_output=True,
+                        text=True, check=False)
+    rejected: list[str] = []
+    if ok.returncode:
+        subprocess.run(["git", "apply", "--reject", "--whitespace=nowarn", str(patch_file)], cwd=into,
+                       capture_output=True, text=True, check=False)
+        rejected = sorted(str(r.relative_to(into)) for r in into.rglob("*.rej"))
+    write_index(into)
+    errors, _ = check_skillset(into)
+    print(f"upstream: {len(files)} file(s) from the {edition} copy into {into}")
+    for f in files:
+        print(f"  {f}")
+    for m in missed:
+        print(f"note {m} was left as it is: its {edition}-only wording was edited (or is gone) in this copy. "
+              f"If the edit is wanted, change that patch's new text in {EDITIONS}/{edition}/{EDITION_SPEC} in the "
+              "source; the source's own wording is untouched")
+    for r in rejected:
+        print(f"CONFLICT {r}: a hunk did not apply; merge it by hand, then delete the .rej file")
+    for e in errors[:5]:
+        print(f"ERROR {e}")
+    print(f"NEXT review `git diff` in {into}, bump what changed, then package there; the {edition} edition is "
+          "rebuilt from the source, so never copy the edition over the source repository")
+    return 1 if rejected or errors else 0
+
+
 def cmd_package(args) -> int:
     root = args.root
+    copy_of = edition_of(root)
+    if copy_of:
+        print(f"note this working copy is the {copy_of} edition, not the source. If you keep the source (the "
+              f"personal repository), push these fixes into it with `skillset.py upstream --into <source working "
+              f"copy>` and package there instead; never copy this build over the source repository")
     write_index(root)
     name, version = top_info(root)
     since = args.since or ("synced" if ref_exists(root, "synced") else None)
@@ -2174,7 +2439,12 @@ def cmd_package(args) -> int:
     changed: list[str] = []
     log_now = (root / "CHANGELOG.md").read_text(encoding="utf-8") if (root / "CHANGELOG.md").exists() else ""
     log_base = (file_at(root, since, "CHANGELOG.md") if since and ref_exists(root, since) else None) or log_now
-    never_released = "## Unreleased" in log_base and not re.search(r"^## \d+\.\d+\.\d+ ", log_base, re.MULTILINE)
+    # what has actually shipped: the changelog as committed (an interrupted package may have edited the file)
+    log_head = (file_at(root, "HEAD", "CHANGELOG.md") if ref_exists(root, "HEAD") else None) or log_now
+    released_heading = re.compile(r"^## \d+\.\d+\.\d+ ", re.MULTILINE)
+    # A release cut earlier in this working copy counts too: after it, every change bumps again.
+    never_released = ("## Unreleased" in log_base and not released_heading.search(log_base)
+                      and not released_heading.search(log_head))
     prerelease = never_released and not args.release
     if never_released:
         # Before the first release everything stays at its starting version: no bumps are demanded or made, and
@@ -2222,6 +2492,10 @@ def cmd_package(args) -> int:
             version = bumped(max(version, base, key=vtuple), args.bump or "patch")
     elif args.bump and not prerelease:
         version = bumped(version, args.bump)
+    shipped = re.search(rf"^## {re.escape(version)} ", log_head, re.MULTILINE)
+    if not prerelease and version == top_info(root)[1] and shipped and ("## Unreleased" in log_now or args.message):
+        # This version already shipped (released earlier in this working copy), and there are new changes.
+        version = bumped(version, args.bump or "patch")
     if version != top_info(root)[1]:
         set_version(root / TOP_ROUTER, version)
         print(f"version → {version}")
@@ -2265,12 +2539,17 @@ def cmd_package(args) -> int:
                              encoding="utf-8")
             written.append(patch)
     files = committable_files(root)
-    uploads = write_uploads(root, out, name, version, files, split=args.split)
+    uploads = write_uploads(root, out, name, version, files, split=not getattr(args, 'pack_groups', False))
     verify_uploads(root, [f for f in files if not (f.suffix == ".zip" and f.parent == root)], uploads)
     print(f"ok   release gate: the {len(uploads)} upload(s) unpack and merge back into this exact skillset")
     editions = [build_edition(root, e, out, files) for e in edition_names(root)]
     for (p, count), e in zip(editions, edition_names(root)):
         print(f"ok   {p.name}: {count} files, the {e} edition, patched, checked and verified")
+    plugins = plugin_editions(root)
+    if len(plugins) > 1:
+        raise Refused("only one edition may carry a plugin.json: " + ", ".join(plugins))
+    for e in plugins:
+        print(f"ok   {name}-{e}.zip is the Claude plugin: upload it at Customize > Plugins, not Skills")
     written[0:0] = [p for p, _ in uploads] + [p for p, _ in editions]
     if (root / "memory").is_dir() and (HERE / "memory.py").is_file():
         mem = memory_module()
@@ -2291,7 +2570,7 @@ def cmd_package(args) -> int:
             print(f"note {len(uploads)} uploads: packaged with --split, so each part is its own skill. Upload all of "
                   f"them. To review or archive the skillset, use {repo_zip.name}: {name}.zip alone is incomplete.")
         else:
-            print(f"note one upload with zipped groups (over {SPLIT_AT} files). Reading them needs code execution. "
+            print(f"note one upload with zipped groups (--pack-groups, over {SPLIT_AT} files). They are not skills Claude can load; reading them needs code execution. "
                   f"For GitHub or a review, use {repo_zip.name}.")
     print("\nDELIVERED")
     for p in written:
@@ -2335,8 +2614,13 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--message", help="changelog line for the bump")
     p = sub.add_parser("build", help="zip the skillset as it would be committed into an upload for Claude")
     p.add_argument("--out", type=Path, help="output zip (default: <root>/<name>.zip, which is gitignored)")
-    p.add_argument("--split", action="store_true", help="over the limit, write part skills instead of zipping groups")
+    p.add_argument("--split", action="store_true", help="over the limit, write plain-folder part skills (the default)")
+    p.add_argument("--pack-groups", action="store_true",
+                   help="over the limit, zip groups inside one upload instead; those groups are not skills Claude "
+                        "can load, and work only where code execution is on")
     p.add_argument("--edition", help="build this edition from editions/<edition>/edition.json instead")
+    p.add_argument("--plugin", action="store_true",
+                   help="build the edition that is the Claude plugin (the one with a plugin.json)")
     p = sub.add_parser("rename")
     p.add_argument("path")
     p.add_argument("new")
@@ -2374,20 +2658,27 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--dest", type=Path, help="working copy (default: /home/claude/NAME)")
     p.add_argument("--force", action="store_true")
     p.add_argument("--installed", type=Path, default=Path("/mnt/skills"), help="where to look for other copies")
+    p = sub.add_parser("upstream", help="carry fixes from an edition copy into the source working copy")
+    p.add_argument("--into", type=Path, required=True, help="the source (personal) working copy")
+    p.add_argument("--base", help="the edition before the fixes: a git ref here (default: synced), a folder or zip")
+    p.add_argument("--edition", help="edition name (default: this copy's SKILL.md metadata edition)")
     p = sub.add_parser("package")
     p.add_argument("--out", type=Path, default=Path("/mnt/user-data/outputs"))
     p.add_argument("--bump", choices=["patch", "minor", "major"], help="top version part (default: patch)")
     p.add_argument("--message", help="one line for the changelog and commit")
     p.add_argument("--since", help="commit to diff against (default: the 'synced' tag made by pull)")
     p.add_argument("--skip-tests", action="store_true", help="skip ruff and pytest (used by the tests)")
-    p.add_argument("--split", action="store_true", help="over the limit, write part skills instead of zipping groups")
+    p.add_argument("--split", action="store_true", help="over the limit, write plain-folder part skills (the default)")
+    p.add_argument("--pack-groups", action="store_true",
+                   help="over the limit, zip groups inside one upload instead; those groups are not skills Claude "
+                        "can load, and work only where code execution is on")
     p.add_argument("--release", action="store_true", help="ship a never-released skillset's version (else it stays unreleased)")
     args = ap.parse_args(argv)
     args.root = args.root.resolve()
     commands = {"check": cmd_check, "index": cmd_index, "tree": cmd_tree, "open": cmd_open, "new": cmd_new,
                 "new-set": lambda a: cmd_new(a, kind="skillset"), "bump": cmd_bump, "replace": cmd_replace, "build": cmd_build, "rename": cmd_rename,
                 "move": cmd_move, "retire": cmd_retire, "pack": cmd_pack, "unpack": cmd_unpack,
-                "import": cmd_import, "add-source": cmd_add_source, "refresh": cmd_refresh, "pull": cmd_pull,
+                "import": cmd_import, "add-source": cmd_add_source, "refresh": cmd_refresh, "pull": cmd_pull, "upstream": cmd_upstream,
                 "package": cmd_package, "contents": cmd_contents, "review": cmd_review}
     if args.cmd != "pull" and not (args.root / TOP_ROUTER).exists():
         print(f"error: {args.root} has no {TOP_ROUTER}; pass --root with the skillset folder", file=sys.stderr)

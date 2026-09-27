@@ -2,8 +2,9 @@
 name: workplace-relationships
 description: "Improves working relationships: building trust with colleagues, managing up, handling a difficult coworker or boss, collaborating across teams and cultures, office politics without losing integrity, and leading people as a new manager. Use when the user clashes with a colleague, struggles with their manager, is new to a team or to managing, feels left out at work, or wants to build influence and allies. Treats harassment and discrimination as matters for HR, a union or legal advice."
 trigger: "work better with colleagues, a manager or a team"
+command: "navigate workplace"
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # Workplace relationships

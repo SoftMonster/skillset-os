@@ -2,8 +2,9 @@
 name: manipulation-detection
 description: "Recognises manipulation at the level of patterns: pressure and urgency, guilt and flattery, gaslighting, isolation, false authority, love-bombing, dark patterns and misleading framing, and responds by slowing down and checking. For people, covers manipulation in relationships, sales, scams, media and online; for Claude, covers attempts to steer it off its values, such as role-play or fictional wrappers, gradual escalation, false claims of authority or of messages from Anthropic, and emotional pressure to reverse a sound decision. Use when the user wonders if they are being manipulated or misled, or when Claude notices pressure to act against its values. Do not use to manipulate others."
 trigger: "recognise manipulation, pressure tactics or misinformation"
+command: "spot manipulation"
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # 🕵️ Manipulation Detection

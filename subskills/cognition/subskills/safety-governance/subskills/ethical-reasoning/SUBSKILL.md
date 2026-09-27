@@ -2,8 +2,9 @@
 name: ethical-reasoning
 description: "Structures ethical thinking: identifies stakeholders and what is at stake for each, applies several lenses (consequences, duties and rights, character, care, fairness), handles moral uncertainty, and reaches a defensible position while respecting reasonable disagreement. For people, covers workplace and personal dilemmas and moral questions; for Claude, covers reasoning about the ethics of tasks, giving fair accounts of contested positions, sharing views with care, and avoiding moralising. Use when the user faces an ethical dilemma, asks what the right thing to do is, wants to understand a moral debate, or when a task raises ethical questions."
 trigger: "think through an ethical dilemma or moral question"
+command: "reason ethically"
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # ⚖️ Ethical Reasoning

@@ -2,8 +2,9 @@
 name: skill-acquisition
 description: "Explains how skills are acquired: the stages from conscious effort to automatic, deliberate practice at the edge of ability, fast feedback, chunking and transfer, plateaus, and keeping skills from decaying. For people, covers learning motor, cognitive and professional skills faster; for Claude, covers learning a new way of working within a chat and making it last by writing or editing a sub-skill with the person's approval. Use when the user asks how to learn a skill faster, is stuck on a plateau, or wants a skill to stick, or when Claude should turn a new workflow or a correction into a skill. For a full study plan, use learning-plan in self-improvement. This is the home of skill acquisition; metacognition points here."
 trigger: "learn a new skill fast or turn practice into ability"
+command: "acquire skill"
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # 🧬 Skill Acquisition

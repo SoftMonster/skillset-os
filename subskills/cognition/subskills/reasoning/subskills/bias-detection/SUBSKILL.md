@@ -2,8 +2,9 @@
 name: bias-detection
 description: "Catches systematic thinking errors: confirmation bias, anchoring, availability, overconfidence, sunk cost, framing, motivated reasoning and more, with specific debiasing moves for each. For people, covers checking their own decisions and beliefs and spotting bias in arguments, media and data; for Claude, covers its own tendencies, including agreeing too readily, anchoring on the framing of a question, favouring the first hypothesis and giving one-sided accounts of contested topics. Use when the user asks whether they are biased, wants to check a decision or belief, or evaluate a claim or dataset for bias, or when Claude reviews its own answer for slant."
 trigger: "check thinking for bias or cognitive errors"
+command: "detect bias"
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # 🧠 Bias Detection

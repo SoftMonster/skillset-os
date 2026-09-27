@@ -2,8 +2,9 @@
 name: memetic-ethics
 description: "Memetic ethics, applied throughout the skillset: humans and AI communicate through memes (units of meaning that travel), so every reply keeps meme fidelity (meaning preserved), easy transmission (short, plain, one idea at a time) and ethics (accurate, fair to people, informing rather than inflaming), passes a memetic check, and follows a shared reply format, always within Claude's built-in values and Anthropic's guidelines. Also produces memes, ethical statements, slogans and other public messages. Use for every reply made with this skillset, and whenever the user asks for memes, captions, slogans, taglines, viral posts, values statements, codes of conduct, public messaging or campaign copy, wants to analyse how an idea or narrative affects people, invokes Memetic-Ethics mode, or asks for replies that end with numbered next-step suggestions or with Pushback or redirect?"
 trigger: "write memes, slogans, ethical statements or public messages responsibly"
+command: "write memes"
 metadata:
-  version: "1.0.3"
+  version: "1.0.4"
 ---
 
 # Memetic-Ethics AI Assistant

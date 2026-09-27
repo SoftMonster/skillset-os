@@ -555,6 +555,18 @@ def test_a_never_released_skillset_stays_unreleased_until_release(pulled):
     assert run(pulled, "package", "--skip-tests", "--out", out, "--release") == 0
     log = (pulled / "CHANGELOG.md").read_text(encoding="utf-8")
     assert ss.top_info(pulled)[1] == "1.0.0" and "## 1.0.0 — " in log and "## Unreleased" not in log
+    doc.write_text(doc.read_text(encoding="utf-8") + "\nAfter the release.\n", encoding="utf-8")
+    assert run(pulled, "bump", doc.parent.relative_to(pulled / "subskills").as_posix().replace("subskills/", ""),
+               "--part", "patch") == 0
+    assert run(pulled, "package", "--skip-tests", "--out", out, "--message", "after release") == 0
+    log = (pulled / "CHANGELOG.md").read_text(encoding="utf-8")                # the same working copy, released
+    assert ss.top_info(pulled)[1] == "1.0.1" and "## 1.0.1 — " in log and "## Unreleased" not in log
+    doc.write_text(doc.read_text(encoding="utf-8") + "\nA second change.\n", encoding="utf-8")
+    assert run(pulled, "bump", doc.parent.relative_to(pulled / "subskills").as_posix().replace("subskills/", ""),
+               "--part", "patch") == 0
+    assert run(pulled, "package", "--skip-tests", "--out", out, "--message", "second release") == 0
+    log = (pulled / "CHANGELOG.md").read_text(encoding="utf-8")                # 1.0.1 already shipped: bump again
+    assert ss.top_info(pulled)[1] == "1.0.2" and "## 1.0.2 — " in log and "## Unreleased" not in log
 
 
 # ---------------------------------------------------------------- one upload: groups zipped inside it
@@ -563,8 +575,29 @@ def _build_packed(top, tmp_path, monkeypatch, limit=100):
     monkeypatch.setattr(ss, "SPLIT_AT", limit)
     out = tmp_path / "up"
     out.mkdir()
-    assert run(top, "build", "--out", str(out / "skillset-os.zip")) == 0
+    assert run(top, "build", "--out", str(out / "skillset-os.zip"), "--pack-groups") == 0
     return sorted(out.glob("*.zip"))
+
+
+def test_over_the_limit_the_default_is_plain_part_skills_with_no_zipped_members(top, tmp_path, monkeypatch):
+    monkeypatch.setattr(ss, "SPLIT_AT", 100)
+    out = tmp_path / "up"
+    out.mkdir()
+    assert run(top, "build", "--out", str(out / "skillset-os.zip")) == 0
+    zips = sorted(out.glob("*.zip"))
+    assert len(zips) > 1                                        # separate skills, each a plain folder
+    for z in zips:
+        with zipfile.ZipFile(z) as zf:
+            assert not [n for n in zf.namelist() if n.endswith(".zip")], z.name   # nothing Claude cannot load
+            assert "skillset-os/PACKED.json" not in zf.namelist()
+
+
+def test_check_warns_that_a_zipped_member_is_not_a_usable_skill(top):
+    shutil.make_archive(str(top / "subskills" / "apps"), "zip", top / "subskills", "apps")
+    shutil.rmtree(top / "subskills" / "apps")
+    ss.write_index(top)
+    _, warnings = ss.check_skillset(top)
+    assert any("apps is a zip" in w and "cannot load a zip as a skill" in w for w in warnings)
 
 
 def test_over_the_limit_the_upload_stays_one_skill_with_zipped_groups(top, tmp_path, monkeypatch):
@@ -626,7 +659,7 @@ def test_release_gate_refuses_a_packed_group_that_lost_a_file(top, tmp_path, mon
     monkeypatch.setattr(ss, "SPLIT_AT", 100)
     out = tmp_path / "up"
     out.mkdir()
-    assert run(top, "build", "--out", str(out / "skillset-os.zip")) == 1
+    assert run(top, "build", "--out", str(out / "skillset-os.zip"), "--pack-groups") == 1
 
 
 # ---------------------------------------------------------------- editions
@@ -654,3 +687,148 @@ def test_edition_refuses_when_its_source_text_has_drifted(top, tmp_path):
         {"file": "SKILL.md", "old": "text that is not in the skill anywhere", "new": "x"}]}), encoding="utf-8")
     assert run(top, "build", "--edition", "probe", "--out", str(tmp_path / "p.zip")) == 1
     assert not (tmp_path / "skillset-os-probe.zip").exists()
+
+
+# ---------------------------------------------------------------- plugin (the shared edition doubles as it)
+
+def _plugin_zip(top, tmp_path):
+    if not ss.plugin_editions(top):
+        pytest.skip("no edition carries a plugin.json")
+    out = tmp_path / "skillset-os-shared.zip"
+    assert run(top, "build", "--plugin", "--out", str(out)) == 0
+    return out
+
+
+def test_the_plugin_zip_fits_the_claude_ai_plugin_upload(top, tmp_path):
+    # claude.ai's Upload plugin wants .claude-plugin/plugin.json at the zip root or inside one top-level folder,
+    # with nothing beside that folder (its Skills page rejects any zip holding a plugin manifest)
+    out = _plugin_zip(top, tmp_path)
+    with zipfile.ZipFile(out) as zf:
+        names = [n for n in zf.namelist() if not n.endswith("/")]
+    assert {n.split("/", 1)[0] for n in names} == {"skillset-os"}
+    assert [n for n in names if n.endswith("plugin.json")] == ["skillset-os/.claude-plugin/plugin.json"]
+
+
+def test_the_shared_edition_zip_is_the_plugin(top, tmp_path):
+    out = _plugin_zip(top, tmp_path)
+    with zipfile.ZipFile(out) as zf:
+        names = set(zf.namelist())
+        plugin = json.loads(zf.read("skillset-os/.claude-plugin/plugin.json"))
+        market = json.loads(zf.read("skillset-os/.claude-plugin/marketplace.json"))
+        doc = zf.read("skillset-os/SKILL.md").decode("utf-8")
+    name, version = ss.top_info(top)
+    assert plugin["name"] == name and plugin["version"] == version
+    assert market["plugins"][0]["source"] == "./" and market["plugins"][0]["name"] == name
+    assert not (ss.PLUGIN_OWNED - {"name", "version"}) & set(plugin)      # no components: the root SKILL.md loads
+    assert not any(n.startswith(("skillset-os/skills/", "skillset-os/bin/")) for n in names)
+    assert "## Shared edition" in doc and "sponsors/Softmonster" not in doc
+    assert not (top / ".claude-plugin").exists()                          # generated, never stored
+
+
+def test_the_plugin_is_exactly_the_shared_edition_plus_its_manifests(top, tmp_path):
+    out = _plugin_zip(top, tmp_path)
+    edition = ss.plugin_editions(top)[0]
+    stage = tmp_path / "stage" / "skillset-os"
+    ss.stage_edition(top, edition, stage, ss.committable_files(top))
+    want = {f.relative_to(stage).as_posix(): f.read_bytes() for f in ss.tree_files(stage)}
+    with zipfile.ZipFile(out) as zf:
+        got = {n.split("/", 1)[1]: zf.read(n) for n in zf.namelist() if not n.endswith("/")}
+    extra = sorted(set(got) - set(want))
+    assert extra == [".claude-plugin/marketplace.json", ".claude-plugin/plugin.json"]
+    assert {k: v for k, v in got.items() if k in want} == want
+
+
+def test_the_installed_plugin_tree_still_passes_check(top, tmp_path):
+    out = _plugin_zip(top, tmp_path)
+    installed = tmp_path / "skills"
+    with zipfile.ZipFile(out) as zf:
+        zf.extractall(installed)
+    script = installed / "skillset-os" / "scripts" / "skillset.py"
+    r = subprocess.run([sys.executable, str(script), "check"], capture_output=True, text=True, check=False)
+    assert r.returncode == 0, r.stdout[-600:]
+
+
+def test_plugin_refuses_a_spec_that_declares_components_or_a_bad_homepage(top, tmp_path):
+    if not ss.plugin_editions(top):
+        pytest.skip("no edition carries a plugin.json")
+    spec_path = top / "editions" / ss.plugin_editions(top)[0] / "plugin.json"
+    good = spec_path.read_text(encoding="utf-8")
+    try:
+        for bad in ({"skills": "./subskills"}, {"version": "9.9.9"}, {"homepage": "not a url"}):
+            spec = json.loads(good)
+            spec["manifest"].update(bad)
+            spec_path.write_text(json.dumps(spec), encoding="utf-8")
+            out = tmp_path / "p.zip"
+            assert run(top, "build", "--plugin", "--out", str(out)) == 1, bad
+            assert not out.exists()
+    finally:
+        spec_path.write_text(good, encoding="utf-8")
+
+
+def test_check_refuses_reserved_and_duplicate_commands(top):
+    doc = top / "subskills" / "self-improvement" / "subskills" / "goal-setting" / "SUBSKILL.md"
+    good = doc.read_text(encoding="utf-8")
+    try:
+        for bad, why in (("remember goals", "reserves"), ("goal options", "reserves"), ("verify work", "already"),
+                         ("Set Goals!", "lowercase")):
+            doc.write_text(good.replace('command: "set goals"', f'command: "{bad}"'), encoding="utf-8")
+            errors, warnings = ss.check_skillset(top)
+            found = errors if why != "already" else warnings          # duplicates warn; they still route
+            assert any("goal-setting: command" in e and why in e for e in found), (bad, found)
+    finally:
+        doc.write_text(good, encoding="utf-8")
+
+
+# ---------------------------------------------------------------- upstream: shared fixes into the source
+
+@pytest.fixture
+def shared_wc(top, tmp_path):
+    """A working copy pulled from the shared edition, as someone using the plugin would have it."""
+    z = tmp_path / "shared.zip"
+    assert run(top, "build", "--edition", "shared", "--out", str(z)) == 0
+    dest = tmp_path / "shared-wc"
+    assert run(top, "pull", "--source", str(z), "--dest", str(dest), "--installed", str(tmp_path / "none")) == 0
+    return dest
+
+
+def test_upstream_carries_shared_fixes_into_the_source_in_its_own_wording(top, shared_wc):
+    member = "subskills/self-improvement/subskills/habit-building/SUBSKILL.md"
+    (shared_wc / member).write_text((shared_wc / member).read_text(encoding="utf-8") + "\n- A shared fix.\n",
+                                    encoding="utf-8")
+    doc = shared_wc / "SKILL.md"
+    doc.write_text(doc.read_text(encoding="utf-8").replace("Skillset-OS is plain Markdown and Python,",
+                                                           "Skillset-OS is plain Markdown and Python (fixed),"),
+                   encoding="utf-8")
+    assert run(shared_wc, "upstream", "--into", str(top)) == 0
+    assert "- A shared fix." in (top / member).read_text(encoding="utf-8")
+    source = (top / "SKILL.md").read_text(encoding="utf-8")
+    assert "Python (fixed)," in source                                     # shared-and-source text flows
+    assert "## Shared edition" not in source and 'edition: "shared"' not in source   # edition wording stays out
+    assert "sponsors/Softmonster" in source                                # the source keeps its own wording
+    assert (top / "editions" / "shared" / "edition.json").is_file() and not (top / ".claude-plugin").exists()
+    assert ss.check_skillset(top)[0] == []
+
+
+def test_upstream_refuses_to_leak_edition_only_wording(top, shared_wc):
+    doc = shared_wc / "SKILL.md"
+    doc.write_text(doc.read_text(encoding="utf-8").replace("- **Care first.**", "- **Care first, edited.**"),
+                   encoding="utf-8")
+    before = (top / "SKILL.md").read_text(encoding="utf-8")
+    assert run(shared_wc, "upstream", "--into", str(top)) == 1            # a conflict to merge by hand
+    assert (top / "SKILL.md").read_text(encoding="utf-8") == before       # nothing of the edition leaked in
+    assert (top / "SKILL.md.rej").is_file()
+
+
+def test_upstream_with_no_changes_and_its_refusals(top, shared_wc, capsys):
+    assert run(shared_wc, "upstream", "--into", str(top)) == 0
+    assert "nothing to push" in capsys.readouterr().out
+    assert run(top, "upstream", "--into", str(top)) == 1                  # the source is not an edition copy
+    assert run(shared_wc, "upstream", "--into", str(shared_wc)) == 1      # --into must be the source
+
+
+def test_reverse_patch_survives_reordered_front_matter_keys():
+    new = '  edition: "shared"\n  summary: "X (shared edition): one'
+    old = '  summary: "X: one'
+    text = 'metadata:\n  version: "1"\n  summary: "X (shared edition): one skill."\n  edition: "shared"\n---\n'
+    assert ss.reverse_patch(text, new, old) == 'metadata:\n  version: "1"\n  summary: "X: one skill."\n---\n'
+    assert ss.reverse_patch("unrelated text", new, old) is None

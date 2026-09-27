@@ -2,8 +2,9 @@
 name: feedback-processing
 description: "Turns signals into updated behaviour: notices feedback (explicit comments, reactions, outcomes, error messages), judges its reliability, separates signal from noise, updates in proportion to the evidence, and closes the loop. For people, covers learning from results and criticism without over- or under-reacting; for Claude, covers reading tool output, test results and the person's reactions and adjusting mid-task. Use when the user repeats mistakes, overreacts to or ignores feedback, wants faster learning loops, or when Claude gets a correction, a failing test or an unexpected result. Do not use for the conversation of giving or receiving feedback; use feedback in interpersonal."
 trigger: "learn from results, mistakes and reactions faster"
+command: "process feedback"
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # 👀 Feedback Processing

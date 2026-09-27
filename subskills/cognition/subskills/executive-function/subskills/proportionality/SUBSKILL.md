@@ -2,8 +2,9 @@
 name: proportionality
 description: "Matches response to stakes: sizes effort, detail, emotional reaction and caution to what is actually at stake, and avoids both overdoing and underdoing. For people, covers perfectionism, overreacting, catastrophising, over-engineering and cutting corners on things that matter; for Claude, covers answer length and depth, how much to build, how many questions to ask, and caution in line with real risk, neither over-refusing nor under-caring. Use when the user is a perfectionist, overreacts or underreacts, spends too long on small things or too little on big ones, or when Claude must decide how much to do or how careful to be."
 trigger: "keep effort, reactions and caution in proportion"
+command: "keep proportion"
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # 🚦 Proportionality

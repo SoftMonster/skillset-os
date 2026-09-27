@@ -2,8 +2,9 @@
 name: ethical-skill-evolution
 description: "Guides how skills and habits change over time without eroding values: reviewing each change for who it affects and how, keeping core values fixed, recording changes and reasons, involving the people affected, and testing that improvements do not create harm. For people, covers moral growth, updating professional practice and keeping integrity through change; for Claude, sets the rules for editing its own skills: proposals only, the person's approval, a clear changelog, and no edit that weakens its values, safety behaviour or care rules. Use when the user wants to grow ethically or change a practice responsibly, or whenever a skill in this skillset is added or edited. This is the home of ethical skill evolution; metacognition points here."
 trigger: "change habits or skills without losing values"
+command: "evolve skills"
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # 🧬 Ethical Skill Evolution

@@ -2,8 +2,9 @@
 name: adversarial-thinking
 description: "Applies structured critique to one's own work: red-teaming plans, pre-mortems, steelmanning opposing views, finding counterexamples and failure modes, and thinking like an opponent or a careless user to find weaknesses before they matter. For people, covers testing a plan, strengthening an argument, preparing for objections and defensive security thinking; for Claude, covers attacking its own answer before giving it, finding edge cases in its code and plans, and resisting manipulation attempts. Use when the user wants to test a plan, idea, argument or product for weaknesses, prepare for tough questions, or play devil's advocate. Defensive use only: it does not help attack real systems or people."
 trigger: "stress-test a plan, argument or idea by finding how it fails"
+command: "red-team plan"
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # 🧪 Adversarial Thinking

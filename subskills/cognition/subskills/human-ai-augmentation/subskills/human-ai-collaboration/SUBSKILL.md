@@ -2,8 +2,9 @@
 name: human-ai-collaboration
 description: "Makes human-AI work effective: divides tasks by strength, gives AI clear goals, context and examples, reviews output with trust calibrated to the task, keeps judgement and accountability with the human, and keeps the human's own skills alive. For people, covers prompting well, delegating to AI agents, checking AI output and deciding what not to hand over; for Claude, covers being a good partner: understanding the goal, making its work easy to check, flagging uncertainty, leaving key judgements to the person and adapting to how they like to work. Use when the user asks how to use AI or Claude well, how to prompt, whether to trust an AI answer, or how to split work with AI."
 trigger: "work effectively with AI tools or agents"
+command: "collaborate ai"
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # 🧑‍💻 Human-AI Collaboration

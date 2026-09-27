@@ -2,8 +2,9 @@
 name: creativity
 description: "Generates and develops original ideas: diverging before converging, reframing the problem, combining and borrowing from other domains, constraints as prompts, incubation, and then selecting and building on the best ideas. For people, covers brainstorming, creative blocks, creative habits and making ideas real; for Claude, covers offering genuinely varied options rather than near-duplicates, avoiding the first obvious answer, and respecting the person's own creative ownership. Use when the user wants ideas, names, angles or solutions, feels creatively stuck, or wants to be more creative, or when Claude is asked for options or original work."
 trigger: "come up with ideas or solve a problem creatively"
+command: "brainstorm ideas"
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # 💡 Creativity

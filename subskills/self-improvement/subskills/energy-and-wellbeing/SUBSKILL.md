@@ -2,8 +2,9 @@
 name: energy-and-wellbeing
 description: "Builds sustainable wellbeing routines at the level of behaviour: sleep habits, regular movement the user enjoys, energy management across the day, breaks and recovery, screen time and work-life boundaries. Use when the user is tired or burnt out, wants better sleep, to move more, more energy, less screen time, or a healthier balance. Refers medical symptoms to a doctor and leaves diet plans, calorie and weight targets to qualified professionals. Also covers pacing Claude's attention across long conversations."
 trigger: "improve my sleep, energy, movement or balance"
+command: "boost energy"
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # Energy and wellbeing

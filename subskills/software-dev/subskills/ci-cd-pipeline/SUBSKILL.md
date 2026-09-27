@@ -2,8 +2,9 @@
 name: ci-cd-pipeline
 description: "Builds and fixes build and delivery automation: GitHub Actions and other CI workflows, Dockerfiles and compose files, caching, test matrices, release and deploy jobs, and secret handling. Use when the user asks to set up, write or debug CI, CD, a pipeline, GitHub Actions, GitLab CI, a Dockerfile, container build, deployment or release automation, or a failing build. Do not use for a failing test whose cause is in the code; use debug-issue."
 trigger: "set up or fix CI/CD, GitHub Actions, Docker or deployment"
+command: "automate pipeline"
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # CI/CD pipeline

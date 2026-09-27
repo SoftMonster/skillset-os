@@ -2,8 +2,9 @@
 name: decision-making
 description: "Structures personal decisions: frames the real question, widens the options, weighs them against the user's own values in a simple weighted matrix, stress-tests them with a pre-mortem, reversibility and the 10-10-10 check, and ends with a choice or the next piece of information to get. Use when the user is torn between options, asks whether to take a job, move, end or start something, keeps going back and forth, or wants a framework for a big choice. For legal, medical or investment decisions, lay out facts and considerations and suggest a professional. Also structures Claude's own choices between approaches."
 trigger: "make a hard personal decision or choose between options"
+command: "weigh decision"
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # Decision making

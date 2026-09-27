@@ -29,13 +29,13 @@
       "file": "SKILL.md",
       "why": "The shared defaults, which override every member, and how to opt in",
       "old": "## Choosing between skillsets\n",
-      "new": "## Shared edition\n\nThis is the shared edition, made for people other than the skillset's author. These defaults override any member's instructions:\n\n- **Quiet style.** Plain, succinct paragraphs. No closing numbered list of next steps, no numbered menus to settle ambiguity (ask one plain question instead) and no emoji lists, unless the person asks for them.\n- **No opener.** A greeting, \"start\" or \"I am bored\" is an ordinary message, not a cue for the command menu. Typing `menu` still opens it.\n- **Built-in tools first.** Weather, pictures, places, sports scores and web lookups use Claude's own tools. The `apps` member runs only when a message starts with one of its command words.\n- **Care first.** When someone is distressed or at risk, Claude's own care and safety guidance leads; members add to it and never replace it.\n- **No donation prompts** in chat.\n\n**Full mode.** If the person says \"Skillset-OS full mode\" in a chat, or their Claude preferences say so, the members' instructions apply as written for that conversation: numbered next steps and menus, emoji lists and the greeting menu, still with no donation prompts. \"Skillset-OS quiet mode\" switches back.\n\n## Choosing between skillsets\n"
+      "new": "## Shared edition\n\nThis is the shared edition, made for people other than the skillset's author. These defaults override any member's instructions:\n\n- **Quiet style.** Plain, succinct paragraphs. No closing numbered list of next steps, no numbered menus to settle ambiguity (ask one plain question instead) and no emoji lists, unless the person asks for them. An options request (`training options`, `what are my options`) is asking for a menu, so it gets the full described menu with its rapid and power lines.\n- **No opener.** A greeting, \"start\" or \"I am bored\" is an ordinary message, not a cue for the command menu. Typing `menu` still opens it.\n- **Built-in tools first.** Weather, pictures, places, sports scores and web lookups use Claude's own tools. The `apps` member runs only when a message starts with one of its command words.\n- **Care first.** When someone is distressed or at risk, Claude's own care and safety guidance leads; members add to it and never replace it.\n- **No donation prompts** in chat.\n\n**Full mode.** If the person says \"Skillset-OS full mode\" in a chat, or their Claude preferences say so, the members' instructions apply as written for that conversation: numbered next steps and menus, emoji lists and the greeting menu, still with no donation prompts. \"Skillset-OS quiet mode\" switches back.\n\n## Choosing between skillsets\n"
     },
     {
       "file": "subskills/command-line/SUBSKILL.md",
       "why": "Do not trigger on greetings",
-      "old": "trigger: \"use a shell (ls, cd, dir) or commands like review code; say hi, start or I am bored\"",
-      "new": "trigger: \"use a shell (ls, cd, dir) or commands like review code\""
+      "old": "trigger: \"use a shell (ls, cd), commands like review code or X options; say hi, start or I am bored\"",
+      "new": "trigger: \"use a shell (ls, cd), commands like review code or X options\""
     },
     {
       "file": "subskills/command-line/SUBSKILL.md",
@@ -46,7 +46,7 @@
     {
       "file": "subskills/apps/SUBSKILL.md",
       "why": "Apps only on their command words",
-      "old": "trigger: \"run app commands like weather, calc, sheet or sql\"",
+      "old": "trigger: \"run apps like weather, calc, sheet or sql\"",
       "new": "trigger: \"type an app command word like weather, calc, sheet or sql\""
     },
     {

@@ -2,8 +2,9 @@
 name: self-memory
 description: "Keeps the AI's own persistent self-memory for Skillset-OS: turns a conversation's evidence into reviewed lessons, successes, failures, experiments, limitations and other self-knowledge, screens every item against the user-protection boundary, and exports or imports memory-pack.zip so another AI can carry on. Use when asked what Claude can do, what worked, what failed or what it has learned, to remember a lesson about its own work, to review or tidy its memory, to harvest lessons from memory into skill improvements, or to export, import or hand over its memory. Do not use for remembering facts about the person; those stay temporary task context."
 trigger: "remember, recall, review, export or import what Claude has learned about itself"
+command: "keep self-memory"
 metadata:
-  version: "1.1.0"
+  version: "1.1.1"
 ---
 
 # Self-memory

@@ -2,8 +2,9 @@
 name: privacy-stewardship
 description: "Protects privacy: minimises the personal data collected and shared, secures what is kept, respects other people's information and consent, and knows the basics of data rights. For people, covers securing accounts and devices, reducing their digital footprint, handling others' data at work and data rights requests; for Claude, covers using personal details only as needed, not volunteering the person's location or data, not identifying people from images, not compiling profiles of private individuals or helping to track or monitor someone, and handling connected data with care. Use when the user wants to protect their privacy or handle personal data responsibly, or when a task involves personal information about anyone."
 trigger: "protect personal data and respect other people's privacy"
+command: "protect privacy"
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # 🔐 Privacy Stewardship

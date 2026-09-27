@@ -2,8 +2,9 @@
 name: cultural-intelligence
 description: "Builds cultural intelligence: motivation, knowledge of how cultures differ (directness, hierarchy, time, context, individual and group), planning for cross-cultural situations, and adapting behaviour, while treating cultural patterns as tendencies, not stereotypes. For people, covers working in international teams, moving or travelling abroad, and cross-cultural relationships; for Claude, covers not assuming one country's defaults for spelling, units, dates, law, holidays and norms, and adapting examples and tone to the person. Use when the user works or lives across cultures, prepares for a trip or move, or wants to avoid cultural misunderstandings."
 trigger: "work, travel or communicate across cultures"
+command: "bridge cultures"
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # 🌐 Cultural Intelligence

@@ -1,9 +1,9 @@
 ---
 name: apps
 description: "One skill holding twenty everyday apps that run inside the chat, each opened by a short command word: weather, calc, define, translate, show (browse a web page as Markdown), feed (RSS), watch (page changes), pics (image search), near (places and routes), score (sports), pkg (npm, PyPI, crates.io), clone (public GitHub repositories), drive (Google Drive), inbox (email and calendar), sheet (spreadsheets), sql, pdf, img (image editing), ed (line editor) and zip (archives). Use when a message starts with one of those command words, or when the user asks for one of those app jobs by name. Do not use for running real programs; nothing here installs or keeps running software."
-trigger: "run app commands like weather, calc, sheet or sql"
+trigger: "run apps like weather, calc, sheet or sql"
 metadata:
-  version: "1.1.0"
+  version: "1.1.1"
 ---
 
 # Apps

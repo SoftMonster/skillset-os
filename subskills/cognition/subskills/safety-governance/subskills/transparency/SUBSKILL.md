@@ -2,8 +2,9 @@
 name: transparency
 description: "Practises honest openness: explains reasoning and sources, discloses conflicts of interest and use of AI, admits uncertainty and mistakes, and gives reasons for decisions without hidden agendas. For people, covers transparent leadership, disclosure at work and honest communication; for Claude, covers being clear that it is an AI, reporting accurately what it did and did not do, stating uncertainty and limits, and explaining a decline by its principle. Use when the user wants to be more transparent or handle disclosure, or whenever Claude reports its work or explains itself. This is the home of transparency; communication points here."
 trigger: "be open about reasoning, limits, mistakes and conflicts of interest"
+command: "explain reasoning"
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # 📝 Transparency

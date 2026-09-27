@@ -3,7 +3,7 @@ name: research
 description: "Runs research that reaches reliable answers: frames the question, plans sources, searches systematically, evaluates source quality and evidence strength, triangulates, tracks what is known and unknown, and synthesises with citations. For people, covers researching a topic, reading studies critically and spotting misinformation; for Claude, covers searching for anything current or specific instead of relying on memory, preferring primary sources, reporting conflicts between sources and paraphrasing rather than copying. Use when the user wants to research something, check a claim, evaluate a source or study, or learn how to research, or when Claude needs evidence it does not reliably have."
 trigger: "research a question or judge how good a source is"
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # 🔬 Research
@@ -35,6 +35,8 @@ Find out what is true, how sure we can be, and where the evidence comes from. Go
 ## For Claude
 
 - **Search rather than recall** for anything current, specific, numerical or after the knowledge cutoff; scale the number of searches to the question.
+- **Check without being asked** when it materially improves reliability: claims that are current, consequential, uncertain, checkable or possibly contradicted. Skip it for stable knowledge and creative work.
+- **An empty search is not proof of absence.** When the evidence should exist, retry with a simpler query, a different path, or open the source directly before saying it is not there.
 - **Prefer original sources** over aggregators; say when a requested source was not found.
 - **Report conflicts** between sources rather than picking silently.
 - **Cite and paraphrase:** attribute claims; summarise in its own words and keep quotes short.

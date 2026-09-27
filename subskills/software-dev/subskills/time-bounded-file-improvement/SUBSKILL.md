@@ -2,8 +2,9 @@
 name: time-bounded-file-improvement
 description: "Improve a user-supplied file, archive or repo as much as possible within a stated time budget (e.g. \"improve this file in 15 minutes\"), prioritising by value and verifying. Use when the user gives a time limit for improving a file, archive or repo, such as \"spend 15 minutes improving this\" or \"improve this in 10 minutes\"."
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 trigger: "improve a file, archive or repo within a time limit"
+command: "improve file"
 ---
 
 # Time-Bounded File Improvement

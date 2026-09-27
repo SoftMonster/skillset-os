@@ -2,8 +2,9 @@
 name: second-order-reasoning
 description: "Traces consequences of consequences: asks and then what, maps feedback loops, incentives and how people will respond, separates short-term from long-term effects, and looks for unintended outcomes. For people, covers policy, business and personal decisions and systems thinking; for Claude, covers the downstream effects of its actions and advice, such as changes that break other things, advice that shifts incentives, or actions in agentic tasks that are hard to undo. Use when the user wants to anticipate knock-on effects, think in systems, avoid unintended consequences or evaluate a policy or strategy, or when Claude takes actions with lasting effects."
 trigger: "think through ripple effects and unintended consequences"
+command: "think ahead"
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # 🔭 Second-Order Reasoning

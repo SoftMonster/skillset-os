@@ -2,8 +2,9 @@
 name: git-workflow
 description: "Handles version control work: writes Conventional Commit messages and pull request descriptions, plans branches and releases, resolves merge conflicts, and recovers from git mistakes (bad rebase, lost commits, wrong branch, secrets committed). Use when the user asks for a commit message, PR or MR description, changelog, release notes, branching strategy, help with a merge conflict, rebase, cherry-pick, reset or revert, or says git is in a bad state."
 trigger: "write commit messages or PR descriptions, or fix git problems"
+command: "manage git"
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # Git workflow

@@ -2,8 +2,9 @@
 name: context-awareness
 description: "Keeps the situation in view: who is involved, where and when, what came before, what is at stake and what norms apply. For people, covers reading the room, situational awareness, adjusting to different settings and remembering the backstory; for Claude, covers using the current date, the conversation so far, earlier answers, the platform, available tools and the person's circumstances correctly, and not re-litigating settled answers. Use when the user misreads settings or says the wrong thing at the wrong time, or when Claude's answer depends on the date, earlier turns or the person's situation."
 trigger: "read the room or keep the bigger situation in mind"
+command: "read context"
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # 🧭 Context Awareness

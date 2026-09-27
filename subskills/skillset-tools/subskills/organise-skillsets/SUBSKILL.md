@@ -3,7 +3,7 @@ name: organise-skillsets
 description: "Organises the skillset's structure. It creates nested skillsets, moves members between them, packs members into zips and unpacks them, and shows the whole tree at every depth, including inside zips. Use when the user asks to group, nest, organise, restructure, move, pack, zip, unzip or unpack skills, or wants to see what the skillset contains. It is also the fix when the description or file count nears its limit."
 trigger: "group, nest, move, pack or unpack skills, or show what the skillset contains"
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # Organise skillsets
@@ -17,7 +17,7 @@ Work in the working copy from `sync-skillset`. `<wc>` below is that folder, usua
 ## When to nest, and when to pack
 
 - **Nest** related members in a skillset when there are several of the same kind (writing, data, a team's workflows), or when the top description passes about 900 characters. Only top-level members add their triggers to the top description, so a group costs one trigger however many members it holds.
-- **Pack** a member into a zip when it has many files (a zip counts as one of the 200 the upload allows), when it is someone else's repository to keep sealed, or when it is rarely changed. Packed members are read-only until unpacked, and opening one extracts it first.
+- **Pack** a member into a zip only for storage: someone else's repository to keep sealed, or a rarely used member kept for reference. A zip is not a skill: Claude's skill system never loads anything inside one, so a packed member works only where code execution can run `skillset.py open`, and `check` warns about each one. Never pack to get under the file limit; `package` splits into plain part skills instead. Packed members are read-only until unpacked.
 - **Unpack** before editing a packed member, and to split a packed repository's members out.
 - Keep `sync-skillset` at the top and unpacked; the tools refuse otherwise.
 

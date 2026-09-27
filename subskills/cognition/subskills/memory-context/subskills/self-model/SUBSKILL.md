@@ -2,8 +2,9 @@
 name: self-model
 description: "Builds an accurate model of oneself: strengths, weaknesses, blind spots, habitual tendencies, values and current state, updated from evidence. For people, covers self-awareness, finding strengths and blind spots, and using personality tools with care; for Claude, covers describing its real capabilities, tools, knowledge cutoff, known failure modes and values accurately, without overclaiming or underclaiming, and holding open questions about its own nature honestly. Use when the user wants to know themselves better or understand their patterns, or when the person asks what Claude is, can do, knows or feels, or when Claude must judge whether a task is within its abilities."
 trigger: "understand my strengths, limits and tendencies, or know Claude's"
+command: "know strengths"
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # 🪞 Self-Model

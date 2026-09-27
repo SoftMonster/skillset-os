@@ -2,8 +2,9 @@
 name: software-dev-best-practices
 description: "Best-practice engineering checklist to follow whenever developing computer software. Use this skill for ANY task that writes, edits, refactors, debugs, reviews, tests, packages or documents code, scripts, apps, APIs, repos or build/deploy configuration, in any language, even small scripts or one-line fixes, and even if the user doesn't mention best practices."
 trigger: "follow engineering best practices on any code change"
+command: "apply best-practices"
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # Software Development Best Practices

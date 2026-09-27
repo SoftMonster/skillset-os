@@ -2,8 +2,9 @@
 name: goal-setting
 description: "Turns aspirations into a few well-formed goals, each with an outcome, a measure, a deadline, a reason, milestones, the lead actions that drive it, likely obstacles with if-then plans, and a first step for this week. Use when the user asks to set goals, make New Year's resolutions or personal OKRs, break a big ambition into steps, or rescue goals that keep stalling. Do not use for a single daily habit (habit-building) or for scheduling this week (plan-and-prioritise). Also sets goals and acceptance criteria for Claude's own long tasks."
 trigger: "set, refine or break down goals and resolutions"
+command: "set goals"
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # Goal setting

@@ -3,7 +3,7 @@ name: adopt-repository
 description: "Turns another repository, codebase or app (a zip, folder or GitHub repository) into a develop-PROJECT sub-skill in this skillset: its source is stored in the member's app folder and versioned with the skillset, a project checker encodes the project's runtime limits, promises and core logic, and a release workflow sends each change through the rest of the skillset. It scaffolds the member with adopt.py, writes and mutation-tests the checker, wires routing and tests, and packages. Use when the user asks to adopt, bring in, take over or make a develop skill for a repository, project or app, or to keep a project's code in the skillset. Do not use for changing an already adopted project; use its develop-PROJECT member. Do not use for importing skills; use import-skill."
 trigger: "adopt a repository, codebase or app so Claude can develop it"
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # Adopt a repository
@@ -104,7 +104,7 @@ Run `python3 <wc>/scripts/skillset.py package --message "Adopt PROJECT" --bump m
 
 ## Gotchas
 
-- A skillset over 190 files still uploads as one skill: `package` zips its largest groups inside the upload (see `sync-skillset`), so adopted projects never need packing in the repository.
+- A skillset over 190 files uploads as separate part skills, each a plain folder (see `sync-skillset`), so adopted projects never need packing: Claude cannot load a zip as a skill.
 - Tests that copy the whole skillset can pass the file limit once projects are added. Keep test fixtures independent of the skillset's size.
 - `ruff check .` only lints the top `scripts/` and `tests/`. Lint new checkers yourself with `ruff check --line-length 120 <file>`.
 - Some source files have enormous single lines, such as embedded bundles or JSON. One `grep` hit can flood the context. Cut every search of the source (`| cut -c1-200`) and write the offending line into the develop member's Gotchas.

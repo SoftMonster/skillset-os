@@ -7,7 +7,7 @@ The repository is one Agent Skill. Claude loads it in stages. First it sees the 
 | `SKILL.md` | Top router: generated description and member table, plus how to navigate |
 | `subskills/<name>/SUBSKILL.md` | A sub-skill's instructions, with `trigger`, `description` and `metadata.version` |
 | `subskills/<name>/SKILLSET.md` | A nested skillset's router: authored description and trigger, generated table |
-| `subskills/<name>.zip` | A packed member: skill, skillset or repository (may contain zips) |
+| `subskills/<name>.zip` | A packed member: skill, skillset or repository (may contain zips). Storage, not a skill: Claude never loads a zip, so it is read with `skillset.py open` where code execution is on |
 | `skillsets.json` | Linked GitHub repositories and trigger overrides for packed members |
 | `scripts/routing_eval.py` | blind routing sheet and scoring against `tests/routing.json` |
 | `scripts/skillset.py` | check, index, tree, open, new, new-set, bump, replace, build, rename, move, retire, pack, unpack, import, add-source, refresh, pull, package |

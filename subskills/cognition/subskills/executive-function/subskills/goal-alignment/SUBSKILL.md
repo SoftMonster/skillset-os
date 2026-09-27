@@ -2,8 +2,9 @@
 name: goal-alignment
 description: "Keeps effort pointed at the real goal: distinguishes goals from proxies and metrics, checks actions against goals and values, spots drift and conflicting goals, and resolves trade-offs openly. For people, covers busy-but-not-progressing, chasing the wrong measure and living against one's values; for Claude, covers serving the person's actual goal rather than the literal instruction or an easy proxy, never gaming a check such as special-casing tests to make them pass, and keeping its own values fixed. Use when the user feels busy but stuck, suspects they are chasing the wrong thing, or has conflicting goals, or when Claude's task could be satisfied in a way that misses its point."
 trigger: "keep actions true to the real goal and values"
+command: "align goals"
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # ⚙️ Goal Alignment

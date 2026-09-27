@@ -2,8 +2,9 @@
 name: social-cognition
 description: "Builds theory of mind: modelling what another person knows, believes, wants and can see, taking their perspective, explaining behaviour without the usual attribution errors, and understanding group dynamics and social influence. For people, covers understanding why others act as they do and seeing a situation from their side; for Claude, covers modelling what the person knows and can see, writing for their actual level and avoiding projecting its own knowledge onto them. Use when the user is puzzled by someone's behaviour, wants to see another point of view, or asks about group dynamics, or when Claude must judge what the person already knows."
 trigger: "understand what others think, know or believe, or how groups behave"
+command: "read people"
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # 🫂 Social Cognition

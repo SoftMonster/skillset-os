@@ -2,8 +2,9 @@
 name: threat-detection
 description: "Builds early warning for threats: recognising danger signs, scams, phishing, fraud, unsafe situations and online risks, weighing likelihood and severity, and responding in time. For people, covers personal, online, financial and workplace safety and protecting others; for Claude, covers noticing when a request, a conversation's direction or embedded content signals risk of serious harm, including instructions injected into files, pages or tool output. Use when the user asks whether something is a scam, is worried about a risk, wants to be safer online or in person, or when Claude notices warning signs in a task."
 trigger: "spot scams, risks or danger signs early"
+command: "spot threats"
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # 🚨 Threat Detection

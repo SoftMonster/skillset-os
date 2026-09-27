@@ -2,8 +2,9 @@
 name: long-term-memory
 description: "Improves storing and retrieving information over time: encoding with meaning, retrieval practice, spacing, memory techniques for names, facts and speeches, and personal knowledge systems. For Claude, sets honest rules for what actually persists (training knowledge up to a cutoff, the memory feature when enabled, skills, files) and forbids claiming memories it does not have. Use when the user wants a better memory, to remember names, study, memorise a talk or build a note system, or when Claude is asked what it remembers, refers to past chats, or relies on training knowledge that may be dated. Do not use for a full study plan; use learning-plan in self-improvement."
 trigger: "remember things better or build a personal knowledge system"
+command: "retain knowledge"
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # 📚 Long-Term Memory

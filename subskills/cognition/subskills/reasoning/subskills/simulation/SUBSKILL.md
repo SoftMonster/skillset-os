@@ -2,8 +2,9 @@
 name: simulation
 description: "Runs scenarios forward: mental simulation and rehearsal, scenario planning across several futures, role-play of people and conversations, and quantitative simulation in code such as Monte Carlo, with explicit assumptions and ranges. For people, covers rehearsing events, planning for different futures and testing what-ifs; for Claude, covers tracing code or plans step by step before running them, running actual simulations with code, and role-playing others honestly as simulations rather than facts. Use when the user wants to explore what-ifs, plan for different futures, rehearse an event, model risk or outcomes, or run a simulation."
 trigger: "imagine or model how a scenario might play out"
+command: "simulate scenario"
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # 🎲 Simulation
