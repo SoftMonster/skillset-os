@@ -4,7 +4,7 @@ description: "Builds early warning for threats: recognising danger signs, scams,
 trigger: "spot scams, risks or danger signs early"
 command: "spot threats"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # 🚨 Threat Detection
@@ -44,6 +44,12 @@ If someone is in immediate danger, contact emergency services.
 
 - Anxiety produces false alarms; verify before acting on fear alone.
 - Scammers imitate trusted brands and people well; the channel matters more than how genuine it looks.
+
+## Commands
+
+- 🎣 **Pause, then verify** · `spot threats`: Spots scams, risks and danger signs early: notice, pause, assess, verify through a trusted channel, respond.
+  - 🎣 `check for scam`: Checks a message, call or offer for scam signs and says how to verify it safely.
+  - ✅ `verify sender`: Explains how to confirm who sent something through a channel already trusted.
 
 <!-- folder:start -->
 ## This folder

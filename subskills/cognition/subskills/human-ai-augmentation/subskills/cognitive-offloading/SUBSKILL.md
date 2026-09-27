@@ -4,7 +4,7 @@ description: "Guides offloading thinking onto notes, tools and AI: what offloadi
 trigger: "decide what to keep in my head and what to hand to tools or AI"
 command: "offload memory"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # 🧠🤝 Cognitive Offloading
@@ -45,6 +45,12 @@ For making what stays in the head last, see `long-term-memory` in cognition/memo
 
 - Offloading to many places is as bad as none; consolidate.
 - Having it in notes is not the same as knowing it; revisit what matters.
+
+## Commands
+
+- 📤 **Offload storage, keep judgement** · `offload memory`: Decides what to keep in your head and what to hand to tools or AI: offload storage and routine, keep understanding and judgement.
+  - 🗃️ `set up offloading`: Designs a system of notes, reminders and tools for what a person should not hold in their head.
+  - 🧠 `keep in head`: Names what must stay understood by the person, so offloading does not hollow out their skill.
 
 <!-- folder:start -->
 ## This folder

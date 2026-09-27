@@ -4,7 +4,7 @@ description: "Builds listening skill: full attention, open questions, reflecting
 trigger: "listen better and ask better questions"
 command: "listen actively"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # Active listening
@@ -42,6 +42,13 @@ Claude listens the same way: reflect back the person's goal before a long answer
 - Reflecting every sentence sounds robotic; use it at key moments and vary the wording.
 - "I know exactly how you feel" turns the conversation to you; stay with their experience.
 - Listening well is not agreeing; the person can understand fully and still disagree later.
+
+## Commands
+
+- 👂 **Understand, reflect, ask before advising** · `listen actively`: Helps a person listen better: full attention, open questions, reflecting, summarising, listening for needs, asking before advising and allowing silence.
+  - ❓ `ask better questions`: Turns closed or leading questions into open ones for the conversation described.
+  - 🔁 `practise reflecting`: Gives statements to reflect back and feedback on the person's reflections.
+  - 🗓️ `listening practice plan`: Builds a short practice plan to make the techniques habits.
 
 <!-- folder:start -->
 ## This folder

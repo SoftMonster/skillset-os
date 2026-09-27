@@ -3,7 +3,7 @@ name: plan-feature
 description: "Turns a feature idea or ticket into a technical plan: clarified requirements, acceptance criteria, the chosen design with alternatives considered, affected components, risks, and an ordered task breakdown, plus an ADR when a lasting decision is made. Use when the user asks to plan, spec, scope, estimate, break down or design a feature, writes an RFC or design doc, or asks how to approach a change before coding. Do not use for API contracts alone (api-design) or schema design alone (database-design)."
 trigger: "plan, spec or design a feature or technical change before building it"
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # Plan a feature
@@ -65,6 +65,15 @@ Consequences: what gets easier, what gets harder, what we must now watch.
 - Rollout and rollback are the parts most often forgotten and the ones that hurt in production. Always fill them, even with "trivial: revert the commit".
 - "Out of scope" prevents scope creep in review. Include it.
 - Deliver the plan in the reply unless the person asks for a document; offer to save it as a doc or `docs/adr/` file afterwards.
+
+## Commands
+
+- 🗺️ **Need, design, then steps** · `plan feature`: Plans a feature or technical change before building: clarifies context and requirements, chooses a design with alternatives, lists risks, and breaks it into tasks.
+  - 🎯 `define requirements`: Writes the goal, acceptance criteria, assumptions and open questions from what the person has said.
+  - 📐 **Choose the design** · `choose design`: Proposes a design and at least one alternative with trade-offs, then recommends one.
+    - ⚠️ `list risks`: Lists risks with mitigations and a rollout and rollback plan.
+    - 🧾 `write adr`: Records the decision as an architecture decision record.
+  - ✅ `break into tasks`: Splits the work into small, ordered, testable tasks with what is out of scope.
 
 <!-- folder:start -->
 ## This folder

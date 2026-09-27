@@ -3,7 +3,7 @@ name: retire-subskill
 description: "Removes a member (a sub-skill, nested skillset or zip) from the skillset cleanly. It checks that nothing else depends on it, deletes it, and records a one-line restore command in the changelog, leaving the skillset ready to package. Use when the user asks to retire, remove, delete, drop, deprecate or get rid of a skill or sub-skill, says one is obsolete, unused or replaced by another, or wants a retired one back. Do not use to make a sub-skill do or trigger less; use the edit-subskill sub-skill for that."
 trigger: "retire, remove or delete a skill, or bring a retired one back"
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # Retire a sub-skill
@@ -70,6 +70,12 @@ A working copy pulled from an upload has no history before the pull, so this usu
 
 - If `pytest` fails during packaging after a retirement, a test still exercises the sub-skill; it was a dependent, so update it in the same change.
 - Retiring a sub-skill does not touch standalone copies of the same skill the person may still have installed; mention any `pull` reported.
+
+## Commands
+
+- 🌅 **Check dependents, remove cleanly, leave a way back** · `retire subskill`: Retires, removes or deletes a skill after a dry run and settling dependents, and can bring a retired one back.
+  - 🧪 `dry run retire`: Lists what depends on the member before anything is removed.
+  - ♻️ `restore subskill`: Brings a retired sub-skill back from history.
 
 <!-- folder:start -->
 ## This folder

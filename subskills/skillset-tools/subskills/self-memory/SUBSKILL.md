@@ -4,7 +4,7 @@ description: "Keeps the AI's own persistent self-memory for Skillset-OS: turns a
 trigger: "remember, recall, review, export or import what Claude has learned about itself"
 command: "keep self-memory"
 metadata:
-  version: "1.1.1"
+  version: "1.2.0"
 ---
 
 # Self-memory
@@ -113,6 +113,14 @@ Answer "what can you do / what worked / what did you learn" from approved items,
 - Don't record every observation. An item earns its place when it would change how the AI works next time.
 - The screen can't know every name. Always pass the identifiers you know with `--forbid` when reviewing, exporting or running acceptance after a conversation that mentioned them. Its known blind spot is a bare proper name beside a preference verb ("<Name> prefers ..."): with no role word such as "user" or "customer", nothing flags it.
 - If you change the screen's rules, test them on text you did not write while tuning. A rule that scored no false positives on its own examples flagged 86% of 735 sentences built from unrelated skill names.
+
+## Commands
+
+- 🧠 **Remember what improves the AI, never the person** · `keep self-memory`: Remembers, recalls, reviews, exports or imports what Claude has learned about itself, through candidate, screen, approve and index.
+  - 📝 `add memory candidate`: Proposes a lesson, success, failure or other item about the AI as a candidate for review.
+  - ✅ `review memory candidates`: Screens candidates against the user-protection boundary and approves, edits or rejects each.
+  - 📤 `export memory pack`: Writes memory-pack.zip so another AI can take over.
+  - 📥 `import memory pack`: Compares a memory pack with the store and imports only genuinely new items as candidates.
 
 <!-- folder:start -->
 ## This folder

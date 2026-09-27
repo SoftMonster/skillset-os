@@ -3,7 +3,7 @@ name: conflict-mediation
 description: "Guides neutral third-party mediation: preparing the parties, setting ground rules, letting each side be heard, reframing positions into interests, generating options together and recording agreements, while staying impartial. For people, covers mediating between colleagues, team members, friends, family members or children; for Claude, covers helping several people who disagree in a shared conversation or channel, staying even-handed and focusing on the shared problem. Use when the user is asked to mediate or is caught between others in conflict, or when Claude is working with several people who disagree. For the user's own conflicts, use conflict-resolution in interpersonal."
 trigger: "mediate between two people or groups in a dispute"
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # 🕊️ Conflict Mediation
@@ -51,6 +51,13 @@ To prepare one side's own hard conversation, use `difficult-conversations` in in
 
 - Rushing to solutions before people feel heard fails.
 - Neutral does not mean passive; the mediator firmly holds the process.
+
+## Commands
+
+- ⚖️ **Neutral, heard, both needs met** · `mediate conflict`: Mediates between two people or groups: prepares, opens, hears each story, finds interests, generates options, agrees and follows up.
+  - 👂 `hear both sides`: Lets each side state their account and restates it until they agree it is fair.
+  - 🎯 `find interests`: Finds the needs under each side's position.
+  - 🤝 `draft agreement`: Writes options that meet both sides' interests and a clear agreement with follow-up.
 
 <!-- folder:start -->
 ## This folder

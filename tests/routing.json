@@ -1,5 +1,5 @@
 {
-  "about": "Routing fixture: realistic prompts and the member each should reach (null: the skillset should not open). 'also' lists other acceptable members. Grade blind with scripts/routing_eval.py.",
+  "about": "Routing fixture: realistic prompts and the member each should reach (null: the skillset should not open). 'also' lists other acceptable members. 'needs' marks a request that needs several members: every entry must be opened, and an entry may give alternatives separated by '|'. Grade blind with scripts/routing_eval.py.",
   "prompts": [
     {
       "id": 1,
@@ -175,7 +175,8 @@
       "prompt": "what are you actually able to do, and what are your limits?",
       "expect": "cognition/memory-context/self-model",
       "also": [
-        null
+        null,
+        "skillset-tools/self-memory"
       ]
     },
     {
@@ -282,12 +283,20 @@
     {
       "id": 53,
       "prompt": "run the universal skill curriculum exam on yourself",
-      "expect": "cognition/metacognition/universal-skill-curriculum-exam"
+      "expect": "cognition/metacognition/universal-skill-curriculum-exam",
+      "needs": [
+        "cognition/metacognition/exam-regression-battery",
+        "cognition/metacognition/universal-skill-curriculum-exam"
+      ]
     },
     {
       "id": 54,
       "prompt": "how good are you at your skills really? test yourself and score it",
-      "expect": "cognition/metacognition/universal-skill-curriculum-exam"
+      "expect": "cognition/metacognition/universal-skill-curriculum-exam",
+      "needs": [
+        "cognition/metacognition/exam-regression-battery",
+        "cognition/metacognition/universal-skill-curriculum-exam"
+      ]
     },
     {
       "id": 55,
@@ -384,6 +393,72 @@
       "expect": "command-line",
       "also": [
         "self-improvement/habit-building"
+      ]
+    },
+    {
+      "id": 72,
+      "prompt": "plan this feature properly, then write the tests for it before I build it",
+      "expect": "software-dev/plan-feature",
+      "needs": [
+        "software-dev/plan-feature",
+        "software-dev/write-tests"
+      ]
+    },
+    {
+      "id": 73,
+      "prompt": "I found a security hole in my team lead's code; help me confirm it and tell them without it going badly",
+      "expect": "software-dev/security-review",
+      "needs": [
+        "software-dev/security-review",
+        "interpersonal/feedback|interpersonal/difficult-conversations"
+      ]
+    },
+    {
+      "id": 74,
+      "prompt": "review this pull request and check it for SQL injection",
+      "expect": "software-dev/code-review",
+      "needs": [
+        "software-dev/code-review",
+        "software-dev/security-review"
+      ]
+    },
+    {
+      "id": 75,
+      "prompt": "help me choose between two job offers and then negotiate the one I pick",
+      "expect": "self-improvement/decision-making",
+      "needs": [
+        "self-improvement/decision-making",
+        "interpersonal/negotiation"
+      ]
+    },
+    {
+      "id": 76,
+      "prompt": "work out why this endpoint is so slow, fix it, and write up what you changed for the team",
+      "expect": "software-dev/performance-tuning",
+      "also": [
+        "software-dev/debug-issue"
+      ],
+      "needs": [
+        "software-dev/performance-tuning|software-dev/debug-issue",
+        "software-dev/technical-docs"
+      ]
+    },
+    {
+      "id": 77,
+      "prompt": "set me up a daily reading habit and a Sunday review to check how it's going",
+      "expect": "self-improvement/habit-building",
+      "needs": [
+        "self-improvement/habit-building",
+        "self-improvement/reflect-and-review"
+      ]
+    },
+    {
+      "id": 78,
+      "prompt": "add a skill for writing meeting minutes, then give me the updated skillset for GitHub",
+      "expect": "skillset-tools/write-subskill",
+      "needs": [
+        "skillset-tools/write-subskill",
+        "sync-skillset"
       ]
     }
   ]

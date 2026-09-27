@@ -4,7 +4,7 @@ description: "Improves storing and retrieving information over time: encoding wi
 trigger: "remember things better or build a personal knowledge system"
 command: "retain knowledge"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # 📚 Long-Term Memory
@@ -46,6 +46,12 @@ Be exact about what actually persists, because claiming a memory it does not hav
 - Highlighting and re-reading feel productive and do little.
 - Cramming works for tomorrow and fails for next month.
 - Memory worries that affect daily life, especially new ones, are worth discussing with a doctor.
+
+## Commands
+
+- 📚 **Recall beats rereading** · `retain knowledge`: Remembers things better or builds a personal knowledge system: retrieval practice, spacing and linking; says plainly what really persists.
+  - 🔁 `spaced repetition`: Builds a spaced-repetition schedule and recall questions for what must be remembered.
+  - 🗃️ `build knowledge base`: Designs a personal notes system that links ideas and gets reviewed.
 
 <!-- folder:start -->
 ## This folder

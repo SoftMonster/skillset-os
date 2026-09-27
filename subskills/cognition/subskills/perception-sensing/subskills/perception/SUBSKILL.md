@@ -4,7 +4,7 @@ description: "Improves how information is taken in and interpreted: separates ob
 trigger: "notice details and read situations or inputs accurately"
 command: "notice details"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # 👁️ Perception
@@ -60,6 +60,12 @@ Good: "The file didn't come through; could you attach it again? Meanwhile, the u
 - Confidence in a perception is not evidence it is right; the vivid first impression is the one most shaped by expectation.
 - Reading people's emotions from faces alone is unreliable; context and asking beat guessing.
 - Do not over-correct into paralysis; one alternative reading is usually enough.
+
+## Commands
+
+- 🔍 **What's there, not what's expected** · `notice details`: Notices details and reads inputs accurately: registers, separates observation from interpretation, checks expectations, notices absences and anomalies, and reads twice.
+  - 👀 `observe only`: Describes what is present without interpretation, then lists possible interpretations separately.
+  - 🕳️ `spot anomalies`: Finds what is missing, odd or inconsistent in the input.
 
 <!-- folder:start -->
 ## This folder

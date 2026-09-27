@@ -3,7 +3,7 @@ name: implement-feature
 description: "Implements code changes that fit the existing codebase: follows its conventions, works in small verified increments, adds tests alongside, handles errors and edge cases, and leaves the code runnable and linted. Use when the user asks to write, build, add, implement, code or finish a feature, function, endpoint, component, script or ticket. Do not use for fixing a reported bug (debug-issue) or for restructuring without behaviour change (refactor-code)."
 trigger: "write, build or implement code, a feature or a script"
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # Implement a feature
@@ -58,6 +58,15 @@ Ran: ruff, mypy, pytest (142 passed). Not verified: S3 upload path (needs creden
 - Do not reformat or refactor unrelated code in the same change; it hides the real diff. Suggest it separately (`refactor-code`).
 - Match the existing language version. Using syntax newer than the project targets (e.g. `match` in Python 3.9) breaks CI.
 - When editing an uploaded file, edit the file itself and keep everything you did not need to change byte-for-byte identical.
+
+## Commands
+
+- 🧩 **Fit in, build small, test alongside** · `implement feature`: Writes the code for a feature or script: learns where it fits, confirms the target, builds in small verified increments with tests, hardens it, and delivers a summary.
+  - 📍 `confirm target`: Restates what will be built, the acceptance criteria and where it lives in the codebase, and asks only if a choice changes the design.
+  - 🧱 **Build in increments** · `build increment`: Implements the next smallest working slice with its test, runs it, and repeats until the feature is complete.
+    - 🧪 `test as you go`: Writes or updates a test alongside each slice so every step is proven before the next.
+  - 🛡️ `harden code`: Walks the hardening checklist: input validation, errors, edge cases, logging, security and performance basics.
+  - 📦 `deliver feature`: Summarises what changed, how to run and test it, and any follow-ups, with files presented.
 
 <!-- folder:start -->
 ## This folder

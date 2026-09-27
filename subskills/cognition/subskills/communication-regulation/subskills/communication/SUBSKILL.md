@@ -4,7 +4,7 @@ description: "Builds clear communication: knowing the audience and purpose, lead
 trigger: "explain or write clearly for the audience"
 command: "communicate clearly"
 metadata:
-  version: "1.0.2"
+  version: "1.1.0"
 ---
 
 # 🗣️ Communication
@@ -50,6 +50,13 @@ Transparency (being open about reasoning, limits and mistakes) lives in `safety-
 
 - Clear to the writer is not clear to the reader; test on someone else.
 - Over-structured text (every line a bullet) is harder to follow than good prose.
+
+## Commands
+
+- 🗣️ **Point first, plain words, reader's level** · `communicate clearly`: Explains or writes clearly for the audience: purpose, point first, structure, plain language, right length, and a check of understanding. Paste the text or say the message and the reader.
+  - ✂️ `make it clearer`: Rewrites the given text point-first in plain words at the reader's level, keeping every fact.
+  - 📏 `shorten text`: Cuts the text to the length the reader needs without losing the point.
+  - 👥 `adapt for audience`: Rewrites the same message for a named audience: expert, beginner, child, executive.
 
 <!-- folder:start -->
 ## This folder

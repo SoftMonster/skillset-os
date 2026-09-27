@@ -4,7 +4,7 @@ description: "Builds real understanding of meaning: concepts and how they relate
 trigger: "understand concepts deeply or pin down what something means"
 command: "parse meaning"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # 🧩 Semantic Understanding
@@ -42,6 +42,12 @@ In conversations, when a disagreement will not resolve, check definitions: peopl
 
 - Fluency is not understanding: being able to repeat an explanation is different from being able to use it.
 - Analogies illuminate and mislead; say where one breaks down.
+
+## Commands
+
+- 🔤 **The meaning, not just the words** · `parse meaning`: Understands a concept deeply or pins down what something means: simple explanation, examples and non-examples, a map, application and checked terms.
+  - 🧒 `explain concept`: Explains the concept simply and gives examples and non-examples.
+  - 📖 `define term`: Pins down what a term means in this context, with the boundary cases.
 
 <!-- folder:start -->
 ## This folder

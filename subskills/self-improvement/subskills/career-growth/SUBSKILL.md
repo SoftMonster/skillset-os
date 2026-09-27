@@ -4,7 +4,7 @@ description: "Plans career moves: assesses strengths and gaps against a target r
 trigger: "grow my career, change jobs or ask for a promotion or raise"
 command: "grow career"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # Career growth
@@ -50,6 +50,14 @@ The skillset is Claude's development plan. Compare what the person keeps asking 
 - Salary figures change and vary by place; suggest current sources rather than quoting numbers from memory.
 - Do not assume they want to climb; some want depth, balance or meaning. Ask.
 - Burnout-driven career change: check energy and wellbeing first; the problem may be the load, not the field.
+
+## Commands
+
+- 📈 **Know the bar, close gaps visibly** · `grow career`: Grows a career: finds the situation, then grows in role, changes direction, finds a job, or asks for a promotion or raise with evidence.
+  - 🎯 `know the bar`: Defines what the next level requires and the person's gaps against it.
+  - 💰 `ask for raise`: Prepares the evidence and the conversation for a promotion or raise.
+  - 🔀 `change career`: Plans a change of direction: options, tests and a first step.
+  - 🔎 `find job`: Plans a job search: targets, CV, applications and networking.
 
 <!-- folder:start -->
 ## This folder

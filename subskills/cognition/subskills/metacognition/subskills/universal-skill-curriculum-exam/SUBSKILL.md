@@ -4,7 +4,7 @@ description: "Conduct a comprehensive self-assessment of an AI against a large, 
 trigger: "run the skill curriculum exam, or test and score Claude's own skills and capability gaps"
 command: "run skill-exam"
 metadata:
-  version: "1.2.1"
+  version: "1.3.2"
 ---
 
 # Universal Skill Curriculum Exam
@@ -406,7 +406,7 @@ capabilities.
 
 Here the exam is how the AI monitors its own performance. One run is a snapshot; the self-memory turns snapshots into a trend.
 
-- **Inventory (Phase 1).** The skills actually installed are Skillset-OS's members: list them with `python3 <top>/scripts/skillset.py tree` and inspect any with `contents` or `open`. Most of the curriculum's 922 capabilities are not installed here; say so rather than scoring them as present.
+- **Inventory (Phase 1).** The skills actually installed are Skillset-OS's members: list them with `python3 <top>/scripts/skillset.py tree` and inspect any with `contents` or `open`. Most of the curriculum's 922 capabilities are not installed here; say so rather than scoring them as present. Before the clock starts, run `python3 scripts/card_map.py plan`: it lists the cards mapped to the member that covers each one (`references/card-map.json`, exact or checked by hand), which are the cards the run can test and score against that member's instructions. Cards appear by id and name, because some ids repeat. `card_map.py suggest` only guesses from shared name words; never test or score a suggestion as mapped. To map more cards, check each suggestion by hand, add it with a reason, and run `card_map.py check`; a suggestion is right as given only about one time in five (EXP-0009). Record a card no member covers as `rejected` with the reason, so it is not suggested again; rejected cards are never tested or scored. Cards that share no name word with a member are never suggested, so reviewing them means reading the curriculum by domain.
 - **Start from reproduced evidence.** Run `exam-regression-battery` in this group first, so earlier results are re-executed rather than remembered. Every result claimed as a pass cites the battery check that reproduced it in this run, and anything no check reproduces is reported as untested; evidence kept outside the battery decays between runs.
 - **Before starting,** read `memory/SELF.md` and run `python3 <top>/scripts/memory.py search exam` for earlier runs, their retest priorities and known limitations, so this run can focus on what changed.
 - **Self-memory candidates (Phase 8)** go through `skillset-tools/self-memory`: add each as a candidate with `memory.py add`, never approve inside the timed exam, and screen it against the user-protection boundary. Nothing from the exam becomes memory until it is reviewed after marking.
@@ -449,6 +449,12 @@ knowledge question is not evidence that a tool was executed. Passing a simulated
 exercise is not evidence of live-system competence.
 
 The strongest evidence is reproducible execution plus independent verification.
+
+## Commands
+
+- 🎓 **Thirty minutes, truthful evidence** · `run skill-exam`: Runs the timed Universal Skill Curriculum Exam on Claude's own skills with evidence only, then stops and submits; self-marks only when authorised.
+  - ✍️ `mark exam`: Marks a submitted exam against the curriculum, only with the person's authorisation.
+  - 🕳️ `find capability gaps`: Lists capability gaps from exam results as candidates for training.
 
 <!-- folder:start -->
 ## This folder

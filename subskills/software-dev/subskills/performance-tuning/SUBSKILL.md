@@ -4,7 +4,7 @@ description: "Speeds up code and systems by measuring first: establishes a bench
 trigger: "make code, a query or an app faster or use less memory"
 command: "tune performance"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # Performance tuning
@@ -55,6 +55,16 @@ Measure with Lighthouse or WebPageTest and work on Core Web Vitals (LCP, INP, CL
 - Caches without invalidation plans become correctness bugs. Write down when each entry becomes stale.
 - Timing in a noisy sandbox varies. Repeat runs and compare medians, and treat differences under about 10% as noise.
 - For a single slow SQL query, use `database-design`, which covers reading query plans.
+
+## Commands
+
+- ⚡ **Measure, fix the hotspot, prove it** · `tune performance`: Makes code, a query or an app faster or leaner: sets a target, benchmarks, profiles, fixes the real hotspot in payoff order, re-measures, and reports the gain.
+  - 🎯 `set performance-target`: Agrees the metric (latency, throughput, memory, load time) and the target before changing anything.
+  - 📊 **Measure** · `benchmark code`: Builds a repeatable benchmark on realistic data and records the baseline.
+    - 🔥 `profile hotspot`: Profiles to find where time or memory actually goes, rather than guessing.
+  - 🔧 `fix hotspot`: Applies fixes in typical payoff order: algorithm, I/O and queries, caching, then micro-optimisation.
+  - 📈 `report speedup`: Re-measures on the same benchmark and reports before, after and what changed.
+  - 🌐 `speed up frontend`: Applies the frontend specifics: bundle size, rendering, images, caching and Core Web Vitals.
 
 <!-- folder:start -->
 ## This folder

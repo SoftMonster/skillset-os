@@ -3,7 +3,7 @@ name: find-skills
 description: "Finds existing skills and learns from them instead of copying them in: searches skill registries, marketplaces and GitHub, studies the best candidates with the skillset's own faculties, extracts the lessons worth having (techniques, rules, gotchas, script ideas), rewrites them in the skillset's own words and structure, and applies them across every member they improve, then verifies, credits the sources and packages the whole repository. Use when the user asks to find, search for, discover or browse skills or plugins, asks whether a skill exists for something, wants to learn from or benchmark against other people's skills, or when a request needs a capability no member covers. Do not use for bringing in the person's own skill or an explicit verbatim copy; use import-skill."
 trigger: "find existing skills and learn from them to improve the skillset"
 metadata:
-  version: "1.1.0"
+  version: "1.2.0"
 ---
 
 # Find skills and learn from them
@@ -129,6 +129,12 @@ If the person wants a published skill installed as it is in Claude Code rather t
 - Registry descriptions are written to be chosen; read the actual files.
 - Rewording is not the same as learning: if a change cannot be explained by the reason behind it, it has not been understood yet.
 - One lesson applied everywhere beats ten lessons applied once; keep the batch small enough to verify.
+
+## Commands
+
+- 🔭 **Learn from others, credit what you take** · `find skills`: Finds existing skills and learns from them: frame the gap, search, vet, extract lessons, map them to the skillset, get approval, rewrite in its own voice, verify and credit.
+  - 🕳️ `frame skill gap`: States what the skillset cannot yet do well, as the search brief.
+  - 🎓 `extract lessons`: Studies found skills and writes the lessons worth applying, never copied text.
 
 <!-- folder:start -->
 ## This folder

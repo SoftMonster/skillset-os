@@ -3,7 +3,7 @@ name: attention
 description: "Manages where focus goes: chooses what deserves attention, filters distraction, sustains focus in blocks, notices drift and returns deliberately. For people, covers concentration, phone and notification distraction, deep work, mind-wandering and restoring depleted attention; for Claude, covers attending to what was actually asked, weighting the most important instructions and details, and holding the thread through long or dense contexts. Use when the user cannot concentrate, is constantly distracted, wants deep focus or attention training, or when Claude faces a long task where key details could be lost. Do not use for scheduling a week; use plan-and-prioritise in self-improvement."
 trigger: "focus, concentrate or stop getting distracted"
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # 🎯 Attention
@@ -48,6 +48,12 @@ Point limited focus at what matters, hold it there, and notice when it slips. Th
 - Multitasking feels productive and measurably is not, for anything demanding.
 - Persistent inability to focus that affects work or life may deserve a conversation with a doctor; do not diagnose.
 - For planning what to focus on this week, use `plan-and-prioritise` in self-improvement.
+
+## Commands
+
+- 🎯 **Choose, guard, return** · `improve focus`: Improves focus: finds the leaks, shapes the environment, sets focus blocks, trains the return without blame, and restores.
+  - 🚰 `find distractions`: Finds where attention leaks and how to plug each.
+  - ⏲️ `plan focus block`: Sets up a focus block: task, time, environment and what to do when attention drifts.
 
 <!-- folder:start -->
 ## This folder

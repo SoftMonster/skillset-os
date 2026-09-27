@@ -3,7 +3,7 @@ name: habit-building
 description: "Designs habits that stick and dismantles unwanted ones: starts one tiny behaviour, anchors it to an existing cue, shapes the environment, sets up tracking and a never-miss-twice rule, and for unwanted habits maps cue, craving and payoff to find a substitute and add friction. Use when the user wants to start exercising, reading, meditating, journaling or any routine, stop scrolling, snacking or another habit, build a morning or evening routine, or keeps failing at consistency. For dependence or compulsions causing serious harm, respond with care and point to professional support rather than a habit plan. Also turns repeated corrections of Claude into lasting skill edits."
 trigger: "build a new habit or break a bad one"
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # Habit building
@@ -58,6 +58,12 @@ Claude's habits live in its skills, since nothing else carries over between chat
 - No shaming language about misses; guilt makes quitting more likely.
 - If a habit to break is substance use, gambling, self-harm, binge or purge behaviour, or feels out of control, this is not a habit plan. Respond with care and suggest professional or specialist support.
 - Exercise habits: start where the person is; suggest they check with a doctor if they have health conditions.
+
+## Commands
+
+- 🔗 **Tiny, tied to a cue, never miss twice** · `build habit`: Builds a new habit or breaks a bad one: pick one, shrink it, anchor it, shape the environment, track and recover, grow it.
+  - 🚭 `break habit`: Plans how to break a bad habit by changing cues, friction and replacement.
+  - 🪪 `make habit card`: Writes a one-card summary of the habit: cue, tiny action, reward and recovery.
 
 <!-- folder:start -->
 ## This folder

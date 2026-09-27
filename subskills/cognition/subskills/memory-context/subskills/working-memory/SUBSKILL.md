@@ -4,7 +4,7 @@ description: "Manages information held in mind right now: chunks it, externalise
 trigger: "keep track of several things at once or think with less overload"
 command: "hold context"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # 🧠 Working Memory
@@ -49,6 +49,12 @@ Claude's context can hold a lot, but attention across a long, crowded context is
 
 - Overload feels like stupidity; it usually is not. Reducing load is the fix.
 - ADHD, stress and poor sleep all reduce working memory; externalising helps regardless of cause, and persistent problems are worth raising with a doctor.
+
+## Commands
+
+- 📝 **Write it down, free your head** · `hold context`: Keeps track of several things at once: spots overload, externalises, chunks and sequences, protects capacity.
+  - 🧺 `brain dump`: Captures everything the person is holding into one written list, then groups it.
+  - 🧩 `chunk it`: Breaks a complex task into chunks and a sequence that fits in the head.
 
 <!-- folder:start -->
 ## This folder

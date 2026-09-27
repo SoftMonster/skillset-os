@@ -4,7 +4,7 @@ description: "Builds a mental model of relationships: who is involved, their rol
 trigger: "map the people, roles and dynamics in a situation"
 command: "map relationships"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # 🧑‍🤝‍🧑 Relationship Modelling
@@ -45,6 +45,11 @@ Example map row: *Sam → Priya: peers, competed for the same role last year, po
 - A map is a snapshot; relationships change, so update it.
 - Mapping people to manipulate them is not the aim; use it to act fairly and effectively.
 - For improving one relationship, use `close-relationships` or `workplace-relationships` in interpersonal.
+
+## Commands
+
+- 🕸️ **Map who's involved first** · `map relationships`: Maps the people, roles and dynamics in a situation, then predicts and plans.
+  - 🗺️ `map stakeholders people`: Lists the people involved and the links, power and history between them.
 
 <!-- folder:start -->
 ## This folder

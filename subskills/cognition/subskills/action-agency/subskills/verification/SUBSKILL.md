@@ -4,7 +4,7 @@ description: "Checks work against what it should achieve: defines done, tests ag
 trigger: "check work before calling it done"
 command: "verify work"
 metadata:
-  version: "1.1.0"
+  version: "1.2.0"
 ---
 
 # 🧪 Verification
@@ -48,6 +48,13 @@ Before reporting any task as done:
 
 - Verifying with the same method that produced the error repeats the error.
 - Checking takes time; scale it to stakes (see `proportionality` in executive-function).
+
+## Commands
+
+- ✅ **Define done, check it another way** · `verify work`: Checks work before calling it done: defines done first, checks independently, checks claims not just output, tests edges, and reports honestly.
+  - 🏁 `define done`: Writes the concrete conditions that make this task complete, before checking.
+  - 🔀 `check independently`: Verifies by a different route than the one that produced the result.
+  - 🧾 `report verification`: Reports what was checked, how, what passed and what was not verified.
 
 <!-- folder:start -->
 ## This folder

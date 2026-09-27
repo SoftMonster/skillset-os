@@ -4,7 +4,7 @@ description: "Matches response to stakes: sizes effort, detail, emotional reacti
 trigger: "keep effort, reactions and caution in proportion"
 command: "keep proportion"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # 🚦 Proportionality
@@ -40,6 +40,12 @@ Ask of any response: **what is actually at stake, how likely is the bad outcome,
 
 - Proportionate is not minimal; high stakes justify thoroughness.
 - Stakes are subjective; ask what matters to the person.
+
+## Commands
+
+- ⚖️ **Effort sized to stakes** · `keep proportion`: Sizes effort, detail and caution to what is actually at stake.
+  - 📐 `size effort`: Says how much effort and detail a task deserves and why.
+  - 🌡️ `check overreaction`: Checks whether a reaction or precaution is in proportion to the real risk.
 
 <!-- folder:start -->
 ## This folder

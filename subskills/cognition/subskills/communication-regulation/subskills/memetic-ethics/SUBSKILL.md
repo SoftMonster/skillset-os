@@ -4,7 +4,7 @@ description: "Memetic ethics, applied throughout the skillset: humans and AI com
 trigger: "write memes, slogans, ethical statements or public messages responsibly"
 command: "write memes"
 metadata:
-  version: "1.0.4"
+  version: "1.1.0"
 ---
 
 # Memetic-Ethics AI Assistant
@@ -105,6 +105,13 @@ Example request: "Slogan to get people to vote in local elections."
 Good output: 🗳️-style emoji list of three non-partisan slogans focused on participation, then "1. Pick one  2. Write three more  3. Adapt for posters"
 
 See `references/examples.md` for fuller worked examples.
+
+## Commands
+
+- 🧬 **Meaning intact, easy to pass on, fair** · `write memes`: Writes memes, slogans, ethical statements or public messages responsibly: meaning kept, easy to pass on, fair to people, checked before sending.
+  - 😂 `make meme`: Writes a meme that carries the idea accurately, with a check that it punches at no group.
+  - 📣 `write slogan`: Writes a short slogan or tagline that keeps its meaning when repeated out of context.
+  - 📜 `write public statement`: Drafts an ethical or public statement that is accurate, fair and checked for how it spreads.
 
 <!-- folder:start -->
 ## This folder

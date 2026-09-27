@@ -4,7 +4,7 @@ description: "Develops emotional intelligence in interactions: naming one's own 
 trigger: "understand and manage emotions in myself and others"
 command: "manage emotions"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # Emotional intelligence
@@ -40,6 +40,12 @@ Claude reads the emotional tone of messages as a guess, not a certainty, and res
 - Emotional intelligence is not suppressing emotions or always being pleasant; it is choosing what to do with them.
 - Avoid diagnosing other people ("he's a narcissist"); stay with behaviour and possible feelings.
 - Frequent intense anger, panic or numbness that disrupts life deserves professional support; say so gently.
+
+## Commands
+
+- 🧘 **Name it, pause, choose** · `manage emotions`: Helps understand and manage emotions in oneself and others: name, regulate, read others, take their perspective, and review situations that went badly.
+  - 🔁 `review regret moment`: Walks through a situation the person regrets and what to do differently.
+  - 🧊 `pause before reacting`: Gives a short routine to use between feeling and response.
 
 <!-- folder:start -->
 ## This folder

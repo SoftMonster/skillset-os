@@ -4,7 +4,7 @@ description: "Turns signals into updated behaviour: notices feedback (explicit c
 trigger: "learn from results, mistakes and reactions faster"
 command: "process feedback"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # 👀 Feedback Processing
@@ -45,6 +45,12 @@ Act → Observe result → Compare with expectation → Judge the signal → Upd
 - Survivorship and silence: missing feedback (people who left, results never measured) can matter most.
 - Metrics can be gamed or be the wrong measure; check they track the real goal.
 - Do not wait for perfect feedback; act on the best available signal and keep watching.
+
+## Commands
+
+- 📡 **Notice, weigh, update in proportion** · `process feedback`: Learns from results, mistakes and reactions faster: notices the signal, judges its weight, updates in proportion and closes the loop.
+  - ⚖️ `weigh feedback`: Judges how much a piece of feedback should change things and why.
+  - 🔄 `close feedback loop`: Turns feedback into one change and a check that it worked.
 
 <!-- folder:start -->
 ## This folder

@@ -3,7 +3,7 @@ name: apps
 description: "One skill holding twenty everyday apps that run inside the chat, each opened by a short command word: weather, calc, define, translate, show (browse a web page as Markdown), feed (RSS), watch (page changes), pics (image search), near (places and routes), score (sports), pkg (npm, PyPI, crates.io), clone (public GitHub repositories), drive (Google Drive), inbox (email and calendar), sheet (spreadsheets), sql, pdf, img (image editing), ed (line editor) and zip (archives). Use when a message starts with one of those command words, or when the user asks for one of those app jobs by name. Do not use for running real programs; nothing here installs or keeps running software."
 trigger: "run apps like weather, calc, sheet or sql"
 metadata:
-  version: "1.1.1"
+  version: "1.2.0"
 ---
 
 # Apps
@@ -460,6 +460,34 @@ File layout:
 3. After the card, add one or two practical lines ("rain after 3pm, take an umbrella") without repeating every number. If `weather_fetch` is missing, use `web_search` and cite the source.
 
 **Gotchas:** Climate and historical weather are knowledge questions, not this command.
+
+## Commands
+
+- 📱 **One skill, twenty apps** · `launch app`: Opens one of the twenty in-chat apps by its command word; the app's section says how. Type the word with its argument, such as `weather Staines` or `calc 2^10`.
+  - 🌍 **Look it up** · `lookup apps`: The information apps; type the word then what to look up.
+    - ☀️ `weather`: Forecast for a place: `weather <place>`, dated to the day asked.
+    - 🧮 `calc`: Calculates, solves, converts or plots: `calc 15% of 240`, `convert 5 miles to km`.
+    - 📖 `define`: Defines a word or gives synonyms: `define serendipity`, `syn happy`.
+    - 🌐 `translate`: Translates a phrase: `translate good morning to Japanese`.
+    - 🖼️ `pics`: Image search: `pics <subject>`.
+    - 📍 `near`: Places and routes: `near coffee`, `route <from> to <to>`.
+    - 🏆 `score`: Sports scores, tables and fixtures: `score arsenal`, `table epl`.
+  - 🌐 **Read the web** · `web apps`: Browsing apps that work from links the person sent or a search returned.
+    - 📰 `show page`: Renders a web page as Markdown: type `show` and a URL, then `show 3` for a numbered link.
+    - 📡 `feed`: Reads an RSS feed: `feed <url>`, then `read 2`.
+    - 👀 `watch page`: Compares a page with its last copy in this chat: `watch <url>`.
+  - 🧑‍💻 **Code and packages** · `code apps`: Package and repository apps.
+    - 📦 `pkg`: Looks up a package on npm, PyPI or crates.io: `pkg requests`.
+    - 🐙 `clone`: Clones a public GitHub repository into the sandbox: `clone owner/repo`.
+  - 🗂️ **Your files and accounts** · `file apps`: Apps for documents, data and connected accounts; changes happen on copies.
+    - 📊 `sheet`: Opens or makes a spreadsheet and edits it by command: `sheet budget.xlsx`.
+    - 🧮 `sql`: Runs SQL on uploaded data files: `sql SELECT * FROM data LIMIT 5`.
+    - 📄 `pdf`: Reads, merges, splits or fills a PDF: `pdf merge a.pdf b.pdf`.
+    - 🎨 `img`: Edits an image: `img resize photo.png 50%`.
+    - 📝 `ed`: Line-edits a text file: `ed notes.txt`.
+    - 🗜️ `zip`: Packs or unpacks archives: `zip folder`, `unzip file.zip`.
+    - 📬 `inbox`: Email and calendar through a connector: `inbox`, `cal today`, `free tomorrow`.
+    - 💽 `drive`: Google Drive through a connector: `drive search budget`.
 
 <!-- folder:start -->
 ## This folder

@@ -3,7 +3,7 @@ name: supporting-others
 description: "Helps the user support someone going through a hard time: what to say and not say, listening without fixing, practical help, supporting through grief, illness, breakups or stress, recognising when professional help or urgent help is needed, and looking after their own limits as a supporter. Use when the user asks how to comfort or help someone, what to say to someone grieving, sick or depressed, or is worried about a friend or family member. Also guides how Claude supports a person who is struggling."
 trigger: "support a friend, partner or colleague who is struggling"
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # Supporting others
@@ -45,6 +45,13 @@ When the person themselves is struggling, Claude uses the same approach: acknowl
 
 - The supporter may be the one needing support; watch for that and respond to them.
 - Do not promise confidentiality around risk to life, and do not tell them crisis services will or will not involve anyone; that varies.
+
+## Commands
+
+- 🫶 **Acknowledge, offer specifically, keep showing up** · `support friend`: Helps support a friend, partner or colleague who is struggling: understand, check for urgent risk, what to say, what to do, and look after the supporter.
+  - 💬 `what to say`: Suggests words that acknowledge rather than fix, for the situation described.
+  - 🎁 `offer practical help`: Turns "let me know if you need anything" into specific offers.
+  - 🔋 `care for supporter`: Helps the supporter protect their own energy and wellbeing.
 
 <!-- folder:start -->
 ## This folder

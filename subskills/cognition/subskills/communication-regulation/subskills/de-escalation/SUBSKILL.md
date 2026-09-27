@@ -3,7 +3,7 @@ name: de-escalation
 description: "Calms heated situations: stays calm and safe, listens and acknowledges feelings, lowers intensity with voice, pace and words, finds what can be agreed, offers choices and knows when to step away or get help. For people, covers angry customers, family arguments, road rage, public confrontations and tense meetings; for Claude, covers responding to frustrated, angry or abusive messages without mirroring the heat, becoming defensive or becoming submissive, and keeping the conversation constructive. Use when the user must handle an angry or aggressive person, a situation is getting heated, or when the person talking to Claude is upset with it."
 trigger: "calm down an angry person or a tense situation"
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # 🧯 De-escalation
@@ -41,6 +41,12 @@ Bring the heat down so people can think again. When someone is flooded with ange
 
 - Explaining why they are wrong while they are flooded escalates; timing matters.
 - De-escalation is not appeasement; the outcome can still be "no".
+
+## Commands
+
+- 🧊 **Calm, acknowledge, lower the heat** · `calm situation`: Calms an angry person or tense situation: safety first, regulate yourself, listen and acknowledge, lower intensity, find agreement, offer choices, know when to stop.
+  - 🧑 **For you** · `calm someone down`: Gives a person the words and steps to calm someone angry in front of them, now.
+  - 🤖 **For Claude** · `calm conversation`: Claude lowers the temperature of a heated exchange with the person, acknowledging before answering.
 
 <!-- folder:start -->
 ## This folder

@@ -4,7 +4,7 @@ description: "Keeps work on track and improving: sets checkpoints, monitors for 
 trigger: "catch drift and errors as I go and keep improving"
 command: "correct course"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # 🔄 Continuous Self-Correction
@@ -48,6 +48,12 @@ For fixing a specific error once found, use `error-correction` in action-agency.
 
 - Constant correction without a goal becomes fiddling; tie every correction to the criteria.
 - Improvements that are not captured in a system are forgotten.
+
+## Commands
+
+- 🧭 **Catch drift early, carry one lesson** · `correct course`: Catches drift and errors as work goes, and improves across tasks: a fast loop of checkpoints, and a slow loop of retrospectives with one change that sticks.
+  - ⏱️ **Fast loop** · `check drift`: Runs the fast loop now: compares progress with the goal at a checkpoint and corrects small and early.
+  - 🐢 **Slow loop** · `run retrospective`: Runs the slow loop: what worked, what did not, and one change to carry forward, then checks it worked.
 
 <!-- folder:start -->
 ## This folder

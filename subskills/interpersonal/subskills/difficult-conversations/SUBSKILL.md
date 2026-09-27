@@ -4,7 +4,7 @@ description: "Prepares the user for a conversation they dread: clarifies the goa
 trigger: "prepare for or handle a difficult conversation"
 command: "prepare conversation"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # Difficult conversations
@@ -55,6 +55,13 @@ For a conversation between two other people where the user is the neutral go-bet
 - Scripts help start, but the conversation will go off-script; the goal and the listening matter more than the words.
 - If they fear for their safety raising something, safety comes first: do not coach them into a confrontation; point to specialist support.
 - Ending a conversation to cool down is allowed; agree a time to return.
+
+## Commands
+
+- 🗝️ **Goal clear, facts first, listen** · `prepare conversation`: Prepares for or handles a difficult conversation: clarify the goal, separate facts from story, draft the opener, anticipate their side, plan the setting and rehearse.
+  - 📝 `fill prep sheet`: Completes the prep sheet for the conversation with the person.
+  - 🎬 `draft opener`: Writes the first two sentences, fact-based and non-blaming.
+  - 🎭 `rehearse conversation hard`: Rehearses the conversation, playing the other person realistically.
 
 <!-- folder:start -->
 ## This folder

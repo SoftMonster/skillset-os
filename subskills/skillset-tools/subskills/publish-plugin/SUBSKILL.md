@@ -4,7 +4,7 @@ description: "Publishes the skillset as a Claude plugin and lists it in the Clau
 trigger: "publish, release or submit the skillset as a Claude plugin"
 command: "publish plugin"
 metadata:
-  version: "1.1.0"
+  version: "1.2.0"
 ---
 
 # Publish plugin
@@ -78,6 +78,12 @@ Fixes and contributions to the plugin repository are edits to the shared edition
 - Test each install route in the real product before promising it works; the validator checks the manifest, not what each uploader accepts.
 - Over 190 files, editions are refused rather than zipped, because Claude cannot load a zip as a skill. Trim or split the members first.
 - Uploads and the plugin install into different places. Say which one the person has before debugging "it doesn't trigger".
+
+## Commands
+
+- 🚀 **One zip, platform-checked** · `publish plugin`: Publishes the skillset as a Claude plugin: checks current rules, sets manifest fields, sweeps before release, packages, validates with the platform's tools, test-installs and hands over.
+  - ✅ `validate plugin`: Validates the plugin build with the platform's own validator.
+  - 🏷️ `release skillset`: Cuts a release: sweeps status text, packages with release, and hands over the steps.
 
 <!-- folder:start -->
 ## This folder

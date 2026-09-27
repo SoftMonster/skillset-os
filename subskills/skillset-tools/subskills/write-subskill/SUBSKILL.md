@@ -3,7 +3,7 @@ name: write-subskill
 description: "Writes a new sub-skill for the skillset. It captures what the sub-skill should do, picks a clear name, and writes a trigger and description that route requests to it reliably. Then it writes a lean SUBSKILL.md with any scripts or reference files and tests it against realistic prompts. Use when the user asks to create, write, draft, build or add a new skill or sub-skill, or to turn a workflow or this conversation into one."
 trigger: "write, add or draft a new skill, or turn a workflow or this chat into one"
 metadata:
-  version: "1.1.0"
+  version: "1.4.0"
 ---
 
 # Write a sub-skill
@@ -55,6 +55,8 @@ Follow [writing-guide.md](writing-guide.md). Lean towards being chosen: a sub-sk
 
 Read [writing-guide.md](writing-guide.md) before writing the body. In short: open with the goal, then give an ordered workflow (with a checklist when there are more than three steps). Give one default instead of a menu, and a reason for each rule. Show a concrete example, and collect traps under Gotchas. Leave out anything Claude already knows.
 
+Write the `## Commands` tree the template starts: a root line with the skill's meme and main command, then meme headings for its stages or modes, with the commands under each. Every description says how the skill uses that command, fully enough to get the result from the command alone. Use everyday verb-noun phrases, lowercase, not starting with a shell verb (`check` lists the reserved ones), and run `python3 <wc>/scripts/shell.py do "db SELECT command, member FROM commands WHERE command LIKE '%<word>%'"` to avoid phrases other skills already own.
+
 Put scripts, references and templates in the sub-skill's own folder and link them relatively from `SUBSKILL.md`. Never name a file `SKILL.md` inside the skillset; `check` rejects it. Replace every placeholder the template left; `check` lists any that remain.
 
 ### 6. Test
@@ -68,6 +70,13 @@ Then offer the optional exam-to-memory loop ("The enhancement loop" in `cognitio
 - Every top-level member's trigger lengthens the top description, which has a 1024-character limit. `index` prints how much is used. If it runs short, put the new sub-skill inside a nested skillset, or group existing members with `organise-skillsets`, rather than dropping triggers.
 - A new sub-skill is new behaviour, so package with `--bump minor`.
 - The sandbox network only reaches package registries and GitHub; a script calling other sites fails here. Say so in the sub-skill.
+
+## Commands
+
+- 🆕 **Clear trigger, lean body, tests** · `write subskill`: Writes a new sub-skill: captures what it must do, names and creates it, writes the trigger, description, body and Commands tree, and tests routing.
+  - 🔁 `turn chat into skill`: Turns a workflow from this conversation into a new sub-skill.
+  - 🎯 `write skill trigger`: Writes the everyday-words trigger and description that make the skill get chosen.
+  - 🌳 `write skill commands`: Writes the new skill's Commands tree: root, meme groups and commands, each saying how the skill uses it.
 
 <!-- folder:start -->
 ## This folder

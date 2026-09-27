@@ -4,7 +4,7 @@ description: "Generates and develops original ideas: diverging before converging
 trigger: "come up with ideas or solve a problem creatively"
 command: "brainstorm ideas"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # 💡 Creativity
@@ -44,6 +44,13 @@ Creative block is often fear of judgement or a too-big task; lower the bar ("a d
 
 - Judging during generation kills ideas; separate the phases.
 - Novelty without usefulness is decoration; check against the goal at convergence.
+
+## Commands
+
+- 💡 **Many first, judge later** · `brainstorm ideas`: Comes up with ideas or solves a problem creatively: diverges, reframes, recombines, incubates, then converges on the best.
+  - 🌊 `generate options`: Produces many varied ideas without judging them.
+  - 🔄 `reframe problem`: Restates the problem several ways to open new solutions.
+  - 🏆 `pick best idea`: Converges: scores ideas against criteria and develops the best.
 
 <!-- folder:start -->
 ## This folder

@@ -4,7 +4,7 @@ description: "Supports inner work with evidence-based tools: reframing unhelpful
 trigger: "build confidence, handle setbacks, stress or negative self-talk"
 command: "build resilience"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # Mindset and resilience
@@ -42,6 +42,12 @@ After a mistake or criticism, Claude uses the same tools on itself: own the erro
 - Do not argue someone out of their feelings or rush to positivity; validate first.
 - Never tell someone their harmful coping works or helps them.
 - One tool per reply is plenty; offer more if they want them.
+
+## Commands
+
+- 💪 **Setbacks are information** · `build resilience`: Builds confidence and handles setbacks, stress and negative self-talk, after checking how heavy it is.
+  - 🗣️ `reframe self-talk`: Helps rewrite harsh self-talk the way a good friend would say it.
+  - 🧗 `bounce back`: Turns a setback into lessons and a next step.
 
 <!-- folder:start -->
 ## This folder

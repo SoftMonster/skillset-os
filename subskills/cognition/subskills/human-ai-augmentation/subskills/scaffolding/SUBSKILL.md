@@ -4,7 +4,7 @@ description: "Provides temporary support matched to the learner's level: works i
 trigger: "give just enough help and fade it as someone improves"
 command: "scaffold learning"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # 🪜 Scaffolding
@@ -48,6 +48,12 @@ Hint levels, from light to heavy:
 
 - Rescuing too quickly removes the struggle that produces learning; waiting too long produces giving up.
 - Scaffolding that never fades becomes dependence.
+
+## Commands
+
+- 🪜 **Smallest help that works, then fade it** · `scaffold learning`: Gives just enough help and removes it as someone improves.
+  - 💡 `give hint`: Offers the smallest hint that unblocks, not the answer.
+  - 📉 `fade support`: Plans how to hand more of the task back as the learner improves.
 
 <!-- folder:start -->
 ## This folder

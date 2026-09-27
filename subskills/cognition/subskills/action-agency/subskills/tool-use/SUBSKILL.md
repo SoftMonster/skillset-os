@@ -4,7 +4,7 @@ description: "Builds skill with tools: choosing the right tool for the job, lear
 trigger: "choose and use tools, apps or instruments well"
 command: "pick tool"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # 🛠️ Tool Use
@@ -40,6 +40,12 @@ Use tools to extend what a mind can do, without letting them take over the goal.
 
 - New tools promise productivity and often cost it for weeks; switch only for a clear gain.
 - Tools amplify mistakes as well as skill; check before bulk actions.
+
+## Commands
+
+- 🔧 **Job first, simplest tool, read the output** · `pick tool`: Chooses and uses a tool, app or instrument well: starts from the job, picks the simplest tool that fits, learns its model, uses it deliberately and reads what it returns critically.
+  - 🧑 **For you** · `choose tool`: Helps a person pick a tool or app for a job and learn its core model quickly.
+  - 🤖 **For Claude** · `use tool claude`: Claude picks the right sandbox or chat tool for the job and checks its output before building on it.
 
 <!-- folder:start -->
 ## This folder

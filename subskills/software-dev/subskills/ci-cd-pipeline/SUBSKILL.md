@@ -4,7 +4,7 @@ description: "Builds and fixes build and delivery automation: GitHub Actions and
 trigger: "set up or fix CI/CD, GitHub Actions, Docker or deployment"
 command: "automate pipeline"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # CI/CD pipeline
@@ -88,6 +88,17 @@ CMD ["python", "-m", "myapp"]
 - Secrets are not available to PRs from forks. Design jobs that need them to run after merge.
 - Caches keyed only on branch go stale; key on the lockfile hash.
 - `latest` tags in images and tools make builds unreproducible. Pin versions for anything that ships.
+
+## Commands
+
+- 🔁 **Every change checked the same way** · `automate pipeline`: Sets up or fixes build, test and release automation: finds the project's real commands, writes the workflow, containerises if needed, and validates it runs.
+  - 🏗️ **Build the pipeline** · `build pipeline`: Runs the steps below in order for a project without CI, or one being rebuilt.
+    - 🔎 `find build-commands`: Reads the repository for the real install, lint, test and build commands before writing any workflow.
+    - ⚙️ `write github-actions`: Writes a GitHub Actions workflow (or the named CI) that runs those commands on every push and pull request, with caching.
+    - 🐳 `write dockerfile`: Writes a small, pinned, non-root Dockerfile for the app, with a .dockerignore.
+    - 🚀 `set up deploy`: Adds release or deployment steps with secrets from the CI store and a manual approval where risk warrants it.
+  - 🚑 `fix failing build`: Reads the failing CI log from the first error, reproduces locally, and fixes the cause, not the retry count.
+  - ✅ `validate workflow`: Lints the workflow file and dry-runs what can be run in the sandbox; says what could not be verified.
 
 <!-- folder:start -->
 ## This folder

@@ -3,7 +3,7 @@ name: adopt-repository
 description: "Turns another repository, codebase or app (a zip, folder or GitHub repository) into a develop-PROJECT sub-skill in this skillset: its source is stored in the member's app folder and versioned with the skillset, a project checker encodes the project's runtime limits, promises and core logic, and a release workflow sends each change through the rest of the skillset. It scaffolds the member with adopt.py, writes and mutation-tests the checker, wires routing and tests, and packages. Use when the user asks to adopt, bring in, take over or make a develop skill for a repository, project or app, or to keep a project's code in the skillset. Do not use for changing an already adopted project; use its develop-PROJECT member. Do not use for importing skills; use import-skill."
 trigger: "adopt a repository, codebase or app so Claude can develop it"
 metadata:
-  version: "1.1.0"
+  version: "1.2.0"
 ---
 
 # Adopt a repository
@@ -110,6 +110,16 @@ Run `python3 <wc>/scripts/skillset.py package --message "Adopt PROJECT" --bump m
 - Some source files have enormous single lines, such as embedded bundles or JSON. One `grep` hit can flood the context. Cut every search of the source (`| cut -c1-200`) and write the offending line into the develop member's Gotchas.
 - Keep the project's own line endings and file names (spaces included). The checker's `build` should reproduce the person's release layout exactly, not tidy it up.
 - The sandbox cannot reach the project's live services (Steam, APIs). Checks that need them are SKIPPED and go into the person's test list.
+
+## Commands
+
+- 🏠 **Bring it in, make its promises checkable** · `adopt repository`: Adopts a repository, codebase or app: dry-runs the import, scaffolds a member, writes down its rules, builds a checker that proves it catches mistakes, writes a develop member, routes, tests and packages.
+  - 🔎 `inspect repository`: Dry-runs the source: stack, size, licence and what it promises, before anything is written.
+  - 🏗️ **Make it a member** · `scaffold member`: Runs the three below in order to turn the project into a develop member.
+    - 📜 `write project-rules`: Writes the project's rules and conventions as the member's instructions.
+    - 🧪 `write checker`: Writes a checker for those rules and proves it fails on a deliberate mistake.
+    - 🛠️ `write develop-member`: Writes the member that develops the project with every skill, following its rules and checker.
+  - 🚦 `route adopted-repo`: Adds routing cases and tests so requests about the project reach the new member.
 
 <!-- folder:start -->
 ## This folder

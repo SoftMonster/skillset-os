@@ -4,7 +4,7 @@ description: "Builds cultural intelligence: motivation, knowledge of how culture
 trigger: "work, travel or communicate across cultures"
 command: "bridge cultures"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # 🌐 Cultural Intelligence
@@ -50,6 +50,11 @@ In mixed teams, agree norms explicitly (how decisions are made, how to disagree,
 
 - Over-adapting can seem mocking or patronising; aim to be respectful, not to imitate.
 - Individuals vary more within cultures than averages vary between them.
+
+## Commands
+
+- 🌍 **Your normal is cultural too** · `bridge cultures`: Works, travels or communicates across cultures: learns the basics, surfaces own defaults, plans, observes, asks and adapts.
+  - 🧳 `prepare for culture`: Briefs a person on norms that matter for a named culture and situation, as tendencies not rules.
 
 <!-- folder:start -->
 ## This folder

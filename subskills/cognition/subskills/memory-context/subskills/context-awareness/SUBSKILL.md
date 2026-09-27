@@ -4,7 +4,7 @@ description: "Keeps the situation in view: who is involved, where and when, what
 trigger: "read the room or keep the bigger situation in mind"
 command: "read context"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # 🧭 Context Awareness
@@ -44,6 +44,12 @@ For cultural context, see cultural intelligence in the social intelligence group
 
 - Over-reading context is also a failure: do not infer things about a person that they did not share and do not need.
 - Context carried over from one situation to another (a rule from a previous task) is a common cause of mistakes; check it still applies.
+
+## Commands
+
+- 🌐 **Keep the situation in view** · `read context`: Reads the room and keeps the bigger situation in mind: same words, different setting, different meaning.
+  - 🔍 `read the room`: Describes the situation around a message: who, where, stakes and history, and what that changes.
+  - 🧭 `check fit to context`: Checks whether a reply or plan suits the setting and adjusts it.
 
 <!-- folder:start -->
 ## This folder

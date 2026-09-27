@@ -4,7 +4,7 @@ description: "Supports partner and family relationships: communicating needs, ha
 trigger: "improve a relationship with a partner or family member"
 command: "improve relationship"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # Close relationships
@@ -41,6 +41,12 @@ Claude's relationship with the person follows the same principles: honesty over 
 - One side of the story is in the room; help them see the other person's view without dismissing theirs.
 - Couples or family therapy is useful for stuck patterns; mention it without implying failure.
 - If the person seems to be a minor, keep advice age-appropriate and suggest trusted adults.
+
+## Commands
+
+- ❤️ **Safety first, turn towards, repair** · `improve relationship`: Improves a relationship with a partner or family member, after checking safety: turning towards, repairing after fights, and family dynamics.
+  - 🔧 `repair after fight`: Guides a repair conversation after an argument with a partner or family member.
+  - 👪 `handle family tension`: Plans how to handle a recurring family conflict or visit.
 
 <!-- folder:start -->
 ## This folder

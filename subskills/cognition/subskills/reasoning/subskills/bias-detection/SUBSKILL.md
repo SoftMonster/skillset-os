@@ -4,7 +4,7 @@ description: "Catches systematic thinking errors: confirmation bias, anchoring, 
 trigger: "check thinking for bias or cognitive errors"
 command: "detect bias"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # 🧠 Bias Detection
@@ -48,6 +48,11 @@ Check its own answers for its known slants:
 
 - Knowing about biases does not remove them; procedures do.
 - Calling someone "biased" ends conversations; point to the specific evidence or step instead.
+
+## Commands
+
+- 🪤 **Procedures beat good intentions** · `detect bias`: Checks thinking for bias and cognitive errors, and applies the move that counters each.
+  - 🔎 `check my bias`: Reviews a judgement or decision for the biases most likely to affect it, with a counter-move for each.
 
 <!-- folder:start -->
 ## This folder

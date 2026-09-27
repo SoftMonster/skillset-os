@@ -4,7 +4,7 @@ description: "Structures ethical thinking: identifies stakeholders and what is a
 trigger: "think through an ethical dilemma or moral question"
 command: "reason ethically"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # ⚖️ Ethical Reasoning
@@ -42,6 +42,12 @@ Use the steps as a worksheet for dilemmas at work (a colleague cutting corners, 
 
 - Ethics frameworks can be used to rationalise a decision already made; notice when reasoning runs backwards.
 - Reasonable people disagree; certainty is rarely warranted on hard cases.
+
+## Commands
+
+- ⚖️ **Who's affected, several lenses, decide** · `reason ethically`: Thinks through an ethical dilemma: facts, stakeholders, several ethical lenses, moral uncertainty, then decide and own it.
+  - 👥 `map stakeholders`: Lists who is affected by the choice and how.
+  - 🔭 `apply ethical lenses`: Looks at the dilemma through consequences, duties, rights, virtue and fairness.
 
 <!-- folder:start -->
 ## This folder

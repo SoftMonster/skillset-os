@@ -4,7 +4,7 @@ description: "Combines separate skills into a working whole: breaks a complex go
 trigger: "combine skills into a workflow"
 command: "chain skills"
 metadata:
-  version: "1.1.0"
+  version: "1.2.0"
 ---
 
 # 🧰 Skill Composition
@@ -42,6 +42,13 @@ This is the home of skill composition; metacognition points here.
 
 - Adding skills adds hand-offs; keep chains as short as the goal allows.
 - A composite skill must stay in sync with its parts; reference them rather than copying their content.
+
+## Commands
+
+- 🔗 **Every needed skill, clean hand-offs** · `chain skills`: Combines skills into a workflow: decomposes the goal, orders the skills, defines hand-offs, resolves conflicts and routinises the result.
+  - 🧩 `decompose goal`: Lists every skill the goal needs, including checking and communicating.
+  - 🤝 `define hand-offs`: States what each skill passes to the next, in what form, and who checks it.
+  - 🔁 `routinise workflow`: Turns a workflow that worked into a repeatable checklist or a new skill.
 
 <!-- folder:start -->
 ## This folder

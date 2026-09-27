@@ -4,7 +4,7 @@ description: "Protects privacy: minimises the personal data collected and shared
 trigger: "protect personal data and respect other people's privacy"
 command: "protect privacy"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # 🔐 Privacy Stewardship
@@ -39,6 +39,12 @@ Treat personal information, one's own and other people's, as something held in t
 
 - "It's public anyway" is not consent; aggregation of public scraps can itself cause harm.
 - Monitoring a partner or adult family member is a control behaviour, not safety; see `close-relationships` in interpersonal.
+
+## Commands
+
+- 🔒 **Collect little, protect it** · `protect privacy`: Protects personal data and respects others' privacy: collect little, protect it, share only with consent or clear need.
+  - 🧹 `privacy checkup`: Walks through settings and habits to reduce a person's data exposure.
+  - 🕶️ `redact personal data`: Removes or masks personal information from a text before it is shared.
 
 <!-- folder:start -->
 ## This folder

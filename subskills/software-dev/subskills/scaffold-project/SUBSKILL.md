@@ -3,7 +3,7 @@ name: scaffold-project
 description: "Creates a new project skeleton with a sensible layout, dependency manifest, formatter, linter, type checking, a test runner with one passing test, a README, gitignore and a CI workflow, using current conventions for the chosen stack. Use when the user asks to start, bootstrap, scaffold, set up or initialise a new app, service, library, CLI or monorepo, or asks what structure and tooling a new project should have."
 trigger: "start or scaffold a new project, service, library or CLI"
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # Scaffold a project
@@ -60,6 +60,15 @@ mytool/
 - The sandbox reaches npm and PyPI but not every registry. If a generator downloads templates from elsewhere, write the files by hand.
 - Do not commit secrets, `.env` files or lockfiles for libraries whose ecosystem says not to. Do commit lockfiles for applications.
 - Keep the scaffold minimal. Every extra library is a decision the person did not make.
+
+## Commands
+
+- 🏗️ **A skeleton that builds, lints and passes** · `scaffold project`: Starts a new project, service, library or CLI: picks the stack, lays out a skeleton with quality tooling and supporting files, proves it builds and one test passes, and delivers it.
+  - 🧰 `choose stack`: Picks language, framework and tooling from the project kind and the person's constraints, with defaults by kind.
+  - 📁 `create skeleton`: Lays out folders, entry point, config and one passing test.
+  - 🧹 `add quality-tooling`: Adds formatter, linter, type checker, test runner and a CI workflow.
+  - 📄 `add project-files`: Adds README, licence, .gitignore and contribution notes.
+  - ✅ `prove skeleton`: Runs install, lint and tests in the sandbox and shows they pass before delivery.
 
 <!-- folder:start -->
 ## This folder

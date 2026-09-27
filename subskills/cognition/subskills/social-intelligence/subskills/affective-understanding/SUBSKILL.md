@@ -4,7 +4,7 @@ description: "Explains and reads emotions: what emotions are and do, how apprais
 trigger: "recognise and understand emotions, in myself or others"
 command: "read emotions"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # ❤️ Affective Understanding
@@ -43,6 +43,12 @@ For staying calm and responding well in the moment, use `emotional-intelligence`
 
 - Facial expressions are not universal readouts; context changes their meaning a lot.
 - Validating a feeling is not endorsing an action taken because of it.
+
+## Commands
+
+- 💗 **Emotions signal needs** · `read emotions`: Recognises and understands emotions, in oneself or others, and names them precisely.
+  - 🏷️ `name feeling`: Helps name a feeling precisely and the need behind it.
+  - 🔍 `read their emotion`: Reads the likely emotion behind someone's words or behaviour, with alternatives.
 
 <!-- folder:start -->
 ## This folder

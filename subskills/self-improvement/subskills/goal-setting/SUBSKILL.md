@@ -4,7 +4,7 @@ description: "Turns aspirations into a few well-formed goals, each with an outco
 trigger: "set, refine or break down goals and resolutions"
 command: "set goals"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # Goal setting
@@ -56,6 +56,12 @@ Before a long or multi-step task, set the task's goal the same way: the outcome 
 - Stalled goals usually have too big a first step, no scheduled time or a reason that is not really theirs. Diagnose before adding motivation.
 - Avoid appearance or weight targets framed around self-criticism; anchor health goals in behaviours and how they want to feel.
 - Respect a "no". If they do not want a goal in some area, drop it.
+
+## Commands
+
+- 🎯 **Few goals, clear measures, first step** · `set goals`: Sets, refines or breaks down goals: gather the wants, choose a few, shape each, plan for obstacles, and set the first step and check-in.
+  - ✂️ `break down goal`: Splits a goal into milestones and a first step this week.
+  - 🧱 `plan obstacles`: Plans if-then responses to the likely obstacles.
 
 <!-- folder:start -->
 ## This folder

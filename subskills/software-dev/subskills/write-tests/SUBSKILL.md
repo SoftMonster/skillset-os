@@ -3,7 +3,7 @@ name: write-tests
 description: "Writes and improves automated tests: picks the right level (unit, integration, end-to-end), follows the project's test framework and style, covers behaviour, edge cases and failure paths, and keeps tests fast, isolated and deterministic. Use when the user asks for tests, test cases, coverage, fixtures, mocks, property-based or snapshot tests, a test plan, or TDD, or wants flaky tests made reliable."
 trigger: "write, add or improve tests and test coverage"
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # Write tests
@@ -54,6 +54,15 @@ def test_unknown_code_raises_with_code_in_message():
 - Asserting on log strings or private attributes couples tests to implementation; assert on outputs and observable effects.
 - Chasing a coverage percentage produces assertion-free tests. Coverage shows what is untested; it does not show what is tested well.
 - For TDD requests, write the failing test first, show it failing, then write the minimum code to pass.
+
+## Commands
+
+- 🧪 **Behaviour, edges, failures** · `write tests`: Writes or improves tests: learns the existing setup, decides what and where, writes fast deterministic tests for behaviour, edges and failures, proves they can fail, and reports coverage.
+  - 🔎 `find test-setup`: Finds the test runner, fixtures and conventions already in use.
+  - 🎯 `choose test-cases`: Picks the behaviours, edge cases and failure modes worth testing and where each test lives.
+  - ✍️ `add tests`: Writes the tests in the project's style, fast and deterministic, with clear names.
+  - 💥 `prove tests fail`: Breaks the code on purpose to show each new test can fail, then restores it.
+  - 📊 `report coverage`: Runs the suite with coverage and reports what is now covered and what remains.
 
 <!-- folder:start -->
 ## This folder

@@ -4,7 +4,7 @@ description: "Keeps effort pointed at the real goal: distinguishes goals from pr
 trigger: "keep actions true to the real goal and values"
 command: "align goals"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # ⚙️ Goal Alignment
@@ -44,6 +44,12 @@ Signs of misalignment: busy but not progressing, hitting the target while missin
 
 - Metrics are useful; the problem is forgetting what they stand for.
 - A goal that no longer fits the values can be dropped; that is alignment too.
+
+## Commands
+
+- 🎯 **The real goal, not the easy measure** · `align goals`: Keeps actions true to the real goal and values rather than the easiest measure of it.
+  - 🔍 `check goal fit`: Tests a plan or action against the real goal and flags where it serves a proxy instead.
+  - 🧭 `restate real goal`: Asks and states the goal behind the task in one sentence before work continues.
 
 <!-- folder:start -->
 ## This folder

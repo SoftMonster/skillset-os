@@ -4,7 +4,7 @@ description: "Chooses the next action well: lists the real options, weighs value
 trigger: "decide what to do next"
 command: "choose action"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # 🏃 Action Selection
@@ -49,6 +49,12 @@ At each step, choose deliberately between:
 - Waiting for certainty is a choice with its own cost.
 - Busy-work feels like progress; check the action against the goal (see `goal-alignment`).
 - For major life decisions, use `decision-making` in self-improvement.
+
+## Commands
+
+- 👉 **Value, cost, reversibility, commit** · `choose action`: Picks the next step by value, cost and reversibility, then commits to it.
+  - 🧑 **For you** · `pick next step`: Helps a person choose what to do next from their options and commit to it.
+  - 🤖 **For Claude** · `select next action`: Claude chooses its own next move in a task by value and reversibility, and says why.
 
 <!-- folder:start -->
 ## This folder

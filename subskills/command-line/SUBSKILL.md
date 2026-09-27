@@ -4,7 +4,7 @@ description: "Runs Skillset-OS as a command line as well as in plain English: na
 trigger: "use a shell (ls, cd), commands like review code or X options; say hi, start or I am bored"
 command: "shell mode"
 metadata:
-  version: "1.4.0"
+  version: "1.5.0"
 ---
 
 # Command line
@@ -79,12 +79,23 @@ Where the chat has a tap-to-choose tool (such as claude.ai's multiple-choice but
 
 **Without code execution** (or in an AI that cannot run Python), build the same menu by hand: read the member's `## Options` section, or list its members from the `## Members` section of its `SKILLSET.md`, and show them in the same shape with the same rapid and power lines. Picks work the same way; only the automatic parsing is missing. An options request is the person asking for a menu, so it gets one in every edition and mode. To give a member its own menu, add a `## Options` section of `1. **Label**: what it does` lines; the shell reads it directly.
 
+## The command database
+
+Every member keeps its own `## Commands` section: an emoji tree of the commands that should trigger it, under emoji meme group headings, nested as deep as the skill needs. Each line is `- <emoji> [**meme** · ]`command`: how the skill uses it`. A heading's command sets focus on its group and runs the commands under it in order; a leaf does one thing. The member file is the source of truth. `scripts/commands.py` indexes every tree, plus the generated commands (shell verbs, apps, built-in skills, tools), into SQLite in `$SKILLSET_SHELL_HOME/commands.db` and rebuilds it whenever a member file or a remembered edit changes one.
+
+- **Routing order:** the person's alias, then an exact enabled command (inside the focus first), then the fuzzy matcher. When `do` routes a tree command it prints the skill, the command's place in the tree and its description, and for a heading the children to run in order. **Open that member and do what the description says**, asking only for input the description names and the person has not given.
+- **Focus:** routing a command sets the focus on it; `focus <skill or command>` sets it by hand and `unfocus` clears it. With a focus, `commands` shows the whole skill's tree with the focused command marked, then **Wanted**: requested commands and phrases typed there that were missing or ambiguous.
+- **Missing and ambiguous commands are kept, not dropped.** An unknown phrase is logged; an ambiguous one gets a numbered menu. The first pick is remembered and offered first next time; the same pick twice, or `alias <phrase> = <command>`, makes the phrase a direct route. `request command <phrase> [for <skill>] [: note]` records one outright.
+- **Preferences:** `prefer`/`unprefer` star a command (starred ones lead `commands`), `disable`/`enable` take one out of routing or back. All of it is the person's own data, kept as the list below says.
+- **Examining it:** conversationally (`commands tree <skill>`, `commands tree all`, `why <command>`, or a plain question answered from those) or with SQL: `db <query>`, quoted when run through bash. Bare `db` prints the schema and examples. Reads work everywhere; writes are allowed only on the person's tables (`user_prefs`, `user_aliases`, `user_requests`, `user_misses`); anything else is refused by an authorizer.
+- **New commands:** `advise commands [topic]` prints the evidence (misses, requests, thin related trees, existing related commands, where stars cluster). Then give open-ended advice: three to seven commands written as tree lines, the member and heading each belongs under, and why. To add them for good, edit the member's Commands section (`edit-subskill`, or a remembered `sed -i` applied with `save changes`); `check` validates every tree.
+
 ## The person's own command list
 
 A list of someone's favourite commands is **information about them**, so it never goes into self-memory. Offer these ways to keep it, and let them choose:
 
 1. **This session only:** `favourites add <command>`, `favourites list`, `favourites remove`. It is forgotten when the chat ends.
-2. **A file they keep:** the person types `save favourites` and you run `shell.py favourites save`, which writes `my-commands.md` to the outputs for them to download. Later they upload it and type `load favourites` (or say "load my commands"), and you run `shell.py favourites load <file>`. In chat the verb comes first; the script's subcommand puts it second. Recall is then exactly their list, held by them.
+2. **A file they keep:** the person types `save favourites` and you run `shell.py favourites save`, which writes `my-commands.md` to the outputs for them to download. It carries their starred commands and, from the database, their disabled commands, aliases and requests. Later they upload it and type `load favourites` (or say "load my commands"), and you run `shell.py favourites load <file>`. In chat the verb comes first; the script's subcommand puts it second. Recall is then exactly their list, held by them.
 3. **claude.ai's own memory,** if they switch it on in Settings. That is a user-controlled feature of the app, separate from Skillset-OS.
 
 If they ask Skillset-OS to "just remember" their list permanently, explain why it doesn't, and offer option 2. What the AI may remember is about itself, for example "verb-noun commands that name the noun resolve best", through the self-memory pipeline.
@@ -96,6 +107,31 @@ If they ask Skillset-OS to "just remember" their list permanently, explain why i
 - A command that is also an English word (`find`, `type`, `open`, `more`, `display`, `view`) is run as a shell command when its argument is a path, and as a verb-noun command otherwise ("find skills" → `skillset-tools/find-skills`). Member names count as paths, so `open research` opens the member; `open a pull request` is a verb-noun command.
 - An unknown verb is never guessed: unless the noun alone strongly matches a command, the shell says it doesn't know the command rather than picking the nearest one.
 - **Hand-picked commands:** a member's front matter may set `command: "verb noun"` (one verb and one to three lowercase words). It replaces the generated name, `check` refuses duplicates and words the shell reserves (`options`, `menu`, `infer`, and verbs such as `remember`, `recall`, `start`, `go`), and command verbs go through the same synonyms as typed ones, so `make habit` finds `build habit`. The top list leaves out this skill itself; `commands all` still shows it.
+
+## Commands
+
+- ⌨️ **Type it like a shell or say it like a person** · `shell mode`: Switches to command-line mode over the skills: shell commands in bash, PowerShell or cmd syntax, verb-noun commands routed through the command database, and remembered edits. Plain English still works.
+  - 🗃️ **Rapid routing by database** · `commands`: Lists the most useful commands with your starred ones first; with a focus set, shows the focused skill's command tree and what is still wanted there.
+    - 🌳 `commands tree`: Shows a skill's own emoji command tree (`commands tree debug`), every tree (`commands tree all`), or the focused one.
+    - 🎯 `focus`: Sets focus on a skill or command (`focus debug-issue`, `focus reproduce bug`) and shows its tree; commands typed next route inside it first. Bare `focus` shows the current focus.
+    - 🧹 `unfocus`: Clears the focus so commands route across the whole skillset again.
+    - ❔ `why`: Explains a command (`why reproduce bug`): which skill owns it, where it sits in the tree, and what it does.
+    - 🧮 `db`: Queries the command database with SQL (`db SELECT command, member FROM routes WHERE member LIKE 'software-dev%'`); bare `db` shows the schema and examples. Reads anywhere; writes only to your own tables.
+  - ⭐ **Your command list** · `favourites list`: Shows your starred commands for this session; `favourites add <command>` stars one.
+    - ⭐ `prefer`: Stars a command (`prefer debug issue`) so it leads your list; `unprefer` removes the star.
+    - 🚫 `disable`: Turns a command off for routing (`disable run exam`); it is skipped, and typing it says how to turn it back on.
+    - ✅ `enable`: Turns a disabled command back on (`enable run exam`).
+    - 🔗 `alias`: Routes your own phrase to a command (`alias squash bug = debug issue`); picking from a numbered menu teaches aliases too.
+    - 💾 `save favourites`: Writes your stars, disabled commands, aliases and requests to my-commands.md, a file you keep; Skillset-OS stores none of it.
+    - 📂 `load favourites`: Loads a kept my-commands.md back into this session's database.
+  - 🌱 **Grow the commands** · `request command`: Records a command a skill should have (`request command squash bug for debug-issue: run the debug loop`); it shows under Wanted in that tree until added.
+    - 💡 `advise commands`: Gives open-ended advice on new useful commands (`advise commands testing`) from misses, requests, thin trees and your stars, as tree lines ready to add.
+    - 🧩 `show wanted commands`: Lists commands that were typed but missing or ambiguous, and open requests, across the skillset.
+  - 🐚 **Shell over the skills** · `browse skills`: Navigates the skills as a file system: `ls`, `cd cognition/reasoning`, `cat research`, `tree -L 2`, `grep -ri meme .`, in bash, PowerShell or cmd spelling.
+    - ✏️ `remember an edit`: Records edits (`touch`, `sed -i`, `echo > file`, `rm`) without applying them; `git status` and `git diff` show them.
+    - 📦 `save changes`: Applies remembered edits, including new commands for skills' trees, to an updated repository and packages it.
+    - 📋 `show changes`: Shows what the remembered edits would change.
+  - 🎛️ `options`: Opens a described numbered menu for a topic (`training options`) with rapid and power replies.
 
 <!-- folder:start -->
 ## This folder

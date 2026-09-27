@@ -20,6 +20,17 @@ DESC = "Writes test minutes from rough notes. Use when the user pastes test note
 A, B, C, G = ("zz" + "-test-" + x for x in ("alpha", "beta", "gamma", "group"))
 
 
+def test_parse_uses_a_safe_loader_and_the_fast_one_when_available():
+    import yaml
+    assert ss._YAML_LOADER in (getattr(yaml, "CSafeLoader", None), yaml.SafeLoader)
+    if hasattr(yaml, "CSafeLoader"):
+        assert ss._YAML_LOADER is yaml.CSafeLoader
+    data, body = ss.parse('---\nname: x\nmetadata:\n  version: "1.0.0"\n---\nBody\n')
+    assert data == {"name": "x", "metadata": {"version": "1.0.0"}} and body.strip() == "Body"
+    with pytest.raises(ss.Refused):  # arbitrary Python objects are refused, as with safe_load
+        ss.parse("---\nx: !!python/object/apply:os.system [echo]\n---\n")
+
+
 def run(root: Path, *argv: str) -> int:
     return ss.main(["--root", str(root), *argv])
 

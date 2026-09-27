@@ -4,7 +4,7 @@ description: "Strengthens long-term thinking: connecting to the future self, del
 trigger: "think long term, delay gratification or plan for my future self"
 command: "think long-term"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # 🌱 Long-Term Orientation
@@ -41,6 +41,12 @@ Give the future its fair weight. Brains discount the future steeply: a reward to
 
 - The future is uncertain; prefer actions that help across many futures.
 - Moralising about someone's short-term choices backfires; offer information and tools.
+
+## Commands
+
+- 🌳 **A fair vote for your future self** · `think long-term`: Weighs long-term consequences, delays gratification and plans for a future self without giving up today.
+  - ⏳ `ten year view`: Looks at a choice from ten days, ten months and ten years out.
+  - 🪴 `delay gratification`: Builds a plan that makes the long-term choice easier to take now.
 
 <!-- folder:start -->
 ## This folder

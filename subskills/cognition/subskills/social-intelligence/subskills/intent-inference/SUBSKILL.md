@@ -4,7 +4,7 @@ description: "Infers intent: the literal request, the immediate aim, the deeper 
 trigger: "work out what someone actually wants or means"
 command: "read intent"
 metadata:
-  version: "1.1.1"
+  version: "1.2.0"
 ---
 
 # 🧭 Intent Inference
@@ -44,6 +44,12 @@ A good answer gives a few options with shades of meaning, not one word, and not 
 
 - People often ask for a solution when they want the problem understood; check which.
 - Intent can change mid-conversation; update rather than stick to the first reading.
+
+## Commands
+
+- 🎯 **The goal behind the words** · `read intent`: Works out what someone actually wants or means: not too literal, not too liberal.
+  - 🔎 `what do they mean`: Reads a message for the likely intent, with the evidence and an alternative reading.
+  - 🤖 `interpret request`: Claude infers the best interpretation of an ambiguous request and states the assumption.
 
 <!-- folder:start -->
 ## This folder

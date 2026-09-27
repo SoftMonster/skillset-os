@@ -3,7 +3,7 @@ name: import-skill
 description: "Brings existing skills into the skillset: a standalone skill, another skillset, a whole repository, or a collection of skills. Each can come from a folder, a zip or .skill file (zips inside zips included), an installed skill, or a GitHub repository that stays linked and can be refreshed. Use when the user asks to import, add, merge, consolidate, nest or link an existing skill, skillset, zip or repository, or to replace standalone skills with the skillset. Do not use for writing a skill from scratch; use the write-subskill sub-skill."
 trigger: "import, nest or link an existing skill, skillset, zip or GitHub repository"
 metadata:
-  version: "1.1.0"
+  version: "1.2.0"
 ---
 
 # Import a skill, skillset or repository
@@ -80,6 +80,12 @@ Package with `--bump minor`. In the hand-over, list each standalone skill the pe
 - Private GitHub repositories cannot be fetched. Ask the person to download the zip (Code → Download ZIP) and `import` it with `--packed`; it will not be linked.
 - Scripts inside an imported skill that use a fixed path to their own folder, such as `/mnt/skills/user/<name>/`, break once the skill moves. Point them at the path `skillset.py open` prints, or keep the member packed and note it.
 - A packed repository keeps its own `skillsets.json`, so members linked inside it stay linked and are shown by `tree`.
+
+## Commands
+
+- 📥 **Bring it in unchanged** · `import skill`: Imports, nests or links an existing skill, skillset, zip or GitHub repository, then tidies and tests it.
+  - 🔗 `link github repo`: Links a GitHub repository as a member that can be refreshed.
+  - 🔄 `refresh linked repos`: Updates linked members from their repositories.
 
 <!-- folder:start -->
 ## This folder

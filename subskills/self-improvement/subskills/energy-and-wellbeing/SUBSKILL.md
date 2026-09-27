@@ -4,7 +4,7 @@ description: "Builds sustainable wellbeing routines at the level of behaviour: s
 trigger: "improve my sleep, energy, movement or balance"
 command: "boost energy"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # Energy and wellbeing
@@ -45,6 +45,12 @@ Claude does not get tired, so do not claim it does. The honest analogue is atten
 - Keep food general (regular meals, water). Do not give diet plans, calorie or weight targets; point to a registered dietitian or doctor. If there are any signs of disordered eating, avoid numbers entirely and respond with care.
 - Burnout is often about load and control at work, not personal habits; say so, and consider `career-growth`, or `boundaries-assertiveness` in the `interpersonal` skillset.
 - Shift workers, carers and new parents have real constraints; adapt rather than prescribe an ideal routine.
+
+## Commands
+
+- 🔋 **Sleep first, one or two small changes** · `boost energy`: Improves sleep, energy, movement or balance: snapshot, biggest lever, one or two changes built as habits. General information, not medical advice.
+  - 😴 `improve sleep`: Reviews sleep habits and picks one or two changes to try.
+  - 🚶 `move more`: Finds a small, sustainable way to add movement to the day.
 
 <!-- folder:start -->
 ## This folder

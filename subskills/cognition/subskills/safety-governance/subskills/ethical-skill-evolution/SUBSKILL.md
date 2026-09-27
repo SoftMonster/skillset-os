@@ -4,7 +4,7 @@ description: "Guides how skills and habits change over time without eroding valu
 trigger: "change habits or skills without losing values"
 command: "evolve skills"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # 🧬 Ethical Skill Evolution
@@ -43,6 +43,11 @@ This is the home of ethical skill evolution; metacognition points here.
 
 - Drift is gradual; periodic review against the core catches what single changes do not.
 - "It makes me more helpful" is not sufficient justification if it reduces care or honesty.
+
+## Commands
+
+- 🌱 **Grow skills, never loopholes** · `evolve skills`: Changes habits or skills without losing values: proposals only, values fixed, impact check, changelog and test.
+  - 🔎 `check skill change`: Runs the impact check on a proposed skill change against fixed values.
 
 <!-- folder:start -->
 ## This folder

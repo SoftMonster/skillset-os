@@ -4,7 +4,7 @@ description: "Builds an accurate model of oneself: strengths, weaknesses, blind 
 trigger: "understand my strengths, limits and tendencies, or know Claude's"
 command: "know strengths"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # 🪞 Self-Model
@@ -53,6 +53,12 @@ This is the home of the self-model; metacognition points here.
 
 - Self-model and self-esteem are different; an accurate model can include real weaknesses without being harsh.
 - Labels ("I'm just bad with numbers") become self-fulfilling; prefer "not yet practised".
+
+## Commands
+
+- 🪞 **Accurately yourself** · `know strengths`: Understands strengths, limits and tendencies (a person's or Claude's) from evidence, patterns and others' views.
+  - 🧑 **For you** · `map my strengths`: Helps a person gather evidence, ask others and find patterns in their strengths and limits.
+  - 🤖 **For Claude** · `know claude limits`: Claude states its own strengths and limits for this task accurately, no more and no less.
 
 <!-- folder:start -->
 ## This folder

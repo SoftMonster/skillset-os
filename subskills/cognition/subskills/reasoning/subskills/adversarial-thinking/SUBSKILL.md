@@ -4,7 +4,7 @@ description: "Applies structured critique to one's own work: red-teaming plans, 
 trigger: "stress-test a plan, argument or idea by finding how it fails"
 command: "red-team plan"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # 🧪 Adversarial Thinking
@@ -48,6 +48,12 @@ Defensive security thinking belongs here too: how could someone misuse this acco
 - Criticism without a fix is only half the job; end with what to change.
 - Do not red-team everything; match effort to stakes.
 - Keep critique of ideas separate from criticism of people.
+
+## Commands
+
+- 🗡️ **Break your own plan first** · `red-team plan`: Stress-tests a plan, argument or idea by finding how it fails: pre-mortem, red team and steelman.
+  - ⚰️ `run pre-mortem`: Imagines the plan has failed and lists the most likely reasons.
+  - 🛡️ `steelman argument`: States the strongest version of the opposing view before answering it.
 
 <!-- folder:start -->
 ## This folder

@@ -4,7 +4,7 @@ description: "Reruns every earlier self-examination check in seconds and reports
 trigger: "rerun my earlier exam checks as a quick regression battery"
 command: "rerun exam"
 metadata:
-  version: "1.0.2"
+  version: "1.1.0"
 ---
 
 # Exam regression battery
@@ -30,6 +30,11 @@ Every check prints one line: status, id and evidence. Before trusting a check, p
 - `git bundle verify` must run inside a repository.
 - Run with `PYTHONDONTWRITEBYTECODE=1`. Stale `.pyc` files can mask a restored file.
 - `/bin/sh` `printf` has no `\x` escapes. Write binary fixtures from Python.
+
+## Commands
+
+- 🔁 **Rerun the old proof first** · `rerun exam`: Reruns earlier exam checks as a quick regression battery before new exam work.
+  - ➕ `add exam check`: Adds a new check to the battery from a passed exam item, with its expected evidence.
 
 <!-- folder:start -->
 ## This folder

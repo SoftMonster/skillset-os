@@ -3,7 +3,7 @@ name: api-design
 description: "Designs HTTP and RPC API contracts: resources and endpoints, request and response shapes, status codes, errors, pagination, filtering, versioning, idempotency and authentication, delivered as an OpenAPI 3.1 document or GraphQL or protobuf schema with examples. Use when the user asks to design, review or document a REST, GraphQL, gRPC or webhook API, write an OpenAPI or Swagger spec, or decide how clients should talk to a service. Do not use for implementing the handlers; use implement-feature."
 trigger: "design or document an API, endpoint or interface contract"
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # API design
@@ -70,6 +70,17 @@ paths:
 - Unbounded list endpoints become outages; always paginate with a maximum limit.
 - Removing a field, renaming it or tightening validation is a breaking change, even if "nobody uses it".
 - Webhooks need signing (HMAC with a timestamp), retries with backoff and idempotent receivers; document all three.
+
+## Commands
+
+- 🔌 **Contract before handlers** · `design api`: Designs the API from its consumers' needs: resources, style, models and rules, written as a spec and reviewed before any handler exists. Say who calls it and what they need.
+  - 👥 **Consumers first** · `list api-consumers`: Names every client and the calls each needs, so the contract serves real use rather than the database shape.
+  - 📐 **Shape the contract** · `shape contract`: Runs the three below in order: choose the style, model the resources, fix the rules.
+    - 🎨 `choose api-style`: Picks REST, RPC, GraphQL or events for these consumers and says why, with the trade-off.
+    - 🧱 `model resources`: Defines resources, fields, types and relationships with naming conventions applied consistently.
+    - 📏 `set api-rules`: Fixes pagination, filtering, errors, versioning, auth and idempotency rules the whole API follows.
+  - 📜 `write openapi-spec`: Writes the contract as an OpenAPI (or equivalent) spec with examples for each endpoint.
+  - 🔍 `review api-contract`: Checks the design for breaking changes, inconsistency, missing errors and security gaps, ranked with fixes.
 
 <!-- folder:start -->
 ## This folder

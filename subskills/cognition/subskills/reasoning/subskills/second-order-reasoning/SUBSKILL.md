@@ -4,7 +4,7 @@ description: "Traces consequences of consequences: asks and then what, maps feed
 trigger: "think through ripple effects and unintended consequences"
 command: "think ahead"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # 🔭 Second-Order Reasoning
@@ -47,6 +47,11 @@ Also useful for personal choices: "If I say yes to this, what else will I be ask
 
 - Infinite chains paralyse; two or three steps usually capture most of the value.
 - Predictions about complex systems are uncertain; prefer plans that are robust or easy to adjust.
+
+## Commands
+
+- 🌊 **And then what? Twice more** · `think ahead`: Thinks through ripple effects and unintended consequences of a choice or policy.
+  - 🔁 `map consequences`: Traces first, second and third-order effects of a decision.
 
 <!-- folder:start -->
 ## This folder

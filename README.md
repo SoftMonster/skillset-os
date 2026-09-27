@@ -21,7 +21,7 @@ A skillset is a folder with a router and a `subskills/` folder of members. Each 
 
 - **Routing.** Claude sees one description, generated from the top-level members' triggers. It then follows the router tables down: `SKILL.md` at the top, `SKILLSET.md` in each nested skillset. A nested skillset contributes only one trigger to its parent, so grouping keeps the description within its 1024 characters.
 - **Opening members.** `scripts/skillset.py open <path>` extracts zips as needed and prints the file to read. `tree` shows everything at every depth.
-- **Routing evaluation.** `tests/routing.json` holds realistic prompts and the member each should reach; `scripts/routing_eval.py` prints a blind sheet for a grader and scores the answers.
+- **Routing evaluation.** `tests/routing.json` holds realistic prompts and the member each should reach; `scripts/routing_eval.py` prints a blind sheet for a grader, scores the answers with an optional confusion matrix, answers every prompt with the rapid route as a reproducible baseline, and compares two answer sets.
 - **Tooling.** `scripts/skillset.py` does everything else: check, index, tree, open, new, new-set, bump, replace, build, rename, move, retire, pack, unpack, import, add-source, refresh, pull and package.
 
 Members included:
@@ -64,6 +64,7 @@ Skillset-OS also works as a command line over its own skills, while plain Englis
 
 - **Edits are remembered, not made.** `echo > file`, `sed -i`, `rm`, `mv`, `Set-Content` and the rest are journalled and shown as if applied (`git status`, `git diff`). They are applied only when an updated repository is requested (`shell.py apply --wc <working copy>`, then package).
 - **Verb-noun commands** such as `review code`, `plan feature`, `create spreadsheet`, `recall splitting`, `inventory`, `stats` and `quests` resolve to the member, built-in skill or tool that does them. `commands` generates the most useful ones from what the skillset knows. A verb the shell doesn't know gets "I don't know that command", never a guess.
+- **Every skill keeps its own command tree**, an emoji list under meme headings in its `## Commands` section. `scripts/commands.py` indexes them into a SQLite command database for rapid routing: exact commands first, inside the current `focus`, with the person's aliases, stars and disabled commands applied. `commands tree <skill>`, `why <command>` and `db <sql>` examine it; missing and ambiguous commands are kept as Wanted; `request command` and `advise commands` grow it.
 - **A person's own command list** stays in the session, or in a `my-commands.md` file they keep and upload again. It is never self-memory.
 
 - **Apps** open from their command words (`weather Staines`, `calc 2^10`, `show bbc.co.uk`), read from the command index in `apps`; `apps` lists them.

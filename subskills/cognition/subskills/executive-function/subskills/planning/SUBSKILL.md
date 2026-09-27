@@ -4,7 +4,7 @@ description: "Builds the planning faculty: defining the end state, working backw
 trigger: "structure how to get from here to a goal"
 command: "plan steps"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # 🗺️ Planning
@@ -49,6 +49,13 @@ For the weekly schedule, use `plan-and-prioritise` in self-improvement; for soft
 
 - Over-planning is a form of procrastination; plan to the level of the next checkpoint.
 - Plans made alone miss what others know; show them to someone affected.
+
+## Commands
+
+- 🗺️ **Define done, work backwards, riskiest first** · `plan steps`: Structures how to get from here to a goal: end state, backward planning, decomposition, dependencies, honest estimates, checkpoints and contingencies.
+  - 🏁 `work backwards`: Starts from the end state and lists the steps that must come before it.
+  - ⚠️ `riskiest first`: Finds the step most likely to fail and moves it early.
+  - 🛟 `add contingencies`: Adds checkpoints and a fallback for each risky step.
 
 <!-- folder:start -->
 ## This folder

@@ -4,7 +4,7 @@ description: "Runs scenarios forward: mental simulation and rehearsal, scenario 
 trigger: "imagine or model how a scenario might play out"
 command: "simulate scenario"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # 🎲 Simulation
@@ -46,6 +46,12 @@ For rehearsing conversations, Claude can play the other person (see `difficult-c
 - A simulation is only as good as its assumptions; state them and vary them.
 - Mental rehearsal helps performance; endless replay of worst cases is worry, not planning (see `mindset-resilience` in self-improvement).
 - Precise-looking outputs from rough inputs create false confidence; report ranges.
+
+## Commands
+
+- 🎰 **Run it forward with ranges** · `simulate scenario`: Imagines or models how a scenario might play out, with stated assumptions and ranges, not one guess.
+  - 📊 `model scenarios`: Builds best, likely and worst cases with the assumptions behind each.
+  - 🎭 `rehearse conversation`: Simulates how a conversation might go, with likely responses to prepare for.
 
 <!-- folder:start -->
 ## This folder

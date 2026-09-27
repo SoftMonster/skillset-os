@@ -4,7 +4,7 @@ description: "Helps the user build and keep friendships: finds where to meet peo
 trigger: "make new friends or keep and deepen friendships"
 command: "deepen friendships"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # Friendships and connection
@@ -42,6 +42,13 @@ Claude is not a replacement for human friendship. When someone relies on Claude 
 - Loneliness is common and not a personal failing; say so.
 - Persistent loneliness with low mood deserves care; mention support if it seems heavy.
 - Friendship takes time; set expectations of months, not weeks.
+
+## Commands
+
+- 🫂 **Repeated time, be the one who invites** · `deepen friendships`: Helps make new friends and keep or deepen friendships: take stock, find repeated contact, move from acquaintance to friend, keep in touch, and deepen.
+  - 🌱 `make new friends`: Plans where to find repeated contact with new people and how to invite.
+  - 📅 `keep in touch`: Sets up a simple rhythm for staying in touch with friends.
+  - 🍂 `friendship drifting`: Helps decide what to do about a friendship that is fading or ending.
 
 <!-- folder:start -->
 ## This folder

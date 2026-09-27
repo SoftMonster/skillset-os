@@ -3,7 +3,7 @@ name: decision-support
 description: "Supports another person's decision: clarifies the question and what matters to them, supplies accurate information and options, lays out trade-offs and uncertainty evenly, checks for missing options and pressure, and leaves the choice with them. For people, covers advising friends, family, clients and teams and shared decisions; for Claude, covers giving the facts someone needs for legal, financial, medical and personal choices rather than confident verdicts, respecting their autonomy and values, and being clear about the limits of its role. Use when the user wants to help someone else decide, or when the person asks Claude what they should do about a significant choice. For the user working through their own decision, use decision-making in self-improvement."
 trigger: "help someone else make a decision without deciding for them"
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # 🧭 Decision Support
@@ -45,6 +45,12 @@ When a decision needs a professional or urgent help rather than more information
 
 - Too much information paralyses; focus on what would change the choice.
 - "What would you do?" is sometimes a request for reassurance; notice what they need.
+
+## Commands
+
+- 🧭 **Better decision, their choice** · `support decision`: Helps someone else make a decision without deciding for them: clarifies the question and values, supplies information, lays out options evenly, names uncertainty and respects the choice.
+  - ⚖️ `lay out options`: Presents each option with its trade-offs evenly, without steering.
+  - ❓ `clarify decision`: Asks what matters most to the person and restates the real question.
 
 <!-- folder:start -->
 ## This folder

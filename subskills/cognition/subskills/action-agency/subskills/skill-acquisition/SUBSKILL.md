@@ -4,7 +4,7 @@ description: "Explains how skills are acquired: the stages from conscious effort
 trigger: "learn a new skill fast or turn practice into ability"
 command: "acquire skill"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # 🧬 Skill Acquisition
@@ -51,6 +51,12 @@ This is the home of skill acquisition; metacognition points here.
 
 - Mindless repetition builds habits, not skill; attention and feedback make the difference.
 - The "10,000 hours" figure is an average from a specific study; useful competence usually comes much sooner.
+
+## Commands
+
+- 🎯 **Weakest part, just beyond comfort** · `acquire skill`: Learns a new skill fast: splits it into parts, finds the weakest, and practises it just beyond comfort with fast feedback.
+  - 🧑 **For you** · `practise skill`: Designs a practice plan for a person: sub-skills, drills, feedback source and a schedule.
+  - 🤖 **For Claude** · `learn skill claude`: Claude learns a new kind of task from examples or docs, practises on small cases, and checks results before relying on it.
 
 <!-- folder:start -->
 ## This folder

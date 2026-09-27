@@ -4,7 +4,7 @@ description: "Coordinates skill training by drawing on the rest of the skillset:
 trigger: "train or practise a skill, or pick one to train from recent lessons or current events"
 command: "train skill"
 metadata:
-  version: "1.3.0"
+  version: "1.5.0"
 ---
 
 # Training skills
@@ -99,7 +99,7 @@ When the request is to train many skills ("train 10 at a time", "work through al
 
 - **Batch size changes the reporting, not the training.** Each skill is still chosen, applied and verified on its own; a batch only groups the reports.
 - **Count skills, not files.** A skillset holds routers, scripts, templates and memory beside its skills. Use `skillset.py tree` (members at all depths) for the count, never a file listing.
-- **Keep a verified ledger:** one row per skill with what was done (definition read, drilled, demonstrated) and the evidence. Before saying a curriculum is complete, reconcile the ledger against the actual inventory.
+- **Keep a verified ledger:** one row per skill with what was done (definition read, drilled, demonstrated) and the evidence. For training across several skills, run `python3 scripts/ledger.py init <ledger>.json [--scope <member>]`: it reads the skills from the skillset itself, so the rows match what exists. Record each step with `ledger.py mark <ledger>.json <skill> <status> --evidence "<what showed it worked>"`; drilled and demonstrated are refused without evidence. Before saying a curriculum is complete, run `ledger.py reconcile <ledger>.json`: only COMPLETE may be reported as complete, and every gap it lists is said plainly. Keep the ledger in the session or in a file the person holds, never in the skillset or its self-memory.
 - **Reading is not mastery.** A definition says what a skill is; only a demonstration, a test or a checked result shows it can be done. Report which is which.
 
 ## Example
@@ -113,6 +113,14 @@ Response: "Let's train receiving feedback, because of the meeting you described 
 - Do not choose a skill tied to distressing news for someone who seems vulnerable or upset; pick a steadier one, or respond to how they are first.
 - One skill per session. Training everything trains nothing.
 - If the "lesson learnt" points to distress or a crisis rather than a skill gap, set training aside and respond to the person.
+
+## Commands
+
+- 🏋️ **One skill, baseline, drill, book the next** · `train skill`: Trains or practises a skill (the person's or Claude's): choose the target, baseline, plan from other skills, run a drill session, close the loop.
+  - 🤖 `train claude`: Trains one of Claude's skills from recent lessons, with a baseline and a drill.
+  - 📰 `train from news`: Picks a skill to train from current events and runs a session.
+  - 📏 `take baseline`: Measures the current level of the skill before training.
+  - 📒 `check training ledger`: Reconciles the training ledger against the skills that actually exist and reports COMPLETE only when every one is demonstrated with evidence.
 
 <!-- folder:start -->
 ## This folder

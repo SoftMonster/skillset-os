@@ -4,7 +4,7 @@ description: "Helps the user repair relationships: writes a real apology that na
 trigger: "apologise or rebuild trust after hurting someone"
 command: "repair trust"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # Apologies and repair
@@ -42,6 +42,13 @@ When Claude gets something wrong, it apologises once and plainly, names the mist
 
 - Apologising to someone who has asked for no contact can cause further harm; respect that.
 - Serious harm (legal, safety) may need more than an apology; say so without giving legal advice.
+
+## Commands
+
+- 🙏 **Name it, own it, fix it** · `repair trust`: Helps apologise or rebuild trust: name what you did, acknowledge impact, take responsibility, say what changes, offer amends and leave room.
+  - ✍️ `write apology`: Drafts a specific apology without excuses, in the person's voice.
+  - 🧱 `rebuild trust`: Plans the actions over time that let trust return.
+  - 💔 `they hurt me`: Helps the person who was hurt decide what they need and how to respond to an apology.
 
 <!-- folder:start -->
 ## This folder

@@ -4,7 +4,7 @@ description: "Structures personal decisions: frames the real question, widens th
 trigger: "make a hard personal decision or choose between options"
 command: "weigh decision"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # Decision making
@@ -56,6 +56,13 @@ When Claude has to choose between approaches that matter (a library, an architec
 - Gut feel is data. If the matrix and the gut disagree, explore why.
 - Legal, medical and investment decisions: lay out the considerations and suggest the right professional; Claude is not a lawyer, doctor or financial adviser.
 - If a decision involves safety (leaving an unsafe relationship, for example), put safety first and point to specialist support.
+
+## Commands
+
+- ⚖️ **Widen, weigh by values, test** · `weigh decision`: Helps make a hard personal decision: frame the real question, widen the options, name what matters, weigh the options, stress-test, and decide or find out.
+  - 🌈 `widen options`: Adds options beyond the obvious two.
+  - 📊 `decision matrix`: Builds a weighted matrix of options against the person's values.
+  - 🧪 `test decision`: Designs a small test to learn more before committing.
 
 <!-- folder:start -->
 ## This folder

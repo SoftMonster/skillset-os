@@ -1,0 +1,955 @@
+{
+  "about": "Curriculum card (its id and name, because some ids repeat) -> the installed member that covers the card's core capability. Only 'exact' (same name) and 'curated' (checked by hand) entries count as mapped. 'rejected' records a card that was reviewed and is not covered by any member, with the reason; it is never tested or scored, and it stops the card being suggested again. Every other card is unreviewed. A mapped card is tested against the member's own instructions, and the examiner still notes where the third-party skill it names may go further. Suggestions from card_map.py suggest are never written here unchecked.",
+  "cards": {
+    "B-10-3 change-management": {
+      "member": null,
+      "status": "rejected",
+      "why": "needs specialist or professional judgement the general member does not give"
+    },
+    "B-10-8 strategic-alignment": {
+      "member": null,
+      "status": "rejected",
+      "why": "needs specialist or professional judgement the general member does not give"
+    },
+    "B-120-104 synthetic-session-generator": {
+      "member": null,
+      "status": "rejected",
+      "why": "HR, legal or business documents no member teaches (the suggested emoji-list-generator is unrelated)"
+    },
+    "B-120-118 zabbix-api": {
+      "member": null,
+      "status": "rejected",
+      "why": "tied to a specific product, platform or tool no member covers"
+    },
+    "B-120-17 cfo-review": {
+      "member": null,
+      "status": "rejected",
+      "why": "executive or role-perspective review, not code or security review"
+    },
+    "B-120-18 cmo-review": {
+      "member": null,
+      "status": "rejected",
+      "why": "executive or role-perspective review, not code or security review"
+    },
+    "B-120-19 code-reviewer": {
+      "member": "software-dev/code-review",
+      "status": "curated",
+      "why": "code review"
+    },
+    "B-120-20 code-tour": {
+      "member": "software-dev/codebase-orientation",
+      "status": "curated",
+      "why": "a guided tour of a codebase"
+    },
+    "B-120-3 agency-meetup-publish": {
+      "member": null,
+      "status": "rejected",
+      "why": "name too vague or unfamiliar to judge a match"
+    },
+    "B-120-30 docx-manipulation": {
+      "member": null,
+      "status": "rejected",
+      "why": "tied to a specific product, platform or tool no member covers"
+    },
+    "B-120-39 feature-factory": {
+      "member": null,
+      "status": "rejected",
+      "why": "name too vague or unfamiliar to judge a match"
+    },
+    "B-120-40 feature-flags-architect": {
+      "member": null,
+      "status": "rejected",
+      "why": "needs specialist or professional judgement the general member does not give"
+    },
+    "B-120-43 godaddy-api": {
+      "member": null,
+      "status": "rejected",
+      "why": "tied to a specific product, platform or tool no member covers"
+    },
+    "B-120-49 icp-prospect-list-builder": {
+      "member": null,
+      "status": "rejected",
+      "why": "would profile or target individuals"
+    },
+    "B-120-53 learning-vault": {
+      "member": null,
+      "status": "rejected",
+      "why": "name too vague or unfamiliar to judge a match"
+    },
+    "B-120-54 library-sync": {
+      "member": null,
+      "status": "rejected",
+      "why": "data or automation pipelines no member teaches (ci-cd-pipeline is for code delivery)"
+    },
+    "B-120-56 looking-up-docs": {
+      "member": "cognition/reasoning/research",
+      "status": "curated",
+      "why": "looking facts up in primary documentation"
+    },
+    "B-120-60 modernize-tests": {
+      "member": "software-dev/write-tests",
+      "status": "curated",
+      "why": "improving a test suite"
+    },
+    "B-120-63 named-persona-adversarial-review": {
+      "member": "cognition/reasoning/adversarial-thinking",
+      "status": "curated",
+      "why": "reviewing from a hostile persona's view (suggestion security-review was wrong)"
+    },
+    "B-120-68 parallel-agent-refactor": {
+      "member": null,
+      "status": "rejected",
+      "why": "multi-agent or agent-infrastructure work no member teaches"
+    },
+    "B-120-69 performance-profiler": {
+      "member": "software-dev/performance-tuning",
+      "status": "curated",
+      "why": "profiling is the measuring step of tuning"
+    },
+    "B-120-7 api-design-reviewer": {
+      "member": "software-dev/api-design",
+      "status": "curated",
+      "why": "reviewing API design"
+    },
+    "B-120-70 pr-review-expert": {
+      "member": "software-dev/code-review",
+      "status": "curated",
+      "why": "pull request review"
+    },
+    "B-120-76 project-structure": {
+      "member": "software-dev/scaffold-project",
+      "status": "curated",
+      "why": "project structure"
+    },
+    "B-120-79 python-design-patterns": {
+      "member": null,
+      "status": "rejected",
+      "why": "language- or framework-specific coding practice no member teaches"
+    },
+    "B-120-8 api-test-suite-builder": {
+      "member": "software-dev/write-tests",
+      "status": "curated",
+      "why": "building a test suite (suggestion api-design was the wrong member)"
+    },
+    "B-120-80 python-error-handling": {
+      "member": null,
+      "status": "rejected",
+      "why": "language- or framework-specific coding practice no member teaches"
+    },
+    "B-120-81 refactor": {
+      "member": "software-dev/refactor-code",
+      "status": "curated",
+      "why": "refactoring"
+    },
+    "B-120-82 reviewing-code": {
+      "member": "software-dev/code-review",
+      "status": "curated",
+      "why": "code review"
+    },
+    "B-120-97 spec-driven-workflow": {
+      "member": "software-dev/plan-feature",
+      "status": "curated",
+      "why": "writing the spec before building"
+    },
+    "B-13-11 web-crawl-intelligence-extraction": {
+      "member": null,
+      "status": "rejected",
+      "why": "would profile or target individuals"
+    },
+    "B-13-4 cdp-render-verification": {
+      "member": null,
+      "status": "rejected",
+      "why": "tied to a specific product, platform or tool no member covers"
+    },
+    "B-13-9 universal-scraping-architect": {
+      "member": null,
+      "status": "rejected",
+      "why": "name too vague or unfamiliar to judge a match"
+    },
+    "B-152-1 adversarial-reviewer": {
+      "member": "cognition/reasoning/adversarial-thinking",
+      "status": "curated",
+      "why": "adversarial review is adversarial thinking applied to work"
+    },
+    "B-152-105 peer-agent-collaboration": {
+      "member": null,
+      "status": "rejected",
+      "why": "multi-agent or agent-infrastructure work no member teaches"
+    },
+    "B-152-109 power-bi-docs": {
+      "member": null,
+      "status": "rejected",
+      "why": "tied to a specific product, platform or tool no member covers"
+    },
+    "B-152-113 python-resource-management": {
+      "member": null,
+      "status": "rejected",
+      "why": "language- or framework-specific coding practice no member teaches"
+    },
+    "B-152-118 reflect": {
+      "member": "self-improvement/reflect-and-review",
+      "status": "curated",
+      "why": "reflection"
+    },
+    "B-152-12 ai-security": {
+      "member": null,
+      "status": "rejected",
+      "why": "needs specialist or professional judgement the general member does not give"
+    },
+    "B-152-121 research-summarizer": {
+      "member": "cognition/reasoning/research",
+      "status": "curated",
+      "why": "summarising research is the synthesis step"
+    },
+    "B-152-122 risk-management-specialist": {
+      "member": null,
+      "status": "rejected",
+      "why": "needs specialist or professional judgement the general member does not give"
+    },
+    "B-152-124 self-eval": {
+      "member": "cognition/metacognition/universal-skill-curriculum-exam",
+      "status": "curated",
+      "why": "an AI evaluating its own skills"
+    },
+    "B-152-125 self-improving-agent": {
+      "member": "cognition/metacognition/continuous-self-correction",
+      "status": "curated",
+      "why": "an agent that learns from its own mistakes over time"
+    },
+    "B-152-139 strict-api": {
+      "member": null,
+      "status": "rejected",
+      "why": "language- or framework-specific coding practice no member teaches"
+    },
+    "B-152-141 the-goal": {
+      "member": null,
+      "status": "rejected",
+      "why": "name too vague or unfamiliar to judge a match"
+    },
+    "B-152-145 update-project": {
+      "member": null,
+      "status": "rejected",
+      "why": "name too vague or unfamiliar to judge a match"
+    },
+    "B-152-146 using-git-worktrees": {
+      "member": "software-dev/git-workflow",
+      "status": "curated",
+      "why": "git worktrees are part of git workflow"
+    },
+    "B-152-149 workflow-builder": {
+      "member": null,
+      "status": "rejected",
+      "why": "data or automation pipelines no member teaches (ci-cd-pipeline is for code delivery)"
+    },
+    "B-152-151 write-a-skill": {
+      "member": "skillset-tools/write-subskill",
+      "status": "curated",
+      "why": "writing a skill"
+    },
+    "B-152-20 business-model-canvas": {
+      "member": null,
+      "status": "rejected",
+      "why": "marketing, sales, social media or brand work no member teaches"
+    },
+    "B-152-23 caio-review": {
+      "member": null,
+      "status": "rejected",
+      "why": "executive or role-perspective review, not code or security review"
+    },
+    "B-152-3 agency-docs-updater": {
+      "member": "software-dev/technical-docs",
+      "status": "curated",
+      "why": "keeping documentation current"
+    },
+    "B-152-30 consulting-design": {
+      "member": null,
+      "status": "rejected",
+      "why": "marketing, sales, social media or brand work no member teaches"
+    },
+    "B-152-31 context-builder": {
+      "member": null,
+      "status": "rejected",
+      "why": "multi-agent or agent-infrastructure work no member teaches"
+    },
+    "B-152-32 context-engine": {
+      "member": null,
+      "status": "rejected",
+      "why": "multi-agent or agent-infrastructure work no member teaches"
+    },
+    "B-152-39 decision-logger": {
+      "member": null,
+      "status": "rejected",
+      "why": "name too vague or unfamiliar to judge a match"
+    },
+    "B-152-4 agent-decision-receipts": {
+      "member": "cognition/safety-governance/transparency",
+      "status": "curated",
+      "why": "an auditable record of why decisions were made"
+    },
+    "B-152-40 deep-learning-book": {
+      "member": null,
+      "status": "rejected",
+      "why": "name too vague or unfamiliar to judge a match"
+    },
+    "B-152-42 design-tokens": {
+      "member": null,
+      "status": "rejected",
+      "why": "visual, UI or product design no member teaches (the suggested database-design is unrelated)"
+    },
+    "B-152-67 fable-goal": {
+      "member": null,
+      "status": "rejected",
+      "why": "name too vague or unfamiliar to judge a match"
+    },
+    "B-152-69 git-worktree": {
+      "member": "software-dev/git-workflow",
+      "status": "curated",
+      "why": "git worktrees are part of git workflow"
+    },
+    "B-152-72 grill-with-docs": {
+      "member": null,
+      "status": "rejected",
+      "why": "name too vague or unfamiliar to judge a match"
+    },
+    "B-152-8 agent-memory": {
+      "member": "skillset-tools/self-memory",
+      "status": "curated",
+      "why": "an agent's own persistent memory"
+    },
+    "B-152-9 agent-workflow-designer": {
+      "member": "cognition/action-agency/skill-composition",
+      "status": "curated",
+      "why": "designing a chain of steps and hand-offs for an agent"
+    },
+    "B-152-93 memory-engineering": {
+      "member": null,
+      "status": "rejected",
+      "why": "multi-agent or agent-infrastructure work no member teaches"
+    },
+    "B-152-94 memory-review": {
+      "member": "skillset-tools/self-memory",
+      "status": "curated",
+      "why": "reviewing and tidying an agent's own memory (suggestion security-review was wrong)"
+    },
+    "B-152-95 memory-status": {
+      "member": "skillset-tools/self-memory",
+      "status": "curated",
+      "why": "reporting the state of an agent's own memory (memory.py list and check)"
+    },
+    "B-18-14 power-bi-security": {
+      "member": null,
+      "status": "rejected",
+      "why": "tied to a specific product, platform or tool no member covers"
+    },
+    "B-19-10 information-security-manager-iso27001": {
+      "member": null,
+      "status": "rejected",
+      "why": "needs specialist or professional judgement the general member does not give"
+    },
+    "B-19-19 vendor-management": {
+      "member": null,
+      "status": "rejected",
+      "why": "needs specialist or professional judgement the general member does not give"
+    },
+    "B-23-1 ad-transparency-audit": {
+      "member": null,
+      "status": "rejected",
+      "why": "marketing, sales, social media or brand work no member teaches"
+    },
+    "B-23-13 security": {
+      "member": "software-dev/security-review",
+      "status": "curated",
+      "why": "general software security review"
+    },
+    "B-23-14 Security Monitoring": {
+      "member": null,
+      "status": "rejected",
+      "why": "needs specialist or professional judgement the general member does not give"
+    },
+    "B-23-15 security-pen-testing": {
+      "member": null,
+      "status": "rejected",
+      "why": "needs specialist or professional judgement the general member does not give"
+    },
+    "B-23-17 senior-security": {
+      "member": "software-dev/security-review",
+      "status": "curated",
+      "why": "general software security review"
+    },
+    "B-23-19 skill-security-auditor": {
+      "member": null,
+      "status": "rejected",
+      "why": "needs specialist or professional judgement the general member does not give"
+    },
+    "B-23-2 audit-xcode-security-settings": {
+      "member": null,
+      "status": "rejected",
+      "why": "tied to a specific product, platform or tool no member covers"
+    },
+    "B-23-22 threat-detection": {
+      "member": "cognition/safety-governance/threat-detection",
+      "status": "exact",
+      "why": "same name"
+    },
+    "B-23-23 verification-audit": {
+      "member": "cognition/action-agency/verification",
+      "status": "curated",
+      "why": "auditing work by verification"
+    },
+    "B-35-1 admin-dashboard-verification": {
+      "member": null,
+      "status": "rejected",
+      "why": "data or automation pipelines no member teaches (ci-cd-pipeline is for code delivery)"
+    },
+    "B-35-12 ETL Pipeline": {
+      "member": null,
+      "status": "rejected",
+      "why": "data or automation pipelines no member teaches (ci-cd-pipeline is for code delivery)"
+    },
+    "B-35-13 file-intel": {
+      "member": null,
+      "status": "rejected",
+      "why": "data or automation pipelines no member teaches (ci-cd-pipeline is for code delivery)"
+    },
+    "B-35-25 report-generator": {
+      "member": null,
+      "status": "rejected",
+      "why": "HR, legal or business documents no member teaches (the suggested emoji-list-generator is unrelated)"
+    },
+    "B-35-30 sql-database-assistant": {
+      "member": "software-dev/database-design",
+      "status": "curated",
+      "why": "schema and query design"
+    },
+    "B-35-34 xlsx-manipulation": {
+      "member": null,
+      "status": "rejected",
+      "why": "tied to a specific product, platform or tool no member covers"
+    },
+    "B-35-6 data-pipeline": {
+      "member": null,
+      "status": "rejected",
+      "why": "data or automation pipelines no member teaches (ci-cd-pipeline is for code delivery)"
+    },
+    "B-35-7 Database Sync": {
+      "member": null,
+      "status": "rejected",
+      "why": "data or automation pipelines no member teaches (ci-cd-pipeline is for code delivery)"
+    },
+    "B-35-8 database-designer": {
+      "member": "software-dev/database-design",
+      "status": "curated",
+      "why": "database design"
+    },
+    "B-35-9 database-schema-designer": {
+      "member": "software-dev/database-design",
+      "status": "curated",
+      "why": "schema design"
+    },
+    "B-44-21 n8n-workflow": {
+      "member": null,
+      "status": "rejected",
+      "why": "tied to a specific product, platform or tool no member covers"
+    },
+    "B-44-7 doc-pipeline": {
+      "member": null,
+      "status": "rejected",
+      "why": "data or automation pipelines no member teaches (ci-cd-pipeline is for code delivery)"
+    },
+    "B-50-1 adopt-c-bounds-safety": {
+      "member": null,
+      "status": "rejected",
+      "why": "language- or framework-specific coding practice no member teaches"
+    },
+    "B-50-15 Job Description Generator": {
+      "member": null,
+      "status": "rejected",
+      "why": "HR, legal or business documents no member teaches (the suggested emoji-list-generator is unrelated)"
+    },
+    "B-50-22 nda-generator": {
+      "member": null,
+      "status": "rejected",
+      "why": "HR, legal or business documents no member teaches (the suggested emoji-list-generator is unrelated)"
+    },
+    "B-50-26 Offer Letter Generator": {
+      "member": null,
+      "status": "rejected",
+      "why": "HR, legal or business documents no member teaches (the suggested emoji-list-generator is unrelated)"
+    },
+    "B-50-31 pptx-manipulation": {
+      "member": null,
+      "status": "rejected",
+      "why": "tied to a specific product, platform or tool no member covers"
+    },
+    "B-50-33 pw-review": {
+      "member": null,
+      "status": "rejected",
+      "why": "name too vague or unfamiliar to judge a match"
+    },
+    "B-50-4 conversation-review": {
+      "member": null,
+      "status": "rejected",
+      "why": "name too vague or unfamiliar to judge a match"
+    },
+    "B-50-47 thinking-patterns": {
+      "member": null,
+      "status": "rejected",
+      "why": "name too vague or unfamiliar to judge a match"
+    },
+    "B-53-15 cull-release-publish": {
+      "member": null,
+      "status": "rejected",
+      "why": "name too vague or unfamiliar to judge a match"
+    },
+    "B-53-21 git": {
+      "member": "software-dev/git-workflow",
+      "status": "curated",
+      "why": "git"
+    },
+    "B-53-22 git-advanced-workflows": {
+      "member": "software-dev/git-workflow",
+      "status": "curated",
+      "why": "advanced git workflows"
+    },
+    "B-53-23 git-worktree-manager": {
+      "member": "software-dev/git-workflow",
+      "status": "curated",
+      "why": "git worktrees are part of git workflow"
+    },
+    "B-53-27 github-repo-management": {
+      "member": null,
+      "status": "rejected",
+      "why": "name too vague or unfamiliar to judge a match"
+    },
+    "B-53-39 publish-skill": {
+      "member": "skillset-tools/publish-plugin",
+      "status": "curated",
+      "why": "publishing a skill"
+    },
+    "B-53-42 repo-publish": {
+      "member": null,
+      "status": "rejected",
+      "why": "name too vague or unfamiliar to judge a match"
+    },
+    "B-53-44 security-guidance": {
+      "member": "software-dev/security-review",
+      "status": "curated",
+      "why": "general software security guidance"
+    },
+    "B-53-5 Changelog Generator": {
+      "member": "software-dev/technical-docs",
+      "status": "curated",
+      "why": "technical-docs covers changelogs"
+    },
+    "B-53-51 vpe-review": {
+      "member": null,
+      "status": "rejected",
+      "why": "executive or role-perspective review, not code or security review"
+    },
+    "B-53-52 weekly-review": {
+      "member": "self-improvement/reflect-and-review",
+      "status": "curated",
+      "why": "a weekly review (suggestion was code-review: wrong)"
+    },
+    "B-53-6 changelog-generator": {
+      "member": "software-dev/technical-docs",
+      "status": "curated",
+      "why": "technical-docs covers changelogs"
+    },
+    "B-59-12 ciso-review": {
+      "member": null,
+      "status": "rejected",
+      "why": "executive or role-perspective review, not code or security review"
+    },
+    "B-59-13 code-to-prd": {
+      "member": null,
+      "status": "rejected",
+      "why": "name too vague or unfamiliar to judge a match"
+    },
+    "B-59-18 cpo-review": {
+      "member": null,
+      "status": "rejected",
+      "why": "executive or role-perspective review, not code or security review"
+    },
+    "B-59-19 cto-review": {
+      "member": null,
+      "status": "rejected",
+      "why": "executive or role-perspective review, not code or security review"
+    },
+    "B-59-22 design-system": {
+      "member": null,
+      "status": "rejected",
+      "why": "visual, UI or product design no member teaches (the suggested database-design is unrelated)"
+    },
+    "B-59-26 epic-design": {
+      "member": null,
+      "status": "rejected",
+      "why": "visual, UI or product design no member teaches (the suggested database-design is unrelated)"
+    },
+    "B-59-30 frontend-design": {
+      "member": null,
+      "status": "rejected",
+      "why": "visual, UI or product design no member teaches (the suggested database-design is unrelated)"
+    },
+    "B-59-31 gc-review": {
+      "member": null,
+      "status": "rejected",
+      "why": "executive or role-perspective review, not code or security review"
+    },
+    "B-59-38 marketing-context": {
+      "member": null,
+      "status": "rejected",
+      "why": "marketing, sales, social media or brand work no member teaches"
+    },
+    "B-59-43 product-research": {
+      "member": "cognition/reasoning/research",
+      "status": "curated",
+      "why": "general research method applied to a product"
+    },
+    "B-59-50 svg-logo-brand-asset-pipeline": {
+      "member": null,
+      "status": "rejected",
+      "why": "marketing, sales, social media or brand work no member teaches"
+    },
+    "B-59-53 ui-design-system": {
+      "member": null,
+      "status": "rejected",
+      "why": "visual, UI or product design no member teaches (the suggested database-design is unrelated)"
+    },
+    "B-59-55 ux-decision-rubrics": {
+      "member": null,
+      "status": "rejected",
+      "why": "needs specialist or professional judgement the general member does not give"
+    },
+    "B-59-58 vision-bench": {
+      "member": null,
+      "status": "rejected",
+      "why": "visual, UI or product design no member teaches (the suggested database-design is unrelated)"
+    },
+    "B-59-6 Brand Guidelines Generator": {
+      "member": null,
+      "status": "rejected",
+      "why": "marketing, sales, social media or brand work no member teaches"
+    },
+    "B-60-10 company-research": {
+      "member": "cognition/reasoning/research",
+      "status": "curated",
+      "why": "general research method applied to a company"
+    },
+    "B-60-16 Content Research Writer": {
+      "member": "cognition/reasoning/research",
+      "status": "curated",
+      "why": "research, then synthesis"
+    },
+    "B-60-17 content-research-writer": {
+      "member": "cognition/reasoning/research",
+      "status": "curated",
+      "why": "research, then synthesis"
+    },
+    "B-60-19 deep-research": {
+      "member": "cognition/reasoning/research",
+      "status": "curated",
+      "why": "deep research"
+    },
+    "B-60-21 elimination-research": {
+      "member": null,
+      "status": "rejected",
+      "why": "name too vague or unfamiliar to judge a match"
+    },
+    "B-60-22 firecrawl-research": {
+      "member": null,
+      "status": "rejected",
+      "why": "tied to a specific product, platform or tool no member covers"
+    },
+    "B-60-23 github-research": {
+      "member": "cognition/reasoning/research",
+      "status": "curated",
+      "why": "research method applied to public repositories"
+    },
+    "B-60-27 industry-context-research": {
+      "member": "cognition/reasoning/research",
+      "status": "curated",
+      "why": "general research method applied to an industry"
+    },
+    "B-60-28 intelligence-dossier": {
+      "member": null,
+      "status": "rejected",
+      "why": "would profile or target individuals"
+    },
+    "B-60-30 Lead Research Assistant": {
+      "member": null,
+      "status": "rejected",
+      "why": "would profile or target individuals"
+    },
+    "B-60-31 linkedin-activity-intelligence": {
+      "member": null,
+      "status": "rejected",
+      "why": "would profile or target individuals"
+    },
+    "B-60-35 market-research": {
+      "member": "cognition/reasoning/research",
+      "status": "curated",
+      "why": "general research method applied to a market"
+    },
+    "B-60-39 plan-my-day": {
+      "member": "self-improvement/plan-and-prioritise",
+      "status": "curated",
+      "why": "planning a day"
+    },
+    "B-60-42 research": {
+      "member": "cognition/reasoning/research",
+      "status": "exact",
+      "why": "same name"
+    },
+    "B-60-43 research-add-fields": {
+      "member": null,
+      "status": "rejected",
+      "why": "data or automation pipelines no member teaches (ci-cd-pipeline is for code delivery)"
+    },
+    "B-60-44 research-add-items": {
+      "member": null,
+      "status": "rejected",
+      "why": "data or automation pipelines no member teaches (ci-cd-pipeline is for code delivery)"
+    },
+    "B-60-45 research-deep": {
+      "member": "cognition/reasoning/research",
+      "status": "curated",
+      "why": "deep research"
+    },
+    "B-60-46 research-ops-skills": {
+      "member": null,
+      "status": "rejected",
+      "why": "data or automation pipelines no member teaches (ci-cd-pipeline is for code delivery)"
+    },
+    "B-60-47 research-outline": {
+      "member": "cognition/reasoning/research",
+      "status": "curated",
+      "why": "planning a research outline is the framing step"
+    },
+    "B-60-48 research-report": {
+      "member": "cognition/reasoning/research",
+      "status": "curated",
+      "why": "a research report is the synthesis step"
+    },
+    "B-60-55 video-intelligence": {
+      "member": null,
+      "status": "rejected",
+      "why": "visual, UI or product design no member teaches (the suggested database-design is unrelated)"
+    },
+    "B-60-56 visual-intelligence": {
+      "member": null,
+      "status": "rejected",
+      "why": "visual, UI or product design no member teaches (the suggested database-design is unrelated)"
+    },
+    "B-60-59 x-twitter-growth": {
+      "member": null,
+      "status": "rejected",
+      "why": "marketing, sales, social media or brand work no member teaches"
+    },
+    "B-60-7 clinical-research": {
+      "member": null,
+      "status": "rejected",
+      "why": "needs specialist or professional judgement the general member does not give"
+    },
+    "B-60-8 commercial-property-research": {
+      "member": null,
+      "status": "rejected",
+      "why": "needs specialist or professional judgement the general member does not give"
+    },
+    "B-60-9 company-legal-reputation-research": {
+      "member": null,
+      "status": "rejected",
+      "why": "needs specialist or professional judgement the general member does not give"
+    },
+    "B-62-10 canvas-design": {
+      "member": null,
+      "status": "rejected",
+      "why": "visual, UI or product design no member teaches (the suggested database-design is unrelated)"
+    },
+    "B-62-11 codebase-onboarding": {
+      "member": "software-dev/codebase-orientation",
+      "status": "curated",
+      "why": "onboarding to a codebase"
+    },
+    "B-62-15 dev-slides": {
+      "member": null,
+      "status": "rejected",
+      "why": "visual, UI or product design no member teaches (the suggested database-design is unrelated)"
+    },
+    "B-62-17 docs:write-concisely": {
+      "member": "cognition/communication-regulation/communication",
+      "status": "curated",
+      "why": "writing clearly and concisely"
+    },
+    "B-62-23 human-gate": {
+      "member": "cognition/safety-governance/human-escalation",
+      "status": "curated",
+      "why": "gating work on a human decision"
+    },
+    "B-62-32 md-review": {
+      "member": null,
+      "status": "rejected",
+      "why": "name too vague or unfamiliar to judge a match"
+    },
+    "B-62-39 obsidian-vault-management": {
+      "member": null,
+      "status": "rejected",
+      "why": "tied to a specific product, platform or tool no member covers"
+    },
+    "B-62-47 pdf-processing": {
+      "member": "apps",
+      "status": "curated",
+      "why": "the apps member's pdftool: merge, split, rotate, extract"
+    },
+    "B-62-52 presentation-generator": {
+      "member": null,
+      "status": "rejected",
+      "why": "tied to a specific product, platform or tool no member covers"
+    },
+    "B-62-59 temple-generator": {
+      "member": null,
+      "status": "rejected",
+      "why": "visual, UI or product design no member teaches (the suggested database-design is unrelated)"
+    },
+    "B-64-11 content-idea-generator": {
+      "member": "cognition/reasoning/creativity",
+      "status": "curated",
+      "why": "generating ideas"
+    },
+    "B-64-16 cro-review": {
+      "member": null,
+      "status": "rejected",
+      "why": "executive or role-perspective review, not code or security review"
+    },
+    "B-64-30 File Organizer": {
+      "member": null,
+      "status": "rejected",
+      "why": "data or automation pipelines no member teaches (ci-cd-pipeline is for code delivery)"
+    },
+    "B-64-34 landing-page-generator": {
+      "member": null,
+      "status": "rejected",
+      "why": "marketing, sales, social media or brand work no member teaches"
+    },
+    "B-64-44 marketing-demand-acquisition": {
+      "member": null,
+      "status": "rejected",
+      "why": "marketing, sales, social media or brand work no member teaches"
+    },
+    "B-64-56 social-card-gen": {
+      "member": null,
+      "status": "rejected",
+      "why": "marketing, sales, social media or brand work no member teaches"
+    },
+    "B-64-57 social-content": {
+      "member": null,
+      "status": "rejected",
+      "why": "marketing, sales, social media or brand work no member teaches"
+    },
+    "B-64-58 social-media-analyzer": {
+      "member": null,
+      "status": "rejected",
+      "why": "marketing, sales, social media or brand work no member teaches"
+    },
+    "B-64-59 social-media-manager": {
+      "member": null,
+      "status": "rejected",
+      "why": "marketing, sales, social media or brand work no member teaches"
+    },
+    "B-64-60 social-publisher": {
+      "member": null,
+      "status": "rejected",
+      "why": "marketing, sales, social media or brand work no member teaches"
+    },
+    "B-64-61 subscription-management": {
+      "member": null,
+      "status": "rejected",
+      "why": "name too vague or unfamiliar to judge a match"
+    },
+    "B-7-4 building-document-based-swiftui-applications": {
+      "member": null,
+      "status": "rejected",
+      "why": "tied to a specific product, platform or tool no member covers"
+    },
+    "B-7-4 oem-partner-verification": {
+      "member": null,
+      "status": "rejected",
+      "why": "needs specialist or professional judgement the general member does not give"
+    },
+    "B-7-6 research-finance": {
+      "member": null,
+      "status": "rejected",
+      "why": "needs specialist or professional judgement the general member does not give"
+    },
+    "B-7-7 supplier-verification": {
+      "member": null,
+      "status": "rejected",
+      "why": "needs specialist or professional judgement the general member does not give"
+    },
+    "B-9-1 business-growth-skills": {
+      "member": null,
+      "status": "rejected",
+      "why": "marketing, sales, social media or brand work no member teaches"
+    },
+    "B-91-16 azure-cost-management-app": {
+      "member": null,
+      "status": "rejected",
+      "why": "tied to a specific product, platform or tool no member covers"
+    },
+    "B-91-21 cco-review": {
+      "member": null,
+      "status": "rejected",
+      "why": "executive or role-perspective review, not code or security review"
+    },
+    "B-91-22 cdo-review": {
+      "member": null,
+      "status": "rejected",
+      "why": "executive or role-perspective review, not code or security review"
+    },
+    "B-91-25 ci-cd-pipeline-builder": {
+      "member": "software-dev/ci-cd-pipeline",
+      "status": "curated",
+      "why": "building a CI/CD pipeline"
+    },
+    "B-91-26 cloud-security": {
+      "member": null,
+      "status": "rejected",
+      "why": "needs specialist or professional judgement the general member does not give"
+    },
+    "B-91-30 container-security": {
+      "member": null,
+      "status": "rejected",
+      "why": "needs specialist or professional judgement the general member does not give"
+    },
+    "B-91-33 decision-toolkit": {
+      "member": "self-improvement/decision-making",
+      "status": "curated",
+      "why": "decision tools"
+    },
+    "B-91-76 robusta-dev": {
+      "member": null,
+      "status": "rejected",
+      "why": "tied to a specific product, platform or tool no member covers"
+    },
+    "B-91-77 runbook-generator": {
+      "member": "software-dev/technical-docs",
+      "status": "curated",
+      "why": "technical-docs covers runbooks"
+    },
+    "B-91-80 senior-computer-vision": {
+      "member": null,
+      "status": "rejected",
+      "why": "visual, UI or product design no member teaches (the suggested database-design is unrelated)"
+    },
+    "B-91-84 system-design-architecture": {
+      "member": null,
+      "status": "rejected",
+      "why": "needs specialist or professional judgement the general member does not give"
+    },
+    "B-91-90 web-deploy-verification": {
+      "member": "cognition/action-agency/verification",
+      "status": "curated",
+      "why": "checking a deploy actually works before calling it done"
+    }
+  }
+}

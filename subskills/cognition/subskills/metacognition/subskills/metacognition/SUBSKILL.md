@@ -4,7 +4,7 @@ description: "Builds metacognition: knowing what one knows and does not, plannin
 trigger: "think about my thinking or pick the right strategy for a problem"
 command: "pick strategy"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # 🧠 Metacognition
@@ -53,6 +53,12 @@ Four faculties of this group live elsewhere, one copy each:
 
 - Too much monitoring slows performance of skills that should be automatic; monitor at checkpoints.
 - Metacognition is not self-criticism; the tone is curious and practical.
+
+## Commands
+
+- 🧠 **Real question? Is it working?** · `pick strategy`: Thinks about thinking before, during and after a problem: picks the right strategy, monitors it and reviews it.
+  - 🧑 **For you** · `think about thinking`: Coaches a person to plan, monitor and review their own thinking on a problem.
+  - 🤖 **For Claude** · `conduct thinking`: Claude checks it is answering the real question, picks the approach and monitors whether it is working.
 
 <!-- folder:start -->
 ## This folder

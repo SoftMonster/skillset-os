@@ -4,7 +4,7 @@ description: "Helps the user persuade honestly: understands the audience's conce
 trigger: "persuade people or make a case ethically"
 command: "persuade people"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # Influence and persuasion
@@ -43,6 +43,12 @@ For memes, slogans, campaign lines and other public messages meant to spread, us
 
 - Persuasion works poorly on people who feel attacked; curiosity about their view comes first.
 - Changing a deeply held belief usually takes several conversations and a face-saving path.
+
+## Commands
+
+- 🗣️ **Honest reasons that matter to them** · `persuade people`: Persuades ethically: know the audience, shape the message, make the ask and prepare for objections, never pressure.
+  - 🎯 `make my case`: Builds a case for the proposal around what the audience cares about.
+  - 🛡️ `prepare objections`: Lists likely objections with honest answers.
 
 <!-- folder:start -->
 ## This folder

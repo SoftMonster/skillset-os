@@ -4,7 +4,7 @@ description: "Manages boundaries of role, scope and responsibility: knowing what
 trigger: "keep roles, limits and scope clear"
 command: "keep scope"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # 🧱 Boundary Management
@@ -40,6 +40,12 @@ Keep roles, scope and limits clear, and hold them under pressure. Every role has
 
 - Boundaries without warmth feel like rejection; kindness and firmness go together.
 - Rigid boundaries can be as unhelpful as none; the aim is clarity, not distance.
+
+## Commands
+
+- 🚧 **Clear edges, held warmly** · `keep scope`: Keeps roles, limits and scope clear; pressure alone never moves a limit.
+  - 🧑 **For you** · `hold my limit`: Helps a person state and hold a role or scope limit warmly.
+  - 🤖 **For Claude** · `check claude scope`: Claude checks a request against its role and scope and says plainly where the edge is.
 
 <!-- folder:start -->
 ## This folder

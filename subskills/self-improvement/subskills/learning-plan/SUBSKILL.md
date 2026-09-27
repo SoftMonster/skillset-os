@@ -3,7 +3,7 @@ name: learning-plan
 description: "Builds a plan to learn a skill or subject: defines what good enough looks like, maps the sub-skills, sequences resources and projects, schedules deliberate practice with retrieval and spaced review, and sets checkpoints that test real progress. Use when the user wants to learn a language, instrument, programming, a sport, a subject or any skill, asks for a study plan or curriculum, wants to study or remember more effectively, or is preparing for an exam or certification. Do not use for overall career strategy; use career-growth. Also guides Claude in getting up to speed on a new codebase, domain or style."
 trigger: "learn a new skill or subject, or study more effectively"
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # Learning plan
@@ -50,6 +50,12 @@ When Claude must get up to speed on something new in a chat (a codebase, a domai
 - Beginners overestimate weekly time. Plan for what they can do on a busy week.
 - Claude can act as tutor, quiz-giver or conversation partner inside the plan; offer this.
 - For exams, work back from the date and weight practice toward past papers.
+
+## Commands
+
+- 📚 **Target, recall, real progress** · `plan learning`: Plans how to learn a skill or subject: target, sub-skills, resources and a project, a practice schedule and checkpoints.
+  - 🗺️ `map sub-skills`: Breaks the subject into sub-skills in learning order.
+  - 📅 `study schedule`: Builds a practice schedule with retrieval and spacing.
 
 <!-- folder:start -->
 ## This folder

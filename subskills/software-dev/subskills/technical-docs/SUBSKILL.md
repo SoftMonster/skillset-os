@@ -3,7 +3,7 @@ name: technical-docs
 description: "Writes developer documentation that matches the code: READMEs with quick start, docstrings and comments that explain why, architecture overviews with diagrams, runbooks, contribution guides and changelogs. Use when the user asks to document code, write or improve a README, add docstrings or comments, explain setup, or write a runbook, onboarding or architecture doc for a repository. Do not use for commit or PR text; use git-workflow."
 trigger: "write a README, docstrings, code comments, a runbook or developer docs"
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # Technical docs
@@ -89,6 +89,14 @@ def retry(fn: Callable[[], T], attempts: int = 3, backoff: float = 0.5) -> T:
 - Diagrams should be text (Mermaid) so they are reviewed and updated with the code.
 - Avoid "simply" and "just"; they hide steps and discourage readers who get stuck.
 - Commit messages, PR descriptions and changelogs belong to `git-workflow`.
+
+## Commands
+
+- 📚 **Docs that match the code** · `write technical-docs`: Writes a README, docstrings, comments, a runbook or developer docs: identifies the reader, gathers facts from the code, writes, checks against the code, and delivers.
+  - 📘 `write readme`: Writes a README that starts with quick start and usage, from the real commands.
+  - 🧾 `write docstrings`: Adds docstrings and comments in the project's style that explain why, not just what.
+  - 🚨 `write runbook`: Writes runbook entries: alert, meaning, diagnosis and the fix, step by step.
+  - ✅ `check docs`: Runs every command in the docs and checks each claim against the code.
 
 <!-- folder:start -->
 ## This folder

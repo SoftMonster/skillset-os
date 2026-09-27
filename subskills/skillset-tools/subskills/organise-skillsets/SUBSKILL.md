@@ -3,7 +3,7 @@ name: organise-skillsets
 description: "Organises the skillset's structure. It creates nested skillsets, moves members between them, packs members into zips and unpacks them, and shows the whole tree at every depth, including inside zips. Use when the user asks to group, nest, organise, restructure, move, pack, zip, unzip or unpack skills, or wants to see what the skillset contains. It is also the fix when the description or file count nears its limit."
 trigger: "group, nest, move, pack or unpack skills, or show what the skillset contains"
 metadata:
-  version: "1.1.0"
+  version: "1.2.0"
 ---
 
 # Organise skillsets
@@ -23,17 +23,10 @@ Work in the working copy from `sync-skillset`. `<wc>` below is that folder, usua
 
 ## Commands
 
-```bash
-python3 <wc>/scripts/skillset.py tree [--depth 2]                      # everything, including inside zips
-python3 <wc>/scripts/skillset.py open <path>                           # print a member's instructions file
-python3 <wc>/scripts/skillset.py new-set <path> --description "<what it groups. Use when ...>" --trigger "<phrase>"
-python3 <wc>/scripts/skillset.py move <path> --into <set>              # --into "" moves to the top
-python3 <wc>/scripts/skillset.py pack <path>
-python3 <wc>/scripts/skillset.py unpack <path>
-python3 <wc>/scripts/skillset.py rename <path> <new-name>
-```
-
-Paths name members from the top: `writing/blog-post` is `blog-post` inside the nested skillset `writing`. Every command updates the routers, the changelog and `skillsets.json`, including linked-repository records and trigger overrides, which move with their members.
+- 🌲 **Shape the tree for clean routes** · `organise skillsets`: Groups, nests, moves, packs or unpacks members, or shows what the skillset contains, keeping routing clean and uploads within limits.
+  - 🪺 `nest members`: Groups related members into a nested skillset so the top description stays short.
+  - 📦 `pack member`: Packs or unpacks a member as a zip, with the trade-offs explained.
+  - 🗺️ `show skillset layout`: Shows the whole tree of members with versions and triggers.
 
 ## Workflow
 

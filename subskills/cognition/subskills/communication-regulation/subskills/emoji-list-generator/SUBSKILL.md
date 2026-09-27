@@ -4,7 +4,7 @@ description: "Transform information into a concise, structured emoji list that m
 trigger: "summarise information as a clear emoji list"
 command: "list emojis"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # Emoji List Generator
@@ -255,6 +255,12 @@ Screen readers announce every emoji by its name ("brain", "warning sign"), so a 
 **Compress the language, not the meaning.**
 
 The best emoji list should allow a reader to understand the essential structure of a complex subject in seconds while retaining the facts necessary to reconstruct the fuller explanation.
+
+## Commands
+
+- 📋 **Compress the language, not the meaning** · `list emojis`: Summarises information as an emoji list: identifies the information, compresses it, chooses semantic emojis and structures the list, with numbers and causes kept exact.
+  - ⚖️ `emoji comparison`: Lays out a comparison as a parallel emoji list, one line per point of difference.
+  - ➡️ `emoji steps`: Turns a process into ordered emoji steps with cause → effect kept visible.
 
 <!-- folder:start -->
 ## This folder

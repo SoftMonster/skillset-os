@@ -11,3 +11,11 @@ Skills this skillset has learned from, rather than copied, by the `find-skills` 
 - Discarded: auto-running `ccpm setup` — it changes the person's Claude Desktop configuration without asking.
 - Discarded: installing skills as standalone copies by default — they compete with the skillset; learning replaced importing.
 - Discarded: the MCP server section — outside the skillset's scope.
+
+## 2026-09-27 — an outside AI's architecture review (supplied by the person; no licence stated, nothing copied)
+
+- The invariants of its proposed "constitution" and its performance-budget and change-surface ideas, rewritten and condensed → `docs/ARCHITECTURE.md` (Design principles)
+- Its suggestion to cache routing metadata, narrowed after profiling to the real cost (YAML parsing) → `scripts/skillset.py`
+- Its memory findings, compared by summary; only items new to this store were kept, re-added with fresh ids → self-memory
+- Discarded for now: the executive layer, goal compiler, capability contracts and 18 design stubs — no evidence yet that they improve routing or task success; recorded as open maintenance instead.
+- Discarded: its "v10/v17" labels — they were download-filename counters for 1.0.0 and 1.8.1.

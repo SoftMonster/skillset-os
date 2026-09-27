@@ -4,7 +4,7 @@ description: "Helps the user speak up for their needs: defines the boundary, wor
 trigger: "set boundaries, say no or stop people-pleasing"
 command: "set boundaries"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # Boundaries and assertiveness
@@ -46,6 +46,12 @@ When Claude cannot or will not do something, it states the limit clearly and kin
 - Guilt after setting a boundary is normal and fades; it does not mean the boundary was wrong.
 - People who benefited from no boundaries often push hardest at first.
 - If standing up to someone could put them at risk, safety comes first; point to specialist support.
+
+## Commands
+
+- 🚧 **Short, kind, then follow through** · `set boundaries`: Helps set boundaries, say no or stop people-pleasing: find the boundary, word it, plan for pushback and practise small.
+  - 🙅 `say no`: Drafts a short, kind no for the request described.
+  - 🛡️ `handle pushback`: Prepares responses for when the boundary is tested, and the follow-through.
 
 <!-- folder:start -->
 ## This folder

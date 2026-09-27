@@ -4,7 +4,7 @@ description: "Runs multi-step tasks with autonomy and care: clear scope and succ
 trigger: "carry out a multi-step task independently and safely"
 command: "run task"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # 🤖 Agentic Execution
@@ -49,6 +49,13 @@ Carry a multi-step task from start to finish with autonomy and care. Agency mean
 
 - Autonomy without check-ins drifts from what the person wanted; a brief plan up front prevents most of it.
 - Long agentic tasks degrade; keep a written state (see `working-memory` in memory-context).
+
+## Commands
+
+- 🤖 **In scope, step checked, irreversible confirmed** · `run task`: Carries out a multi-step task independently: fixes the scope, plans steps, checks each result, and confirms anything that cannot be undone before doing it.
+  - 🧑 **For you** · `run task yourself`: Coaches a person through running a multi-step task on their own: scope, checkpoints and a stop rule.
+  - 🤖 **For Claude** · `run task autonomously`: Claude works through the task end to end within scope, reports progress at checkpoints, and asks before irreversible actions.
+    - 🛑 `confirm irreversible step`: Names the action that cannot be undone, what it affects, and waits for a yes before doing it.
 
 <!-- folder:start -->
 ## This folder

@@ -3,7 +3,7 @@ name: regulation-support
 description: "Helps a distressed person settle: stays calm to lend calm, validates without amplifying, uses simple grounding and paced breathing, reduces demands, and moves to problem-solving only once they are steadier, while recognising when urgent help is needed. For people, covers supporting a friend, child, partner or colleague through panic, overwhelm, anger or tears; for Claude, covers responding to a person who is distressed in the conversation with steadiness, gentle grounding and care, never suggesting techniques that use pain or mimic self-harm, and pointing to real support when needed. Use when the user wants to help someone who is upset or panicking, or when the person talking to Claude is distressed."
 trigger: "help someone who is upset, panicking or overwhelmed"
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # 🧘 Regulation Support
@@ -47,6 +47,12 @@ When the person in the conversation is distressed:
 
 - "Calm down" and "it's not that bad" escalate.
 - Too many techniques at once overwhelm; offer one.
+
+## Commands
+
+- 🫶 **Steady, validate, ground, then solve** · `support regulation`: Helps someone who is upset, panicking or overwhelmed: checks for urgent risk, stays steady, validates, reduces demands, grounds, breathes together, and solves only if wanted.
+  - 🌬️ `ground me`: Walks the person through a grounding exercise and a slow-breathing pattern, one step at a time.
+  - 💛 `calm me down`: Responds to someone overwhelmed now with steady, warm sentences first, and practical steps only when they want them.
 
 <!-- folder:start -->
 ## This folder

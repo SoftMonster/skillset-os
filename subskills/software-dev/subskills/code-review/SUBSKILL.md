@@ -3,7 +3,7 @@ name: code-review
 description: "Reviews code, a diff or a pull request and returns findings ranked by severity (blocking, should fix, nit) with file and line references, the reason, and a concrete suggested change, covering correctness, security, performance, readability, tests and design. Use when the user asks to review, critique, check or give feedback on code, a PR, a merge request, a patch or a snippet, or asks whether code is good or ready to merge. Do not use for a dedicated security audit; use security-review."
 trigger: "review code, a pull request or a diff"
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # Code review
@@ -52,6 +52,16 @@ Suggest: use a bound parameter.
 - Separate facts from preferences. Phrase preferences as questions or nits.
 - For large diffs (over about 400 lines), say which parts you reviewed deeply and which you skimmed, and suggest splitting the PR.
 - For a full security audit rather than a review, use `security-review`.
+
+## Commands
+
+- 🔍 **Findings ranked, each with a fix** · `review code`: Reviews pasted code, a diff or a pull request: learns the intent, reads twice, verifies claims, and returns findings ranked by severity, each with a concrete fix, then a verdict.
+  - 🎯 `state review-intent`: Establishes what the change is meant to do and what matters most (correctness, security, style) before judging it.
+  - 👀 **Read and verify** · `read diff`: Runs the two below: a full read for understanding, then a second pass hunting defects, verifying suspicions by running or tracing code.
+    - 🐛 `hunt defects`: Looks for bugs, edge cases, error handling gaps, concurrency and resource leaks, with file:line references.
+    - 🔐 `spot security issues`: Flags injection, auth, secrets and unsafe input handling; hands deep audits to review security.
+  - 🧾 `rank findings`: Sorts findings into blocker, major, minor and nit, each with the problem, why it matters and the fix.
+  - ⚖️ `give verdict`: Ends with approve, approve with changes, or request changes, and the one thing to fix first.
 
 <!-- folder:start -->
 ## This folder

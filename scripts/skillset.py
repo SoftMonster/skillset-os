@@ -56,6 +56,10 @@ try:
 except ImportError:  # pragma: no cover - fallback for bare Python
     yaml = None
 
+# PyYAML's C loader parses the same YAML about ten times faster; routing reads every member's
+# front matter on each call, so this halves rapid-route time. Falls back to the pure-Python loader.
+_YAML_LOADER = getattr(yaml, "CSafeLoader", None) or getattr(yaml, "SafeLoader", None)
+
 HERE = Path(__file__).resolve().parent
 TOP_ROUTER, SET_ROUTER, LEAF = "SKILL.md", "SKILLSET.md", "SUBSKILL.md"
 MEMBERS = "subskills"
@@ -133,7 +137,7 @@ def parse(text: str) -> tuple[dict, str]:
     if yaml is None:
         return _simple_yaml(block), body
     try:
-        data = yaml.safe_load(block) or {}
+        data = yaml.load(block, Loader=_YAML_LOADER) or {}  # _YAML_LOADER is always a safe loader
     except yaml.YAMLError as exc:
         raise Refused(f"frontmatter is not valid YAML: {exc}") from exc
     if not isinstance(data, dict):
@@ -542,6 +546,18 @@ def memory_module():
     return mod
 
 
+def commands_module():
+    """scripts/commands.py beside this file: parses each member's Commands tree."""
+    name = "skillset_commands"
+    if name in sys.modules:
+        return sys.modules[name]
+    spec = importlib.util.spec_from_file_location(name, HERE / "commands.py")
+    mod = importlib.util.module_from_spec(spec)
+    sys.modules[name] = mod
+    spec.loader.exec_module(mod)
+    return mod
+
+
 def former_names(root: Path) -> set[str]:
     """Names the top skill had before a rename (metadata.former-names, comma-separated)."""
     data, _ = read(root / TOP_ROUTER)
@@ -819,6 +835,13 @@ def check_member(m: Member, root: Path) -> tuple[list[str], list[str]]:
                 errors.append(f"{where}/{m.doc}:{number}: still has a TODO")
         if text.count("\n") > MAX_LINES:
             warnings.append(f"{where}: {m.doc} is over {MAX_LINES} lines; move detail into files beside it")
+        if (HERE / "commands.py").is_file():
+            cm = commands_module()
+            if cm.section(text) is None:              # imported skills arrive unchanged; their trigger still routes
+                warnings.append(f"{where}: no `{cm.SECTION}` tree; add one (edit-subskill) so its commands route fast")
+            else:
+                _nodes, problems = cm.parse(text, allow_reserved=m.name == "command-line")
+                errors += [f"{where}/{m.doc}: Commands: {p}" for p in problems]
         if folder_block(m.path) not in text:
             errors.append(f"{where}: its \"This folder\" section is missing or out of date; run `skillset.py index`")
         for number, line in code_free_lines(text):
@@ -891,6 +914,21 @@ def check_skillset(root: Path) -> tuple[list[str], list[str]]:
         elif own in commands:                     # still routes (best match wins), e.g. in an imported copy
             warnings.append(f"{m.path}: command {own!r} is already {commands[own]}'s; the shell picks one")
         commands[own] = m.path
+    if (HERE / "commands.py").is_file():             # one home per command: a phrase routes to one skill
+        cm = commands_module()
+        owners: dict[str, str] = {}
+        nodes, problems = cm.parse(body) if cm.section(body) is not None else ([], [])
+        errors += [f"{TOP_ROUTER}: Commands: {p}" for p in problems]
+        trees = [("top", nodes)]
+        for _, m in walk(root, manifest):
+            if not m.error and m.folder is not None and m.form == "folder" and root in m.location.parents:
+                trees.append((m.path, cm.parse((m.folder / m.doc).read_text(encoding="utf-8"), allow_reserved=True)[0]))
+        for owner, found in trees:
+            for node in found:
+                if node["command"] in owners and owners[node["command"]] != owner:   # routes as a menu that learns
+                    warnings.append(f"{owner}: command `{node['command']}` is already {owners[node['command']]}'s; "
+                                    "typing it offers both until one is picked twice")
+                owners.setdefault(node["command"], owner)
     seen: dict[str, str] = {}
     packed_upload = (root / "PACKED.json").is_file()
     for _, m in walk(root, manifest):
@@ -1312,7 +1350,9 @@ def cmd_new(args, kind: str = "skill") -> int:
     text = (root / "scripts" / "templates" / template).read_text(encoding="utf-8")
     for key, value in {"NAME": name, "TITLE": args.title or name.replace("-", " ").capitalize(),
                        "DESCRIPTION": args.description.replace('"', '\\"'),
-                       "TRIGGER": args.trigger.rstrip(".").replace('"', '\\"')}.items():
+                       "TRIGGER": args.trigger.rstrip(".").replace('"', '\\"'),
+                       "COMMAND": getattr(args, "command", None) or name.replace("-", " "),
+                       "SUMMARY": shorten(first_sentence(args.description).rstrip("."), 200).replace("`", "'")}.items():
         text = text.replace("{{" + key + "}}", value)
     doc = SET_ROUTER if kind == "skillset" else LEAF
     (dest / doc).write_text(text, encoding="utf-8")
@@ -2599,6 +2639,7 @@ def main(argv: list[str] | None = None) -> int:
         p.add_argument("--description", required=True)
         p.add_argument("--trigger", required=True, help="short 'Use when' phrase for the parent's description")
         p.add_argument("--title")
+        p.add_argument("--command", help="the root command of its Commands tree (default: the name in words)")
     p = sub.add_parser("bump")
     p.add_argument("path")
     p.add_argument("--part", choices=["patch", "minor", "major"], default="patch")

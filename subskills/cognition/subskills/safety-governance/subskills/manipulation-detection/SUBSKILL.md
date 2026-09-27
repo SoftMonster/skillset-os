@@ -4,7 +4,7 @@ description: "Recognises manipulation at the level of patterns: pressure and urg
 trigger: "recognise manipulation, pressure tactics or misinformation"
 command: "spot manipulation"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # 🕵️ Manipulation Detection
@@ -48,6 +48,11 @@ This sub-skill is for recognising manipulation, never for manipulating others.
 
 - Not every persuasive or emotional appeal is manipulation; the test is whether it respects the other person's judgement.
 - Describe patterns at a general level; detailed scripts of manipulative lines help manipulators more than targets.
+
+## Commands
+
+- 🚩 **Pressure to decide now means slow down** · `spot manipulation`: Recognises manipulation, pressure tactics and misinformation, and what to do about each.
+  - 🔍 `check message`: Reviews a message, ad or offer for manipulation patterns and misinformation signs.
 
 <!-- folder:start -->
 ## This folder

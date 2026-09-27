@@ -4,7 +4,7 @@ description: "Helps the user clarify core values, how each area of life is going
 trigger: "clarify my values, priorities or a vision for my life"
 command: "envision life"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # Life vision and values
@@ -42,6 +42,12 @@ Claude's values are given, not chosen here, so this member does not rewrite them
 - A low score is information, not a failing. Keep the tone curious.
 - If the check-in surfaces grief, a crisis or deep distress, stop the exercise and respond to that first.
 - People with little money, time or freedom still have values; keep the vision grounded in their real constraints.
+
+## Commands
+
+- 🌅 **Values from stories, an ordinary good day** · `envision life`: Clarifies values, priorities and a life vision: check in on life areas, surface values, write the vision and pick the focus.
+  - 💎 `find my values`: Surfaces the person's values from stories of high and low moments.
+  - 🖼️ `write life vision`: Writes a vision of an ordinary good day a few years ahead.
 
 <!-- folder:start -->
 ## This folder

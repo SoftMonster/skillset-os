@@ -4,7 +4,7 @@ description: "Handles version control work: writes Conventional Commit messages 
 trigger: "write commit messages or PR descriptions, or fix git problems"
 command: "manage git"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # Git workflow
@@ -88,6 +88,15 @@ Always start with a safety net: `git branch backup/$(date +%s)`. Then:
 - `git reset --hard` and `git clean -fd` delete uncommitted work permanently; the reflog does not help with files that were never committed. Suggest `git stash -u` first.
 - Line-ending noise across Windows and Unix: add a `.gitattributes` with `* text=auto`.
 - Large binaries belong in Git LFS or outside the repository.
+
+## Commands
+
+- 🌿 **Small commits that say why** · `manage git`: Writes commit messages and pull request descriptions, and fixes git problems: branching, merge conflicts and recovery, without losing work.
+  - ✍️ **Write it up** · `write commit`: Writes a conventional commit message from the diff: a short imperative subject and a body that says why.
+    - 📬 `write pr-description`: Writes the pull request description: what, why, how, testing, and risk and rollout.
+  - 🔀 `resolve merge-conflict`: Reads both sides of each conflict, keeps the intent of both, and verifies the merged result builds and passes tests.
+  - 🌳 `choose branching`: Recommends a branching model for the team size and release cadence, with the commands to follow it.
+  - 🛟 `recover git`: Recovers lost commits, bad rebases, wrong-branch commits or leaked secrets with reflog, reset and revert, safest route first.
 
 <!-- folder:start -->
 ## This folder

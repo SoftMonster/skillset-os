@@ -4,7 +4,7 @@ description: "Makes human-AI work effective: divides tasks by strength, gives AI
 trigger: "work effectively with AI tools or agents"
 command: "collaborate ai"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # 🧑‍💻 Human-AI Collaboration
@@ -46,6 +46,12 @@ Check: ask it to flag uncertainty or list assumptions
 
 - Fluent output invites over-trust; the more confident it sounds, the more a check is worth.
 - Collaboration fails when the brief is vague; most bad AI output is a briefing problem.
+
+## Commands
+
+- 🤖 **AI drafts and checks; humans own it** · `collaborate ai`: Works effectively with AI tools or agents: AI drafts and checks, humans hold goals, judgement and accountability.
+  - 🧾 `write ai-brief`: Writes a clear brief or prompt for an AI tool: goal, context, constraints, examples and format.
+  - 🔍 `review ai-output`: Checks AI output for errors, fabrication and fit before it is used.
 
 <!-- folder:start -->
 ## This folder

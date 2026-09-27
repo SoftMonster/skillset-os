@@ -4,7 +4,7 @@ description: "Best-practice engineering checklist to follow whenever developing 
 trigger: "follow engineering best practices on any code change"
 command: "apply best-practices"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # Software Development Best Practices
@@ -85,6 +85,14 @@ This checklist is the baseline. When one of these situations comes up, the match
 - 🔐 **Security-sensitive code** — `security-review`.
 - 🤖 **A long autonomous task** — `agentic-execution` in `cognition/action-agency`.
 - ⏱️ **A fixed time budget** — `time-bounded-file-improvement`.
+
+## Commands
+
+- ✅ **Smallest change, largest reliable gain** · `apply best-practices`: Applies engineering best practices to any code change: understand first, design simply, write robust secure code, test and validate, and run the final check before handing over.
+  - 🔍 `check before change`: Reads the surrounding code, conventions and tests before changing anything.
+  - 🧱 `apply design-principles`: Keeps structure simple, cohesive and consistent with the codebase.
+  - 🛡️ `check robustness`: Walks error handling, validation, security and user experience for the change.
+  - 🏁 `run final check`: Runs the final checklist before handing over: tests, lint, docs and a clear summary.
 
 <!-- folder:start -->
 ## This folder

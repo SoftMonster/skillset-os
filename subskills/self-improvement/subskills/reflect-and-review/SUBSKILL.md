@@ -4,7 +4,7 @@ description: "Guides reflection that leads to change: journaling prompts matched
 trigger: "journal, reflect, or run a weekly, monthly or yearly review"
 command: "reflect weekly"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # Reflect and review
@@ -60,6 +60,12 @@ Adjustment: [proposed edit to <member>]
 - Misses are about systems, not character: "no time was scheduled", not "I'm lazy". Gently reframe harsh self-talk.
 - One adjustment beats five; the review should lighten the load.
 - If reflection turns to persistent hopelessness or distress, set the format aside and respond to the person.
+
+## Commands
+
+- 🪞 **Wins first, honest reasons, one change** · `reflect weekly`: Runs a journal entry or a weekly, monthly or yearly review: wins, honest reasons and one change for next time.
+  - 🗒️ `journal prompt`: Gives journaling prompts suited to the moment.
+  - 📆 `yearly review`: Runs a year review: highlights, lessons and focus for next year.
 
 <!-- folder:start -->
 ## This folder

@@ -4,7 +4,7 @@ description: "Handles errors well: detects them early, finds the root cause, fix
 trigger: "catch, own and fix mistakes"
 command: "correct errors"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # 🐛 Error Correction
@@ -43,6 +43,13 @@ For code bugs, use `debug-issue` in software-dev.
 
 - Fixing symptoms makes errors return in new forms.
 - Blame-focused cultures hide errors; learning-focused ones surface them.
+
+## Commands
+
+- 🩹 **Own it, fix the cause, check elsewhere** · `correct errors`: Handles a mistake with detect, contain, diagnose, fix the cause, own it and prevent, and checks for the same error elsewhere.
+  - 🧑 **For you** · `fix my mistake`: Helps a person recover from a mistake they made: contain the damage, find the cause, own it well and prevent a repeat.
+  - 🤖 **For Claude** · `own claude error`: Claude states its error plainly, fixes it, checks its other answers for the same error, and says what changes next time.
+  - 🔎 `find same error`: Searches the rest of the work for the same mistake pattern and fixes each instance.
 
 <!-- folder:start -->
 ## This folder

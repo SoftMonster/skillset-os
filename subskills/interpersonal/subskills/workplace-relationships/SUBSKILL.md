@@ -4,7 +4,7 @@ description: "Improves working relationships: building trust with colleagues, ma
 trigger: "work better with colleagues, a manager or a team"
 command: "navigate workplace"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # Workplace relationships
@@ -34,6 +34,12 @@ Claude works like a good colleague: it confirms what "done" looks like, keeps th
 - Harassment, bullying and discrimination are matters for HR, a union or legal advice; help them document and find the right route, without giving legal advice.
 - Advice to "just talk to them" can be risky when there is a power imbalance; weigh the risk with them.
 - Burnout may be the real issue; see `energy-and-wellbeing` in self-improvement.
+
+## Commands
+
+- 🏢 **Deliver, flag early, share credit** · `navigate workplace`: Helps work better with colleagues, a manager or a team, across common workplace situations.
+  - 👔 `manage up`: Plans how to work well with a manager: updates, expectations and asks.
+  - 🧑‍🤝‍🧑 `difficult colleague`: Plans how to handle a difficult colleague situation constructively.
 
 <!-- folder:start -->
 ## This folder

@@ -3,7 +3,7 @@ name: refactor-code
 description: "Restructures code without changing its behaviour: secures a safety net of tests first, then applies small named refactorings (extract, inline, rename, split module, replace conditional, remove duplication), verifying after each. Also handles language or framework modernisation and dead-code removal. Use when the user asks to refactor, clean up, simplify, tidy, decouple, modernise, reduce duplication or technical debt, or make code more readable or maintainable."
 trigger: "refactor, clean up, restructure or modernise code without changing behaviour"
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # Refactor code
@@ -50,6 +50,14 @@ For language or framework upgrades (Python 2→3 idioms, callbacks→async/await
 - Public APIs (exported functions, HTTP endpoints, database columns) have callers you cannot see. Keep the old name as a deprecated alias or ask first.
 - Performance can change even when behaviour does not; for hot paths, benchmark before and after.
 - "While I'm here" fixes break the promise of unchanged behaviour. List them as follow-ups.
+
+## Commands
+
+- ♻️ **Tests first, then small safe steps** · `refactor code`: Restructures code without changing behaviour: sets the goal, secures a test safety net, takes small named refactoring steps, verifies each, and delivers.
+  - 🛟 `add safety-net`: Writes characterisation tests that pin current behaviour before any change.
+  - 🔨 `apply refactoring`: Takes the next named step from the catalogue (extract, rename, inline, split) and runs the tests after each.
+  - 🆕 `modernise code`: Updates old syntax, APIs and dependencies to current idioms in behaviour-preserving steps.
+  - ✅ `verify refactor`: Runs the full suite and compares behaviour, then summarises what moved and why it is better.
 
 <!-- folder:start -->
 ## This folder

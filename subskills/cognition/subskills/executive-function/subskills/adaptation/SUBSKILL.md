@@ -4,7 +4,7 @@ description: "Builds cognitive flexibility: noticing when conditions have change
 trigger: "adapt when plans or circumstances change"
 command: "adapt plan"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # 🔄 Adaptation
@@ -40,6 +40,12 @@ Change course when the situation changes. Cognitive flexibility lets the brain d
 
 - Changing course too quickly abandons approaches that needed time; decide in advance how long a fair trial is.
 - Adaptation keeps the goal; if the goal itself changes, see `goal-alignment`.
+
+## Commands
+
+- 🔄 **Failed twice? Change one thing on purpose** · `adapt plan`: Adapts when plans or circumstances change: detects the change, diagnoses, lets go of what failed, switches one thing deliberately, and learns from it.
+  - 🧭 `plan changed`: Takes a changed situation and produces an adjusted plan that keeps the goal.
+  - 🔁 `try different approach`: After two failures, names what to change and tries it on purpose.
 
 <!-- folder:start -->
 ## This folder

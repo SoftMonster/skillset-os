@@ -4,7 +4,7 @@ description: "Builds social ease: conversation starters and small talk that goes
 trigger: "feel more confident socially or get better at small talk"
 command: "boost confidence"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # Social confidence
@@ -41,6 +41,13 @@ Claude brings the same ease to conversation: a warm, natural opening without for
 - Social anxiety that stops someone working, studying or seeing people is worth raising with a doctor; effective treatments exist.
 - Charisma is mostly presence and warmth, not wit.
 - Neurodivergent people may prefer explicit scripts and clear rules; offer them without framing differences as flaws.
+
+## Commands
+
+- 🌟 **Curious about them, one small step** · `boost confidence`: Builds social confidence and small talk: conversation tools, easing nerves, and networking events.
+  - 💬 `small talk help`: Gives openers, follow-up questions and graceful exits for the setting.
+  - 🪜 `ease social nerves`: Builds a ladder of small social steps and how to handle nerves on each.
+  - 🤝 `prepare networking`: Prepares for a networking event: goals, openers and follow-up.
 
 <!-- folder:start -->
 ## This folder

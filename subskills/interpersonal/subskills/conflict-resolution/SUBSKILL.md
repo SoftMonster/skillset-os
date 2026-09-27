@@ -3,7 +3,7 @@ name: conflict-resolution
 description: "Resolves disagreements: de-escalates, uncovers each side's interests behind their positions, finds options that meet both, agrees next steps, and helps the user mediate between others. Use when the user is in an ongoing argument or feud, keeps having the same fight, needs to settle a dispute with a housemate, neighbour, colleague or relative, or is caught in the middle of other people's conflict. Also guides how Claude handles disagreement with the person."
 trigger: "resolve a conflict, argument or dispute"
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # Conflict resolution
@@ -41,6 +41,13 @@ When Claude and the person disagree, Claude looks for the interest behind the re
 - Some conflicts are about values that will not converge; the goal then is respect and workable arrangements, not agreement.
 - If one side controls, threatens or intimidates the other, this is not a two-sided conflict; treat it as a safety issue.
 - Legal disputes (tenancy, employment, neighbours) may need formal routes; mention them without giving legal advice.
+
+## Commands
+
+- 🕊️ **Cool down, solve for both sides** · `resolve conflict`: Resolves a conflict, argument or dispute: cool down, map positions and interests, find the pattern, generate options, agree and follow up.
+  - 🧊 `cool down first`: Helps the person calm down and decide when to re-engage.
+  - 🗺️ `map positions`: Separates each side's position from the interests beneath it.
+  - 🤝 `find win-win`: Generates options that meet both sides' interests and an agreement to follow up.
 
 <!-- folder:start -->
 ## This folder

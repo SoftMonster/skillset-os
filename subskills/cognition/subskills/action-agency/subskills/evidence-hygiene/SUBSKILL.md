@@ -4,7 +4,7 @@ description: "A pre-flight checklist for any claim of success: prove each check 
 trigger: "check my evidence before I claim something works"
 command: "weigh evidence"
 metadata:
-  version: "1.0.3"
+  version: "1.1.0"
 ---
 
 # Evidence hygiene
@@ -41,6 +41,13 @@ Eight rules: six promoted because it was independently re-observed in at least t
 
 - A check that finds nothing may be checking nothing. Confirm that the denominator is non-zero.
 - Carried-forward text inflates recurrence counts. Diff consecutive versions before counting.
+
+## Commands
+
+- 🧫 **A pass means nothing until it can fail** · `weigh evidence`: Checks a claim that something works against the checklist: negative control, effect not exit code, unknowns visible, independent evaluation, and a human gate for consequential work.
+  - ❌ `run negative control`: Breaks the thing on purpose to show the check can fail, before trusting its pass.
+  - 👁️ `check effect`: Confirms the intended effect happened, not just that the command exited cleanly.
+  - ❓ `list unknowns`: States what was not tested or could not be verified, alongside what passed.
 
 <!-- folder:start -->
 ## This folder

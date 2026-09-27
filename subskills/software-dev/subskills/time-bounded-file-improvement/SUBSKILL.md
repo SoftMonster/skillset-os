@@ -2,7 +2,7 @@
 name: time-bounded-file-improvement
 description: "Improve a user-supplied file, archive or repo as much as possible within a stated time budget (e.g. \"improve this file in 15 minutes\"), prioritising by value and verifying. Use when the user gives a time limit for improving a file, archive or repo, such as \"spend 15 minutes improving this\" or \"improve this in 10 minutes\"."
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 trigger: "improve a file, archive or repo within a time limit"
 command: "improve file"
 ---
@@ -179,6 +179,14 @@ The same method works for anyone improving their own work against a clock: recor
 - `verification` in `cognition/action-agency` — its evidence-before-claims rule for step 5; it matters most when time is short.
 - `debug-issue` (this group) — for P0 items where the cause of a failure isn't obvious; don't guess-fix under time pressure.
 - `scaffold-project` and `ci-cd-pipeline` (this group) — when the deliverable is a repository; this skillset has no equivalent of the `check_repo.py` and `package_repo.py` scripts from the original collection.
+
+## Commands
+
+- ⏱️ **Most value per minute** · `improve file`: Improves a file, archive or repo within a stated time budget: understands it fast, builds a backlog, allocates time, improves iteratively, verifies and does a final pass. Say the budget in minutes.
+  - 🔎 `scan artifact`: Rapidly understands the artifact and its purpose within the first slice of the budget.
+  - 📋 `build improvement-backlog`: Lists improvements by value per minute, highest first.
+  - ⏲️ `keep time`: Tracks elapsed time with the clock, not by feel, and stops early rather than pad.
+  - ✅ `verify improvements`: Verifies each change and does a final quality pass before the budget ends.
 
 <!-- folder:start -->
 ## This folder

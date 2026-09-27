@@ -24,7 +24,7 @@ A new AI continues from here without the one that wrote it: understand the syste
 
 ## Index
 
-### Capabilities (13)
+### Capabilities (14)
 
 What the AI can do.
 
@@ -41,6 +41,7 @@ What the AI can do.
 - `CAP-0014` Answer '<topic> options' with a described numbered menu, rapid replies and power moves, from a member's Options list or its members.
 - `CAP-0015` Every member has a natural verb-noun command, hand-picked in front matter and checked for reserved words and duplicates.
 - `CAP-0016` Carry fixes from a shared copy into the personal source with `upstream`, reversing edition patches so no edition wording leaks.
+- `CAP-0017` Route typed commands through a SQLite database built from every member's own Commands tree.
 
 ### Skills (3)
 
@@ -50,7 +51,7 @@ Reusable capabilities and skill definitions, with their status.
 - `SKL-0002` Self-memory keeping is a skill of its own: the self-memory member of skillset-tools.
 - `SKL-0003` universal-skill-curriculum-exam: timed self-examination with a coverage ledger and a marking gate.
 
-### Lessons (48)
+### Lessons (65)
 
 Reusable lessons learned from experience.
 
@@ -102,6 +103,23 @@ Reusable lessons learned from experience.
 - `LES-0049` When a repository search returns no result, treat that as tool-path uncertainty rather than proof of absence.
 - `LES-0050` Skill composition should preserve explicit hand-offs between component skills.
 - `LES-0051` Before importing a memory pack, compare it with the store by summary: a pack from the same baseline adds nothing.
+- `LES-0052` Route by intent hierarchy: explicit command, concrete task, deepest specialist, then a cognitive faculty; keyword overlap alone is weak evidence.
+- `LES-0054` Imported memory whose evidence cites a change absent from the working copy is a claim, not knowledge: hold it as a candidate.
+- `LES-0055` Learn a menu pick only when it repeats; one pick silently rerouting a phrase broke a documented menu behaviour.
+- `LES-0056` Whole-skillset rules must tolerate imported collections: malformed is an error, missing or shared is a warning.
+- `LES-0057` Save shell state before printing; a closed pipe killed the process and lost the focus.
+- `LES-0058` Package once per chat, when asked or at the end; each package covers everything since the pull, so intermediate ones are wasted test runs.
+- `LES-0059` Before building an optimisation, confirm the limit it relieves is actually binding; a measured saving is not a need.
+- `LES-0060` Before moving an experiment into a skill, check it against the top router's rules; an unproven shortcut can contradict them.
+- `LES-0061` Judge a change to a fallback by comparing it with what happens instead; a component's own misses do not show whether removing it helps.
+- `LES-0062` A retyped copy is not proven by matching size: a same-length typo passed; ship true checksums with any file copied through a text-only tool.
+- `LES-0063` For a 'latest version' question, fast search returned stale secondary answers; searching the primary source first gave a confirmed answer.
+- `LES-0064` Check identifiers are unique before keying data by them: the exam curriculum reuses 32 card ids, so the card map keys by id and name.
+- `LES-0065` Keep held-out routing prompts outside the repo; report blind grades any-match and first-choice, with extra opens.
+- `LES-0066` Profile before accepting an architectural fix: one parse call was 80% of routing time, and a one-line change beat a proposed router split.
+- `LES-0067` Do not tune routing to fixture expectations that are ambiguous; first settle the policy or widen the acceptable members.
+- `LES-0068` A routing gain seen only on the fixture is an experiment result; promote it only when it also holds on held-out prompts.
+- `LES-0069` Identify an outside archive by its metadata, not its filename: '(17)' was a download counter, and a foreign memory pack reused our ids.
 
 ### Successes (6)
 
@@ -114,7 +132,7 @@ Approaches that demonstrably worked, and when.
 - `SUC-0005` Mutation-testing new checks (breaking the feature on purpose) confirmed each test can fail.
 - `SUC-0006` Harvested another session's candidate memories: screened, de-duplicated, re-numbered and moved into four members.
 
-### Failures (9)
+### Failures (11)
 
 Approaches that failed, and why.
 
@@ -127,16 +145,25 @@ Approaches that failed, and why.
 - `FAI-0007` Zipping groups inside the upload by default made members Claude could not load as skills.
 - `FAI-0008` Claimed one zip worked as both skill upload and plugin after testing only the plugin validator, not the skill uploader.
 - `FAI-0009` Named a source for `use tool` (a sandbox built-in) without checking; it was the tool-use member, caught by a test.
+- `FAI-0010` Used a non-existent flag (git revert -q) in an exam check; the usage error cost one retry.
+- `FAI-0011` Shell lines sent to shell.py do were read as verb-noun (ls subskills guessed edit-subskill); looks_like_shell fixes it.
 
-### Experiments (3)
+### Experiments (10)
 
 Hypotheses tested, methods and results.
 
 - `EXP-0001` Nested splitting: with the threshold lowered, an oversized group split one level further and merged back exactly.
 - `EXP-0002` Installing all parts side by side and pulling rebuilt all files identically.
 - `EXP-0003` A routing walkthrough over realistic prompts, including near-misses, exposed two missing hand-offs.
+- `EXP-0005` Gated hybrid: shortlist only above a held-out-tuned score, else routers: 26 of 28 shortlists right, routing text down 41%, upload 177 to 66 files.
+- `EXP-0006` Paging skills from a database (page table plus pinned Workflow plus one matched section): 46% less text, 21% fewer tool calls; eviction impossible.
+- `EXP-0007` Rapid route on the 68-prompt fixture: 26 confident routes (21 right), 23 likeliest guesses (9 right), 3 false opens; short command-shaped input 10 of 11.
+- `EXP-0008` Curriculum exam run 1 (self-marked, authorised): 824/9152 (9.0%) in 3 of 30 min; 2/922 cards, 6/23 domains; no critical findings.
+- `EXP-0009` Word-overlap card suggestions reviewed by hand: 42 of 190 right as given (22%), 22 matched another member, 126 matched none.
+- `EXP-0010` Blind grade of 1.8.2 router text: 75/75 fixture, 42/42 held-out; rapid route 36/75 and 16/42.
+- `EXP-0011` PyYAML's C loader in parse(): rapid route 2.2x faster, fixture run 39s to 10s; answers identical on 75 fixture and 42 held-out prompts.
 
-### Evolution (5)
+### Evolution (6)
 
 Changes in capability or architecture.
 
@@ -145,8 +172,9 @@ Changes in capability or architecture.
 - `EVO-0003` Change logs gave way to self-memory: lessons kept as knowledge, with provenance, instead of dated history.
 - `EVO-0004` Every folder member gained a generated This folder section, so each can list and audit itself.
 - `EVO-0006` Over-limit uploads moved back from zipped groups to plain-folder part skills, because Claude cannot load zips as skills.
+- `EVO-0007` Routing gained a command database: every member keeps an emoji Commands tree, indexed into SQLite for exact, focus-aware routes.
 
-### Limitations (13)
+### Limitations (16)
 
 Known weaknesses, uncertainty and failure modes.
 
@@ -163,20 +191,26 @@ Known weaknesses, uncertainty and failure modes.
 - `LIM-0013` claude.ai's Skills page rejects any zip holding .claude-plugin/plugin.json; a zip is a skill upload or a plugin, never both.
 - `LIM-0014` Conversational skill training changes behavioural procedures but does not modify underlying model weights.
 - `LIM-0015` The memory screen reads dates as long personal numbers and refuses them; cite sources without dates.
+- `LIM-0016` Context is append-only within a conversation: tools can avoid loading text but can never evict it from working memory.
+- `LIM-0017` No evidence yet of reliability on unseen end-to-end tasks: checks cover structure, routing and packaging, not task success.
+- `LIM-0018` Rapid route alone is right on 38/75 fixture and 17/42 held-out prompts, mostly by not opening; the router-text fallback is still needed.
 
-### Maintenance (7)
+### Maintenance (9)
 
 Self-maintenance that is required or recommended.
 
 - `MNT-0001` Keep headroom in the 1024-character top description; index prints how much is used.
 - `MNT-0002` Re-check the routing fixture after any trigger, description or move.
-- `MNT-0003` Add a routing confusion matrix to show which members get mistaken for each other.
 - `MNT-0004` Design skill composition (building a chain of skills for one request) as a separate piece of work.
 - `MNT-0005` After each change, record new self-knowledge through the memory pipeline, and supersede what it replaces.
 - `MNT-0006` Rerun the curriculum exam after significant changes, and record each marked run as an experiment to track the trend.
-- `MNT-0007` Maintain a verified training ledger so completion claims can be reconciled against the actual repository inventory.
+- `MNT-0008` After routing changes, rerun the blind fixture and add near-miss cases for each newly observed overlap.
+- `MNT-0011` Raise rapid-route coverage on held-out prompts without adding false opens; measure each change on prompts kept outside the repo.
+- `MNT-0012` Trial capability contracts on a few members only with a held-out routing or task-outcome score; adopt them only on a measured gain.
+- `MNT-0013` Run the whole test suite in one call (about 125 of the 300 seconds allowed), then package with --skip-tests; split it again only past about 250s.
+- Historical: `MNT-0003`, `MNT-0007`, `MNT-0010`
 
-### Decisions (22)
+### Decisions (23)
 
 Authoritative decisions about the AI system itself.
 
@@ -202,3 +236,9 @@ Authoritative decisions about the AI system itself.
 - `DEC-0023` Skillset-OS is portable: other AIs adopt it to the extent of their competence, putting their own values and maker's guidelines first.
 - `DEC-0024` The shared edition ships as the Claude plugin only: one zip, installed at Customize > Plugins or from the plugin repository.
 - `DEC-0025` The personal edition is the one source: fixes made in the shared edition go upstream into it every time, then it is packaged.
+- `DEC-0026` The Design principles in docs/ARCHITECTURE.md decide between competing changes, below Claude's values and the person's authority.
+
+## Candidates awaiting review
+
+- `EXP-0004` (experiment) Hypothesis: a written routing precedence policy resolves common overlaps without new members and keeps null routing for thematic prompts.
+- `LES-0053` (lesson) When two members plausibly match, prefer the one that owns the requested outcome; open both only for distinct jobs that need both.

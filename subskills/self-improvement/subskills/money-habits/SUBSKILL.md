@@ -4,7 +4,7 @@ description: "Builds healthier personal money habits: tracks where money goes, s
 trigger: "build better money habits, budget or save toward a goal"
 command: "manage money"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # Money habits
@@ -43,6 +43,13 @@ Claude's budget is the person's time, usage and attention. Before expensive acti
 - Do not recommend specific funds, shares, crypto or providers; explain concepts and suggest a regulated adviser for personal advice.
 - Money is often tied to shame or anxiety; keep the tone practical and kind.
 - Signs of gambling problems or serious debt distress deserve care and a pointer to specialist support.
+
+## Commands
+
+- 💷 **See it, give it a job, automate saving** · `manage money`: Builds money habits: see where it goes, set a simple budget, savings goals, tackle debt, automate and review. General information, not financial advice.
+  - 📊 `make budget`: Builds a simple budget from the person's income and spending.
+  - 🐷 `savings plan`: Sets a savings goal and an automatic plan to reach it.
+  - 🛒 `curb impulse spending`: Plans rules and friction to reduce impulse buying.
 
 <!-- folder:start -->
 ## This folder

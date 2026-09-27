@@ -3,7 +3,7 @@ name: edit-subskill
 description: "Changes an existing sub-skill, a nested skillset's router text, or the skillset's own tooling. It makes the smallest edit that does what was asked, and renames the sub-skill when needed. It bumps the sub-skill's version, re-tests both the changed and unchanged behaviour, and leaves the skillset ready to package. Use when the user asks to edit, fix, improve, update, extend, tweak, rename, shorten or rewrite a skill or sub-skill, says one did the wrong thing or was not used when it should have been, or wants the skillset itself to work differently."
 trigger: "edit, fix, improve or rename a skill, or fix one that did the wrong thing or was not used"
 metadata:
-  version: "1.1.0"
+  version: "1.2.0"
 ---
 
 # Edit a sub-skill
@@ -20,6 +20,7 @@ Work in the working copy from `sync-skillset`. `<wc>` below is that folder, usua
 - **Never lose routing.** When changing a trigger or description, keep every situation it already covered unless the person wants it gone.
 - **Bump every changed sub-skill**: `patch` for fixes and wording, `minor` for new behaviour or new triggers, `major` for renames or changed outputs that other things depend on. `package` refuses changed sub-skills that were not bumped.
 - **Respect other people's work.** For a sub-skill with its own licence file (usually imported), add rather than delete, and record each change in a `CHANGES.md` beside it, noting that the original licence still applies.
+- **Keep the Commands tree true.** When a change adds, removes or renames what the skill does, update its `## Commands` lines in the same edit. Requested or repeatedly missed commands (`commands tree <skill>` shows them under Wanted) are added here: put each under the heading it belongs to, with a description of how the skill uses it. A new command line is new behaviour, so bump `minor`.
 - **Edit sources, not generated text.** The top description and every router table come from each member's `trigger` and `description`, and the dotfiles from `scripts/templates/`. Change those, then `skillset.py index`.
 
 ## Workflow
@@ -94,6 +95,13 @@ Report only tests that actually ran.
 - The installed skillset under `/mnt/skills` is read-only; editing there fails. Always use the working copy.
 - Shortening a trigger or description is the most common way to lose routing; compare old and new side by side.
 - A rename is major because anything that names the sub-skill breaks, including the person's habits.
+
+## Commands
+
+- ✏️ **Smallest edit, then bump and re-test** · `edit subskill`: Changes an existing sub-skill, a router's text or the tooling: finds it, understands the change, makes the smallest edit, reviews the diff, bumps and re-tests.
+  - 🩺 `fix skill routing`: Finds why a skill did the wrong thing or was not used (trigger, description, sibling overlap) and fixes the cause.
+  - 🏷️ `rename subskill`: Renames a sub-skill and fixes every remaining mention.
+  - 🌳 `edit skill commands`: Adds, rewords or regroups lines in a member's Commands tree, including requested commands, then checks and bumps it.
 
 <!-- folder:start -->
 ## This folder

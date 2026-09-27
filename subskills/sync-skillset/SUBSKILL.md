@@ -3,7 +3,7 @@ name: sync-skillset
 description: "Gets a working copy of the skillset (from the installed skill, an attached zip or an earlier step in this chat), and at the end packages it: versions it, runs the checks and tests, commits, and writes the one zip that is both the upload for Claude and the copy for GitHub, plus a patch. Use first for any change to the skillset, and on its own to download it, sync it with GitHub, refresh linked repositories or check which version is installed."
 trigger: "download, sync or update the skillset or copy it to GitHub"
 metadata:
-  version: "1.3.0"
+  version: "1.4.0"
 ---
 
 # Sync skillset
@@ -108,6 +108,15 @@ The patch only applies if the clone matches what was pulled. If it fails, use th
 - The top description is built from the triggers of the top-level members only. If `check` says it is near the 1024-character limit, group related members into a nested skillset with `organise-skillsets`: the group contributes one trigger.
 - `refresh` needs github.com; the GitHub API is not used, so its rate limits do not apply.
 - `package` runs the whole test suite in one tool call, which is capped at about 300 seconds. If the suite nears that, run the tests in parts first (`pytest tests/test_structure.py`, then the rest), then `package --skip-tests` only once every part has passed.
+
+## Commands
+
+- 🔄 **Pull once, change the copy, package once** · `sync skillset`: Gets a working copy of the skillset, and at the end packages it: versions, checks, tests, commits and writes the upload zip (also the GitHub copy) plus a patch, then hands over the steps.
+  - 📥 `pull working copy`: Copies the installed skillset (or an attached zip) to a git working copy and tags the baseline.
+  - 📦 `package skillset`: Regenerates routers, checks everything, runs the tests, bumps versions and writes the zip, patch and edition builds.
+  - ⬇️ `download skillset`: Packages the current skillset unchanged so it can be downloaded or put on GitHub.
+  - 🐙 `sync with github`: Gives the exact steps to put the packaged zip or patch into the GitHub repository.
+  - 🔢 `check installed version`: Reports which version is installed and whether another copy is newer.
 
 <!-- folder:start -->
 ## This folder

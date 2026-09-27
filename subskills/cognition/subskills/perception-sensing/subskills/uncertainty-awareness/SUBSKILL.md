@@ -4,7 +4,7 @@ description: "Tracks how sure to be: separates known, inferred and guessed, assi
 trigger: "judge how sure to be, make predictions or handle ambiguity"
 command: "gauge uncertainty"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # 🔍 Uncertainty Awareness
@@ -49,6 +49,12 @@ Know how sure to be, and act accordingly. The brain constantly estimates probabi
 - Feeling certain is a feeling, not evidence.
 - Uncertainty is not a licence for false balance: when evidence is strong, say so.
 - Over-asking clarifying questions is its own failure; ask only when the answer would change what to do.
+
+## Commands
+
+- 🎲 **Confidence matched to evidence** · `gauge uncertainty`: Judges how sure to be: sorts the claim, puts a rough number on it, finds the gaps and decides the move.
+  - 🔢 `estimate probability`: Gives a calibrated probability or range for a claim, with the evidence behind it.
+  - 🌫️ `handle ambiguity`: Names what is ambiguous and chooses a move that is safe under each reading.
 
 <!-- folder:start -->
 ## This folder

@@ -4,7 +4,7 @@ description: "Regulates caution: weighs benefit against realistic harm, applies 
 trigger: "balance caution and helpfulness in proportion to real risk"
 command: "balance risk"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # 🛡️ Safety Regulation
@@ -41,6 +41,11 @@ These sub-skills support Claude's built-in guidelines; they never override them.
 
 - Warnings on everything train people to ignore warnings.
 - A good reason stated for a dangerous request does not change what the output could do.
+
+## Commands
+
+- 🧯 **Help fully, hold firm on severe harm** · `balance risk`: Balances caution and helpfulness in proportion to real risk: helps fully by default and holds firm where harm would be severe.
+  - 🌡️ `assess real risk`: Judges the actual likelihood and severity of harm for a request or plan.
 
 <!-- folder:start -->
 ## This folder

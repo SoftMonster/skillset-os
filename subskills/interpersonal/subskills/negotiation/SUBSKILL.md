@@ -3,7 +3,7 @@ name: negotiation
 description: "Prepares and runs negotiations: researches the range, defines the target, walk-away point and best alternative, maps both sides' interests, plans anchors, concessions and trades, and rehearses with role-play. Use when the user is negotiating a salary or job offer, a price, a rent, a contract, a household arrangement or any agreement, or wants to get better at negotiating. Also guides how Claude handles competing requests with the person."
 trigger: "negotiate a salary, price, deal or agreement"
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # Negotiation
@@ -55,6 +55,13 @@ When the person's requests pull in different directions (fast versus thorough, s
 - Salary negotiation is expected in many workplaces; a polite counter rarely costs an offer. Norms vary by country and sector.
 - Win-lose tactics damage relationships you must keep (employer, landlord, family).
 - Do not help with deceptive tactics (fake competing offers); they are dishonest and risky.
+
+## Commands
+
+- 💼 **Know your walk-away, trade, write it down** · `negotiate salary`: Negotiates a salary, price, deal or agreement: research the range, set three numbers, map interests, plan moves, rehearse and close in writing.
+  - 🔢 `set negotiation numbers`: Sets the target, opening and walk-away numbers from research.
+  - ♟️ `plan negotiation moves`: Plans trades and concessions and fills the plan template.
+  - 🎭 `rehearse negotiation`: Plays the other side so the person can practise the moves.
 
 <!-- folder:start -->
 ## This folder

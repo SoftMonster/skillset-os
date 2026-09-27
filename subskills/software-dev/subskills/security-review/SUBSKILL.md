@@ -3,7 +3,7 @@ name: security-review
 description: "Audits the user's own code and configuration defensively against the OWASP Top 10 and common weaknesses (injection, broken access control, secrets in code, unsafe deserialisation, SSRF, weak crypto, vulnerable dependencies) and returns prioritised findings with fixes. Use when the user asks for a security review or audit, asks whether code is secure, wants to harden auth, input handling or configuration, or needs to fix a reported vulnerability or dependency advisory. Do not use for writing exploits or attacking systems."
 trigger: "audit code for security vulnerabilities or harden an application"
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # Security review
@@ -55,6 +55,15 @@ Reference: OWASP A01 Broken Access Control, CWE-639.
 - Client-side validation is not a control. Check that the server enforces everything.
 - Do not roll your own crypto, password hashing or session handling. Recommend the framework's built-in or a vetted library.
 - If the request moves from reviewing the person's own code to attacking systems they do not own, decline that part.
+
+## Commands
+
+- 🔐 **Input is hostile; fix the worst first** · `review security`: Audits code for vulnerabilities: sets scope, runs scanners, reviews by hand, ranks findings and fixes the worst first.
+  - 🎯 `scope audit`: Names the assets, trust boundaries and threat model before looking at code.
+  - 🤖 `run scanners`: Runs dependency, secret and static analysis scanners available in the sandbox and triages the output.
+  - 🕵️ **Review by hand** · `audit code`: Reviews input handling, auth, secrets, crypto, injection and data exposure by hand.
+    - 🧾 `rank vulnerabilities`: Ranks findings by severity and exploitability, each with evidence and a fix.
+  - 🛠️ `fix vulnerability`: Fixes the highest-severity finding first and adds a test that proves it is closed.
 
 <!-- folder:start -->
 ## This folder

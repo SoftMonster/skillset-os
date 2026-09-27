@@ -4,7 +4,7 @@ description: "Knows when and how to escalate to people: emergencies, professiona
 trigger: "know when to bring in a professional, manager or emergency help"
 command: "escalate human"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # 🧑‍⚖️ Human Escalation
@@ -42,6 +42,12 @@ Use the list above to decide; when in doubt about safety, escalate. At work, esc
 
 - Escalation is not abandonment; stay supportive while pointing onward.
 - Handing over without context forces people to repeat painful details.
+
+## Commands
+
+- 🆘 **Know when it needs more** · `escalate human`: Knows when to bring in a professional, manager or emergency help, and hands over with context.
+  - 📞 `who to call`: Says which kind of professional or service fits the situation, and when it is urgent.
+  - 🧾 `write handover`: Writes a handover with the context the person or professional will need.
 
 <!-- folder:start -->
 ## This folder

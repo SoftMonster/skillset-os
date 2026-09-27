@@ -78,6 +78,28 @@ def memory():
     return _load("skillset_memory", "memory.py")
 
 
+def cmdb():
+    return _load("skillset_commands", "commands.py")
+
+
+def db(view: View):
+    """The command database for VIEW's tree, rebuilt when any member's file (or a remembered edit) changes it."""
+    ss = skillset()
+    docs = [("", view.root / "SKILL.md")]
+    for _d, m in ss.walk(view.root):
+        if not m.error and m.folder is not None:
+            docs.append((m.path, m.folder / m.doc))
+    return cmdb().open_db(STATE_HOME / "commands.db", docs, lambda: catalogue(view.root))
+
+
+def db_quiet(state: dict):
+    """The database, or None where it cannot be opened (a bare state, a missing tree)."""
+    try:
+        return db(View(state))
+    except Exception:  # noqa: BLE001 - the session list still works without the database
+        return None
+
+
 # ================================================================ session state
 
 def load_state() -> dict:
@@ -978,6 +1000,13 @@ META = [  # (command, how, description)
     ("load favourites", "favourites load <file>", "Bring back a command list you kept."),
     ("run exam", "open cognition/metacognition/universal-skill-curriculum-exam",
      "The timed self-examination, to monitor performance."),
+    ("focus skill", "focus <skill or command>", "Set focus on a skill or command and show its command tree."),
+    ("commands tree", "commands tree [skill|all]", "A skill's own commands as an emoji tree, with what is still wanted."),
+    ("db query", "db <sql>", "Query the command database with SQL; your own tables are writable."),
+    ("enable command", "enable|disable <command>", "Turn a command on or off for routing, in your preferences."),
+    ("prefer command", "prefer|unprefer <command>", "Star a command so it leads your command list."),
+    ("request command", "request command <phrase> [for <skill>] [: note]", "Ask for a command a skill should have."),
+    ("advise commands", "advise commands [topic]", "Advice on new useful commands, from misses, requests and gaps."),
 ]
 MODEL_TOOLS = [  # (command, how, description) — available when the chat has the tool
     ("search web", "web search", "Find current information on the web."),
@@ -1171,19 +1200,50 @@ def rank(root: Path, cmds: list[dict]) -> list[dict]:
     return sorted(cmds, key=lambda c: (-c["score"], c["command"]))
 
 
+SHELL_ONLY_WORDS = {"ls", "ll", "la", "cd", "chdir", "pwd", "dir", "grep", "egrep", "findstr", "gci", "get-childitem",
+                    "get-content", "set-location", "mkdir", "rmdir", "rm", "touch", "wc", "du", "printenv"}
+SHELL_SYNTAX = re.compile(r"(?:&&|\|\||[|<>*]|(?:^|\s)--?[A-Za-z]|[/\\]|\b\w+\.\w{1,5}\b)")
+
+
+def looks_like_shell(text: str) -> bool:
+    """True when a message typed to the rapid route is really a shell command line (`ls subskills`,
+    `cd cognition && cat SKILLSET.md`, `Get-ChildItem -Recurse -Filter *.md`), so it goes to the shell rather
+    than being read as a verb-noun phrase. English words that are also shell aliases (find, open, help, type,
+    cat...) count only with shell syntax after them."""
+    first = (tokens(text) or [""])[0].lower()
+    if first not in ALIASES:
+        return False
+    if first in SHELL_ONLY_WORDS:
+        return True
+    rest = text.strip()[len(first):]
+    return "-" in first or bool(SHELL_SYNTAX.search(rest))
+
+
 def resolve_verb_noun(text: str, state: dict, view: View | None = None, brief: bool = False,
                       menu: bool = True) -> str:
     view = view or View(state)
     words = _words(text)
     if not words:
         return ""
+    if looks_like_shell(text):                                    # shell syntax: run it, do not guess a skill
+        sh = Shell(state)
+        sh.view = view
+        first = (tokens(text) or [""])[0]
+        return f"> {text}\n→ shell command `{first}`  [skill: command-line]\n" + sh.run(text)
     opener = opener_menu(words, state, view)
     if opener:
         return opener
     fixed = autocorrect_menu(text, words, state, view) if menu else None
     if fixed:
         return fixed
+    menu_before = dict(state.get("menu") or {})
     picked = pick_from_menu(text, state)                          # "2", "last": answer to the last numbered choice
+    if picked is not None and menu_before.get("learn") and not picked.startswith(("pick:", "inferred: ", "option: ")):
+        con = db(view)                                            # the person chose: route that phrase there next time
+        row = con.execute("SELECT member FROM routes WHERE command=? ORDER BY source DESC",
+                          (cmdb().normal(picked),)).fetchone()
+        if cmdb().learn(con, menu_before["for"], picked, row["member"] if row else None):
+            state["learned"] = f"`{menu_before['for']}` now routes straight to `{picked}` (picked twice)"
     if picked is not None:
         if picked.startswith("inferred: "):
             choice = picked.split(": ", 1)[1]
@@ -1251,14 +1311,35 @@ def resolve_verb_noun(text: str, state: dict, view: View | None = None, brief: b
     if verb == "list" and rest and rest[0] in ("commands", "command"):
         return commands_text(view.root, None if "all" in rest else 20)
     if verb in ("commands", "command"):                              # the shell's own hint says `commands`
-        return commands_text(view.root, None if "all" in rest else 20)
+        return commands_verb(view, state, rest)
+    own = database_verbs(text, words, state, view)                 # focus, db, enable, prefer, request, advise ...
+    if own is not None:
+        return own
     if verb == "remember" and rest:
         kinds = list(memory().TYPES)
         kind = rest[0] if rest[0] in kinds else "lesson"
         summary = text.split(None, 2 if rest[0] in kinds else 1)[-1].strip(" \"'")
         return remember_candidate(state, kind, summary)
+    # rapid routing: an exact command from the database (inside the focus first), or the person's learned alias
+    con = db(view)
+    focus = (state.get("focus") or {}).get("member")
+    found = cmdb().lookup(con, text, focus)
+    if found["status"] == "hit":
+        return route_text(con, found["rows"][0], text, state, brief, found["via"])
+    if found["status"] == "disabled":
+        return (f"{text}: `{found['rows'][0]['command']}` is disabled in your preferences. `enable "
+                f"{found['rows'][0]['command']}` turns it back on; say it in plain English to use the skill anyway.")
+    if found["status"] == "ambiguous" and menu:
+        rows = found["rows"][:4]
+        cmdb().log_miss(con, text, "ambiguous", [r["member"] for r in rows], focus)
+        options = [{"command": r["command"], "how": f"open {r['member']}"} for r in rows]
+        out = choice_menu(state, text, options)
+        state["menu"]["learn"] = True
+        state["menu"]["members"] = [r["member"] for r in rows]
+        return f"> {text}\n`{text}` is a command in several skills; pick one (your pick is remembered):\n" + out
     # everything else: find the best command in the catalogue
-    cmds = catalogue(view.root)
+    off = {r[0] for r in con.execute("SELECT command FROM user_prefs WHERE enabled=0")}
+    cmds = [c for c in catalogue(view.root) if cmdb().normal(c["command"]) not in off]
     target_words = [_stem(w) for w in rest]
     scored = []
     for c in cmds:
@@ -1275,9 +1356,13 @@ def resolve_verb_noun(text: str, state: dict, view: View | None = None, brief: b
     scored.sort(key=lambda x: (-x[0], x[1]["command"]))
     if not scored:
         near = near_commands(text, cmds) if menu else []
+        cmdb().log_miss(con, text, "unknown", [c["command"] for c in near], focus)
         if not near:
-            return f"{text}: I don't know that command. Try `commands`, `help`, or just say it in plain English."
-        return f"{text}: I don't know that command. Did you mean:\n" + choice_menu(state, text, near)
+            return (f"{text}: I don't know that command. Try `commands`, `help`, or just say it in plain English. "
+                    f"It is noted as wanted: `request command {text}` keeps it for adding to a skill.")
+        out = f"{text}: I don't know that command. Did you mean:\n" + choice_menu(state, text, near)
+        state["menu"]["learn"] = True
+        return out
     best = scored[0][1]
     if brief:
         return f"{text}: {best['kind']} → {best['command']} ({best['how']})"
@@ -1287,7 +1372,14 @@ def resolve_verb_noun(text: str, state: dict, view: View | None = None, brief: b
     if menu and alts and scored[0][0] - scored[1][0] < 1.5:
         lines[1] = lines[1].replace("→", "→ likeliest:", 1)
         lines.append("  ambiguous, so ask the person to pick a number instead of guessing:")
-        lines.append(choice_menu(state, text, [best] + alts))
+        ranked = [best] + alts
+        prior = cmdb().last_pick(con, text)
+        if prior and any(c["command"] == prior for c in ranked):
+            ranked = sorted(ranked, key=lambda c: c["command"] != prior)
+            lines.append(f"  (last time this was `{prior}`; picking it again makes it a direct route)")
+        lines.append(choice_menu(state, text, ranked))
+        state["menu"]["learn"] = True
+        cmdb().log_miss(con, text, "ambiguous", [c["command"] for c in [best] + alts], focus)
     return "\n".join(lines)
 
 
@@ -1593,14 +1685,197 @@ def save_changes_text(state: dict) -> str:
             "`python3 <top>/scripts/shell.py apply --wc <working copy>`, check, and package.")
 
 
-def commands_text(root: Path, top: int | None) -> str:
+def commands_text(root: Path, top: int | None, con=None) -> str:
     cmds = rank(root, catalogue(root))
+    mine = []
+    if con is not None:
+        mine = [r for r in con.execute("SELECT command, description FROM routes WHERE favourite=1 AND enabled=1 "
+                                       "GROUP BY command HAVING MAX(source='tree') = (source='tree') ORDER BY command")]
+        off = {r[0] for r in con.execute("SELECT command FROM user_prefs WHERE enabled=0")}
+        cmds = [c for c in cmds if c["command"] not in off]
     if top:                                   # the shell itself is not a command to suggest from inside the shell
         cmds = [c for c in cmds if c.get("target") != "command-line"][:top]
     width = max(len(c["command"]) for c in cmds)
     head = ("Most useful commands, generated from the installed skills, built-in skills, self-memory and routing "
             "evidence:" if top else "Every command:")
-    return head + "\n" + "\n".join(f"  {c['command']:<{width}}  {c['kind']:<14} {c['description']}" for c in cmds)
+    body = head + "\n" + "\n".join(f"  {c['command']:<{width}}  {c['kind']:<14} {c['description']}" for c in cmds)
+    if mine:
+        body = "⭐ Yours:\n" + "\n".join(f"  {r[0]}  {r[1][:100]}" for r in mine) + "\n\n" + body
+    if top and con is not None:
+        body += ("\n\nEvery skill keeps a tree of its own commands: `commands tree <skill>`, `focus <skill>`, or "
+                 "`db <sql>` to query them.")
+    return body
+
+
+# ================================================================ the command database: trees, focus, preferences
+
+def route_text(con, row, text: str, state: dict, brief: bool = False, via: str = "exact") -> str:
+    """What a routed command does, with its place in the skill's tree; sets the focus there."""
+    c = cmdb()
+    member, kind = row["member"], row["kind"]
+    if row["source"] == "tree" and row["parent"] is None:          # a skill's root command names the skill itself
+        own = con.execute("SELECT kind FROM commands WHERE member=? AND source='catalogue' AND kind IN "
+                          "('skill','skillset','app')", (member,)).fetchone()
+        kind = own["kind"] if own else ("skillset" if con.execute(
+            "SELECT 1 FROM commands WHERE member LIKE ? AND source='tree' LIMIT 1", (member + "/%",)).fetchone() else "skill")
+    if brief:
+        return f"{text}: {kind} → {row['command']} ({row['how'] or 'open ' + member})"
+    if row["source"] == "tree":
+        state["focus"] = {"member": member, "command": row["command"]}
+    elif kind in ("skill", "skillset") and member:
+        state["focus"] = {"member": member, "command": None}
+    path = " ▸ ".join(f"{r['emoji']} {r['command']}" for r in c.ancestry(con, row)) if row["source"] == "tree" else ""
+    where = member.split("#")[0] if member else ""
+    lines = [f"> {text}", f"→ {row['command']}  [{kind}{': ' + member if member and kind != 'built-in skill' else ''}]"
+             + ("  (your alias)" if via == "alias" else "")]
+    if path:
+        lines.append(f"  in: {where or 'top'} ▸ {path}")
+    lines.append(f"  {row['description']}")
+    if row["source"] == "tree":
+        lines.append(f"  how: open {where or 'the top SKILL.md'} and follow it, doing what this command's description "
+                     "says; ask only for input the description names and the person has not given")
+        kids = c.children(con, row["id"])
+        if kids:
+            lines.append("  runs, in order (skip any the person has already done; disabled ones are skipped):")
+            lines += [f"    {i}. {k['emoji']} `{k['command']}`: {k['description']}" for i, k in
+                      enumerate([k for k in kids if k["enabled"]], 1)]
+        lines.append(f"  focus: {where or 'top'} ▸ {row['command']}  (`commands` shows the tree here; `unfocus` clears)")
+    else:
+        lines.append(f"  how: {row['how'] or 'open ' + member}, then carry out the request with it")
+    return "\n".join(lines)
+
+
+def focus_text(con, state: dict) -> str:
+    c = cmdb()
+    f = state.get("focus") or {}
+    member = f.get("member")
+    if member is None:
+        return "no focus set: `focus <skill or command>` sets one; `commands` lists the most useful commands"
+    tree = c.member_tree(con, member)
+    if f.get("command"):                                 # the whole skill, with the focused command marked
+        tree = [ln + "  👈 focus" if f"`{f['command']}`:" in ln and "👈" not in "".join(tree) else ln for ln in tree]
+    head = f"Focus: {member or 'top'}" + (f" ▸ {f['command']}" if f.get("command") else "")
+    empty = (f"(this member has no Commands tree yet: `request command <phrase> for {member}` or add a "
+             "`## Commands` section)")
+    out = [head, "", *(tree or [empty])]
+    want = c.wanted(con, member or None)
+    if want:
+        out += ["", "Wanted here (missing or ambiguous, still intended):"] + want
+    out += ["", ("Type any command above; `unfocus` clears the focus; `why <command>` explains one; "
+                 "`db <sql>` queries the database.")]
+    return "\n".join(out)
+
+
+def commands_verb(view: View, state: dict, rest: list[str]) -> str:
+    """`commands` [all | top | tree [member] | sql ...]; with a focus, the focused tree."""
+    con = db(view)
+    c = cmdb()
+    if rest[:1] == ["sql"] or rest[:1] == ["db"]:
+        return c.run_sql(con, " ".join(rest[1:]))
+    if rest[:1] in (["tree"], ["trees"]):
+        target = rest[1:]
+        if not target:
+            return focus_text(con, state) if state.get("focus") else "\n".join(c.member_tree(con, "", 1))
+        if target == ["all"]:
+            out = []
+            for r in con.execute("SELECT member FROM commands WHERE source='tree' AND parent IS NULL ORDER BY member"):
+                out += c.member_tree(con, r[0], 9, with_members=False)
+            return "\n".join(out)
+        member = find_member(view.root, target)
+        if member is None:
+            return f"no skill matches {' '.join(target)}"
+        return "\n".join(c.member_tree(con, member))
+    if rest and rest[0] in ("all", "every"):
+        return commands_text(view.root, None)
+    if state.get("focus") and not rest:
+        return focus_text(con, state)
+    return commands_text(view.root, 20, con)
+
+
+def database_verbs(text: str, words: list[str], state: dict, view: View) -> str | None:
+    """The command database's own verbs, or None when TEXT is not one of them."""
+    c = cmdb()
+    verb, rest = words[0], words[1:]
+    raw = text.strip()
+    after = raw.split(None, 1)[1].strip() if len(raw.split(None, 1)) > 1 else ""
+    if verb == "db":
+        return c.run_sql(db(view), after)
+    if verb == "unfocus":
+        state.pop("focus", None)
+        return "focus cleared; commands route across the whole skillset again"
+    if verb == "focus":
+        con = db(view)
+        if not rest:
+            return focus_text(con, state)
+        found = c.lookup(con, after, (state.get("focus") or {}).get("member"))
+        if found["status"] in ("hit", "disabled"):
+            row = found["rows"][0]
+            state["focus"] = {"member": row["member"], "command": row["command"] if row["source"] == "tree" else None}
+            return focus_text(con, state)
+        member = find_member(view.root, rest)
+        if member is not None:
+            state["focus"] = {"member": member, "command": None}
+            return focus_text(con, state)
+        return None                                     # "focus attention" and friends: an ordinary command
+    if verb == "why" and rest and not rest[0].isdigit():
+        con = db(view)
+        rows = con.execute("SELECT * FROM routes WHERE command=?", (c.normal(after),)).fetchall()
+        if not rows:
+            return f"`{after}` is not a known command. `advise commands {after}` suggests some."
+        out = []
+        for r in rows:
+            out.append(f"`{r['command']}` [{r['kind']}{': ' + r['member'] if r['member'] else ''}]"
+                       + ("" if r["enabled"] else " 🚫 disabled") + (" ⭐" if r["favourite"] else ""))
+            if r["source"] == "tree":
+                out.append("  " + " ▸ ".join(f"{a['emoji']} {a['meme'] or a['command']}" for a in c.ancestry(con, r)))
+            out.append(f"  {r['description']}")
+        return "\n".join(out)
+    if verb in ("enable", "disable", "prefer", "unprefer") and rest:
+        con = db(view)
+        target = c.normal(after)
+        if not c.known(con, target):
+            return (f"`{target}` is not a known command, so there is nothing to {verb}. "
+                    f"`request command {target}` asks for it.")
+        if verb in ("enable", "disable"):
+            c.set_pref(con, target, enabled=int(verb == "enable"))
+            return f"{'enabled' if verb == 'enable' else 'disabled'}: `{target}` (this session; `save favourites` keeps it)"
+        c.set_pref(con, target, favourite=int(verb == "prefer"))
+        favs = state.setdefault("favourites", [])
+        if verb == "prefer" and target not in favs:
+            favs.append(target)
+        if verb == "unprefer":
+            state["favourites"] = [f for f in favs if f != target]
+        return f"{'⭐ preferred' if verb == 'prefer' else 'no longer preferred'}: `{target}`"
+    if verb == "alias" and "=" in raw:
+        con = db(view)
+        phrase, command = (x.strip(" `\"'") for x in after.split("=", 1))
+        if not c.known(con, command):
+            return f"`{command}` is not a known command; an alias must point at one"
+        row = con.execute("SELECT member FROM routes WHERE command=? ORDER BY source DESC", (c.normal(command),)).fetchone()
+        c.learn(con, phrase, command, row["member"], confirmed=True)
+        return f"alias kept for this session: `{c.normal(phrase)}` → `{c.normal(command)}`"
+    if verb == "request" and rest[:1] in (["command"], ["commands"]):
+        body = after.split(None, 1)[1] if len(after.split(None, 1)) > 1 else ""
+        note = ""
+        if ":" in body:
+            body, note = (x.strip() for x in body.split(":", 1))
+        member = None
+        m = re.match(r"^(.*?)\s+for\s+(\S+)$", body)
+        if m:
+            member = find_member(view.root, re.split(r"[/\-\s]+", m[2])) or m[2]
+            body = m[1]
+        if not body.strip():
+            return "request command <phrase> [for <skill>] [: what it should do]"
+        con = db(view)
+        n = c.request(con, body, member or (state.get("focus") or {}).get("member"), note)
+        return (f"requested #{n}: `{c.normal(body)}`" + (f" for {member}" if member else "")
+                + ". It shows under Wanted in that skill's tree; `save changes` can add it to the skill's Commands "
+                  "section for good, and `save favourites` keeps the request in your file.")
+    if verb in ("advise", "suggest", "recommend", "ideas") and rest[:1] in (["command"], ["commands"]):
+        return c.advice(db(view), " ".join(rest[1:]) or None)
+    if verb == "new" and rest[:1] in (["command"], ["commands"]):
+        return c.advice(db(view), " ".join(rest[1:]) or None)
+    return None
 
 
 # ================================================================ favourites: the person's own list
@@ -1613,6 +1888,9 @@ def favourites(state: dict, action: str, args: list[str]) -> str:
             return "give the command to add"
         if cmd not in favs:
             favs.append(cmd)
+        con = db_quiet(state) if "journal" in state else None
+        if con is not None:
+            cmdb().set_pref(con, cmd, favourite=1)
         return f"added for this session: {cmd} (`favourites save` writes a file you keep)"
     if action == "remove":
         cmd = " ".join(args).strip()
@@ -1629,18 +1907,29 @@ def favourites(state: dict, action: str, args: list[str]) -> str:
         text = [FAV_MARK, "# My Skillset-OS commands", "",
                 ("Your list, kept by you. Skillset-OS does not store it: upload this file and say \"load my commands\" "
                 "to bring it back."), ""] + [f"- `{f}`" for f in favs]
-        out.write_text("\n".join(text) + "\n", encoding="utf-8")
-        return f"wrote {out} ({len(favs)} commands)"
+        con = db_quiet(state) if "journal" in state else None
+        extra = []
+        if con is not None:
+            _fav, extra = cmdb().export_lines(con)
+            text += [ln for ln in _fav if ln.replace("⭐ ", "") not in text]
+        out.write_text("\n".join(text + extra) + "\n", encoding="utf-8")
+        return f"wrote {out} ({len(favs)} commands" + (", with your disabled commands, aliases and requests" if extra else "") + ")"
     if action == "load":
         if not args:
             return "give the file to load"
         text = Path(args[0]).read_text(encoding="utf-8")
-        loaded = re.findall(r"^\s*[-*]\s*`([^`]+)`", text, re.MULTILINE) or [ln.strip("-* ").strip() for ln in text.splitlines()
+        head = re.split(r"^## ", text, maxsplit=1, flags=re.MULTILINE)[0]
+        con = db_quiet(state) if "journal" in state else None
+        counts = cmdb().import_text(con, text) if con is not None else {}
+        loaded = re.findall(r"^\s*[-*]\s*(?:⭐\s*)?`([^`]+)`", head, re.MULTILINE) or [ln.strip("-* ").strip() for ln in head.splitlines()
                                                                      if ln.strip() and not ln.startswith(("#", "<!--"))]
         for f in loaded:
             if f not in favs:
                 favs.append(f)
-        return f"loaded {len(loaded)} commands for this session"
+            if con is not None:
+                cmdb().set_pref(con, f, favourite=1)
+        more = ", ".join(f"{v} {k}" for k, v in counts.items() if v)
+        return f"loaded {len(loaded)} commands for this session" + (f" (and {more})" if more else "")
     return "favourites add|remove|list|save [FILE]|load FILE|clear"
 
 
@@ -1673,6 +1962,10 @@ def main(argv: list[str] | None = None) -> int:
     p = sub.add_parser("favourites")
     p.add_argument("action", nargs="?", default="list")
     p.add_argument("args", nargs="*")
+    p = sub.add_parser("db")
+    p.add_argument("query", nargs="*")
+    p = sub.add_parser("tree")
+    p.add_argument("member", nargs="*")
     p = sub.add_parser("mode")
     p.add_argument("value", nargs="?", choices=["shell", "english", "auto"])
     sub.add_parser("reset")
@@ -1690,9 +1983,18 @@ def main(argv: list[str] | None = None) -> int:
             if out:
                 print(out)
         elif args.cmd == "do":
-            print(resolve_verb_noun(" ".join(args.words), state))
+            out = resolve_verb_noun(" ".join(args.words), state)
+            if state.get("learned"):
+                out += "\n  learned: " + state.pop("learned")
+            save_state(state)                           # before printing: a closed pipe must not lose the focus
+            print(out)
         elif args.cmd == "commands":
-            print(commands_text(View(state).root, None if args.all else args.top))
+            view = View(state)
+            print(commands_text(view.root, None if args.all else args.top, db(view)))
+        elif args.cmd == "db":
+            print(cmdb().run_sql(db(View(state)), " ".join(args.query)))
+        elif args.cmd == "tree":
+            print(commands_verb(View(state), state, ["tree"] + args.member))
         elif args.cmd == "edit":
             sh = Shell(state)
             v, rel = sh.target_rel(args.path)

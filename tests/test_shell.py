@@ -22,7 +22,7 @@ def sh(tmp_path, monkeypatch):
     builtins.mkdir(parents=True)
     (builtins / "SKILL.md").write_text("---\nname: xlsx\ndescription: \"Create and edit spreadsheets.\"\n---\n\n# xlsx\n",
                                        encoding="utf-8")
-    for name in [n for n in sys.modules if n in ("skillset_shell_test", "skillset", "skillset_memory")]:
+    for name in [n for n in sys.modules if n in ("skillset_shell_test", "skillset", "skillset_memory", "skillset_commands")]:
         del sys.modules[name]
     spec = importlib.util.spec_from_file_location("skillset_shell_test", top / "scripts" / "shell.py")
     mod = importlib.util.module_from_spec(spec)
@@ -117,10 +117,15 @@ def test_apply_writes_remembered_edits_and_memory_candidates_into_a_working_copy
     sh.mod.save_state(state)
     wc = tmp_path / "wc"
     shutil.copytree(sh.top, wc)
+
+    def candidates():
+        return {line for line in (wc / "memory" / "items.jsonl").read_text(encoding="utf-8").splitlines() if '"candidate"' in line}
+
+    before = candidates()  # the store may already hold candidates awaiting review
     assert sh.mod.main(["apply", "--wc", str(wc)]) == 0
     assert (wc / "subskills/skillset-tools/subskills/self-memory/SUBSKILL.md").read_text(encoding="utf-8").endswith("new line\n")
-    items = [line for line in (wc / "memory" / "items.jsonl").read_text(encoding="utf-8").splitlines() if '"candidate"' in line]
-    assert len(items) == 1 and "verb-noun" in items[0]
+    items = candidates() - before
+    assert len(items) == 1 and "verb-noun" in next(iter(items))
     assert sh.mod.load_state()["journal"] == []
 
 
@@ -382,3 +387,151 @@ def test_no_generic_use_commands_remain_and_the_shell_is_not_in_its_own_top_list
     assert generic == []
     top = sh.mod.commands_text(sh.top, 20)
     assert "shell mode" not in top and "shell mode" in sh.mod.commands_text(sh.top, None)
+
+
+# ---------------------------------------------------------------- the command database: every skill's own tree
+
+def _tree_problems(sh, text, allow=False):
+    return sh.mod.cmdb().parse(text, allow_reserved=allow)[1]
+
+
+def test_every_member_keeps_a_valid_command_tree(sh):
+    ss = sh.mod.skillset()
+    for _d, m in ss.walk(sh.top):
+        text = (m.folder / m.doc).read_text(encoding="utf-8")
+        nodes, problems = sh.mod.cmdb().parse(text, allow_reserved=m.name == "command-line")
+        assert nodes and not problems, (m.path, problems)
+        assert nodes[0]["meme"] and nodes[0]["depth"] == 0, m.path       # a meme heading as its root
+    assert ss.check_skillset(sh.top)[0] == []
+
+
+@pytest.mark.parametrize(("text", "problem"), [
+    ("## Commands\n\n- 🐞 `fix it`: has no meme heading but is the root line of the tree.\n", "root line needs"),
+    (("## Commands\n\n- 🐞 **Root** · `fix it`: the root line with a proper description here.\n"
+      "    - 🔬 `too deep`: jumps two levels at once, which the parser must refuse.\n"), "more than one level"),
+    ("## Commands\n\n- 🐞 **Root** · `fix it`: the root line with a proper description here.\n  - 🔬 `x y`: short\n",
+     "needs a description"),
+    ("## Commands\n\n- 🐞 **Root** · `focus thing`: starts with a reserved shell verb, so it must be refused.\n",
+     "reserves"),
+    ("## Commands\n\n- 🐞 **Root** · `Fix It`: uppercase is not a command the router can match, refuse it.\n",
+     "lowercase"),
+    ("## Commands\n\nnot a command line at all\n", "not a command line"),
+])
+def test_the_tree_parser_refuses_malformed_trees(sh, text, problem):
+    assert any(problem in p for p in _tree_problems(sh, text)), _tree_problems(sh, text)
+
+
+def test_check_fails_when_a_tree_breaks_and_warns_when_one_is_missing(sh):
+    ss = sh.mod.skillset()
+    doc = sh.top / "subskills/software-dev/subskills/debug-issue/SUBSKILL.md"
+    good = doc.read_text(encoding="utf-8")
+    doc.write_text(good.replace("`reproduce bug`:", "`Reproduce Bug`:"), encoding="utf-8")
+    assert any("Commands" in e for e in ss.check_skillset(sh.top)[0])
+    head, rest = good.split("## Commands", 1)
+    doc.write_text(head + "<!-- folder:start" + rest.split("<!-- folder:start", 1)[1], encoding="utf-8")
+    errors, warnings = ss.check_skillset(sh.top)
+    assert errors == [] and any("no `## Commands` tree" in w for w in warnings)
+
+
+def test_an_exact_tree_command_routes_with_its_place_and_a_heading_runs_its_children(sh):
+    out = _do(sh, "reproduce bug")
+    assert "software-dev/debug-issue" in out and "🐞 debug issue ▸ 🔬 reproduce bug" in out
+    assert "runs, in order" in out and "`read stack trace`" in out and "`check recent changes`" in out
+    leaf = _do(sh, "add regression test")
+    assert "[command: software-dev/debug-issue]" in leaf and "runs, in order" not in leaf
+
+
+def test_focus_shows_the_skill_tree_routes_inside_it_first_and_clears(sh):
+    out = _do(sh, "focus debug-issue")
+    assert out.startswith("Focus: software-dev/debug-issue") and "`bisect regression`" in out
+    _do(sh, "isolate cause")
+    tree = _do(sh, "commands")
+    assert "`isolate cause`:" in tree and "👈 focus" in tree.split("`isolate cause`:", 1)[1].splitlines()[0]
+    assert "cleared" in _do(sh, "unfocus")
+    assert "Most useful commands" in _do(sh, "commands") or "⭐" in _do(sh, "commands")
+
+
+def test_sql_reads_everything_and_writes_only_the_persons_tables(sh):
+    out = _do(sh, "db SELECT command FROM routes WHERE member='software-dev/debug-issue' AND parent IS NULL "
+                  "AND source='tree'")
+    assert "debug issue" in out and "(1 row(s))" in out
+    assert "not authorized" in _do(sh, "db DELETE FROM commands")
+    assert "not authorized" in _do(sh, "db DROP TABLE user_prefs")
+    assert "1 row(s) changed" in _do(sh, "db INSERT INTO user_requests (phrase) VALUES ('tidy imports')")
+    assert "tidy imports" in _do(sh, "db SELECT phrase FROM user_requests")
+    assert "Tables and views" in _do(sh, "db")
+
+
+def test_preferences_disable_enable_and_star_commands(sh):
+    assert "disabled" in _do(sh, "disable reproduce bug")
+    assert "is disabled in your preferences" in _do(sh, "reproduce bug")
+    assert "🚫 disabled" in _do(sh, "commands tree debug-issue")
+    assert "enabled" in _do(sh, "enable reproduce bug")
+    assert "[group: software-dev/debug-issue]" in _do(sh, "reproduce bug")
+    assert "⭐ preferred" in _do(sh, "prefer debug issue")
+    _do(sh, "unfocus")                                          # routing set a focus; the global list needs none
+    assert _do(sh, "commands").startswith("⭐ Yours:")
+    assert "not a known command" in _do(sh, "disable no such command here")
+
+
+def test_a_menu_pick_is_learned_only_when_repeated_or_confirmed(sh):
+    first = _do(sh, "make plan")
+    assert "ambiguous" in first
+    n = next(ln.split(".")[0].strip() for ln in first.splitlines() if "plan feature" in ln and ln.strip()[:1].isdigit())
+    _do(sh, n)
+    again = _do(sh, "make plan")
+    assert "last time this was `plan feature`" in again and "(your alias)" not in again
+    _do(sh, "1")
+    assert "(your alias)" in _do(sh, "make plan")
+    assert "alias kept" in _do(sh, "alias squash bug = debug issue")
+    assert "(your alias)" in _do(sh, "squash bug")
+
+
+def test_missing_commands_are_wanted_and_the_persons_tables_go_home_in_their_file(sh, tmp_path):
+    _do(sh, "zork the frobnicator")
+    assert "request command" in _do(sh, "zork the frobnicator")
+    assert "requested #1" in _do(sh, "request command squash bug for debug-issue: run the loop fast")
+    tree = _do(sh, "focus debug-issue")
+    assert "Wanted here" in tree and "`squash bug`" in tree
+    _do(sh, "disable run exam")
+    _do(sh, "alias squash bug = debug issue")
+    card = tmp_path / "mine.md"
+    state = sh.mod.load_state()
+    sh.mod.favourites(state, "add", ["debug", "issue"])
+    sh.mod.favourites(state, "save", [str(card)])
+    text = card.read_text(encoding="utf-8")
+    assert "## Disabled" in text and "## My aliases" in text and "## Requested commands" in text
+    import os
+    os.environ["SKILLSET_SHELL_HOME"] = str(tmp_path / "fresh")          # a new session: nothing carried over
+    sh.mod.STATE_HOME = tmp_path / "fresh"
+    fresh = sh.mod.load_state()
+    assert "1 aliases" in sh.mod.favourites(fresh, "load", [str(card)])
+    sh.mod.save_state(fresh)
+    assert "(your alias)" in _do(sh, "squash bug")
+    assert "is disabled" in _do(sh, "run exam")
+
+
+def test_a_remembered_tree_edit_routes_at_once(sh):
+    sh("sed -i 's/`chase flaky test`/`chase flaky tests`/' software-dev/debug-issue/SUBSKILL.md")
+    assert "[command: software-dev/debug-issue]" in _do(sh, "chase flaky tests")
+
+
+def test_advice_on_new_commands_gathers_evidence_for_claude(sh):
+    _do(sh, "zork the frobnicator")
+    out = _do(sh, "advise commands test")
+    assert "zork the frobnicator" in out and "existing related commands" in out and "propose 3-7 commands" in out
+
+
+@pytest.mark.parametrize("line", ["ls subskills", "cd cognition && cat SKILLSET.md",
+                                  "Get-ChildItem -Recurse -Filter *.md", "type SKILL.md", "pwd"])
+def test_rapid_route_sends_shell_command_lines_to_the_shell(sh, line):
+    state = sh.mod.load_state()
+    out = sh.mod.resolve_verb_noun(line, state)
+    assert "[skill: command-line]" in out
+    assert "likeliest" not in out
+
+
+@pytest.mark.parametrize("line", ["find skills about negotiation", "review code", "help me write a speech",
+                                  "type up my notes", "open weather"])
+def test_rapid_route_keeps_english_that_starts_with_a_shell_word(sh, line):
+    assert not sh.mod.looks_like_shell(line)

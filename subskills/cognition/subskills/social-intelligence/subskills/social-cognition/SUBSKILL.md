@@ -4,7 +4,7 @@ description: "Builds theory of mind: modelling what another person knows, believ
 trigger: "understand what others think, know or believe, or how groups behave"
 command: "read people"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # 🫂 Social Cognition
@@ -48,6 +48,12 @@ For groups: notice who speaks and who defers, what the unspoken norms are, and w
 - Perspective-taking is imagination, not knowledge; confirm with the real person when it matters.
 - Understanding someone's view is not agreeing with it or excusing harm.
 - For practical conversations about a relationship, use the interpersonal skillset.
+
+## Commands
+
+- 🧠 **Others see and want differently** · `read people`: Understands what others think, know or believe, or how groups behave.
+  - 👓 `see their view`: Models another person's view of a situation from what they know and want.
+  - 🧩 `explain behaviour`: Offers situational explanations for someone's behaviour before character judgements.
 
 <!-- folder:start -->
 ## This folder

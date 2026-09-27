@@ -4,7 +4,7 @@ description: "Builds clear reasoning: breaking a problem down, deductive, induct
 trigger: "think through a problem logically or check an argument"
 command: "reason logically"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # 🧠 Reasoning
@@ -49,6 +49,12 @@ Common fallacies to spot: straw man, false dilemma, slippery slope, appeal to au
 - Long reasoning is not better reasoning; a crisp argument is easier to check.
 - An intuitive answer that feels obvious deserves a quick check on problems designed to trick.
 - For personal choices between options, use `decision-making` in self-improvement; for choosing the next step in a task, `action-selection` in cognition/executive-function.
+
+## Commands
+
+- 🧮 **Break it down, show each step** · `reason logically`: Thinks a problem through logically, showing each step and checking the conclusion against the premises.
+  - 🧾 `check argument`: Checks an argument's premises, logic and conclusion, naming any fallacy.
+  - 🪜 `step by step`: Works through a problem in explicit numbered steps.
 
 <!-- folder:start -->
 ## This folder

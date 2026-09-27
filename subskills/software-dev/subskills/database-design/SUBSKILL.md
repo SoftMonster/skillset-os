@@ -3,7 +3,7 @@ name: database-design
 description: "Designs relational and document data models, writes safe forward and backward migrations, chooses indexes, and diagnoses slow queries from EXPLAIN plans. Use when the user asks to design or review a schema, tables, relations or an ERD, normalise data, write or review a migration, add an index, optimise a SQL query, or choose between database types. Do not use for general application slowness; use performance-tuning."
 trigger: "design a database schema, write migrations or fix slow queries"
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # Database design
@@ -54,6 +54,19 @@ On PostgreSQL, create indexes with `CREATE INDEX CONCURRENTLY` (outside a transa
 - `ALTER TABLE ... ADD COLUMN ... DEFAULT` with a volatile default rewrites the whole table on Postgres.
 - Soft deletes (`deleted_at`) need partial unique indexes, or uniqueness breaks.
 - Choose a document store only when access is mostly by key with flexible shape; relational is the safer default.
+
+## Commands
+
+- 🗄️ **Model, migrate both ways, measure** · `design database`: Designs schemas from access patterns, writes reversible migrations that are safe on live tables, and fixes slow queries by measuring first.
+  - 🧱 **Design the schema** · `design schema`: Runs the three below in order from the application's queries.
+    - 🔎 `list access-patterns`: Lists the reads and writes the application makes, with frequency and size, before drawing tables.
+    - 📐 `draft tables`: Drafts tables, keys, types, constraints and relationships normalised to fit those patterns.
+    - 📇 `plan indexes`: Chooses indexes for the real queries and explains the write cost of each.
+  - 🔁 **Migrate safely** · `write migration`: Writes an up and down migration; for live tables uses expand, migrate, contract so nothing locks or breaks.
+    - ➕ `expand schema`: Adds new columns or tables without breaking the running code.
+    - 🚚 `backfill data`: Moves data in batches with a way to resume and verify.
+    - ➖ `contract schema`: Removes old structures only after code no longer uses them.
+  - 🐢 `fix slow query`: Runs EXPLAIN, finds the real cost, then indexes, rewrites or restructures and proves the gain with numbers.
 
 <!-- folder:start -->
 ## This folder

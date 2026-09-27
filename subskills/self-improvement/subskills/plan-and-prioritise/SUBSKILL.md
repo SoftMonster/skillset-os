@@ -4,7 +4,7 @@ description: "Turns a messy pile of commitments into a realistic plan: captures 
 trigger: "plan my day or week, prioritise tasks or beat procrastination"
 command: "prioritise tasks"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # Plan and prioritise
@@ -54,6 +54,12 @@ For a request with many parts, plan Claude's own work the same way: pick the par
 - A long list with no ranking is not a plan; always commit to a top three.
 - Offer a weekly planning routine (15 minutes on Sunday or Monday) paired with `reflect-and-review`.
 - Chronic overwhelm or exhaustion may be a wellbeing issue, not a planning one; consider `energy-and-wellbeing`.
+
+## Commands
+
+- 🗓️ **Top three, plan to 70%** · `prioritise tasks`: Plans the day or week and beats procrastination: capture, clarify, prioritise, fit to capacity, name the next action.
+  - 📅 `plan my week`: Builds a week plan with the top three priorities and room to spare.
+  - 🐌 `beat procrastination`: Finds why a task is stuck and the smallest next action to start it.
 
 <!-- folder:start -->
 ## This folder

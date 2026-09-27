@@ -1,5 +1,64 @@
 # Changelog
 
+## 1.8.5 — 2026-09-27
+
+- Self-memory: design principles confirmed as the tie-breaker (DEC-0026); one-call test run replaces the three-part split (MNT-0013 supersedes MNT-0009).
+
+## 1.8.4 — 2026-09-27
+
+- Routing 2x faster (C YAML loader, identical routes); design principles in ARCHITECTURE.md; self-memory from an outside AI review reconciled.
+
+## 1.8.3 — 2026-09-27
+
+- Rapid route sends shell command lines to the shell; routing fixture keys aligned with documented exam and self-memory behaviour; blind-grade results in self-memory.
+
+## 1.8.2 — 2026-09-27
+
+- Card map: every word-overlap suggestion reviewed by hand (64 of 922 cards mapped to 31 members, 126 rejected with reasons); rejected status; EXP-0009.
+- Updated `cognition/metacognition/universal-skill-curriculum-exam` to 1.3.2: card map: all word-overlap suggestions reviewed; rejected status
+
+## 1.8.1 — 2026-09-27
+
+- Exam card map: 34 of 922 curriculum cards mapped by hand to the members that cover them; card_map.py check, plan and suggest; curriculum exam run 1 recorded (EXP-0008); MNT-0010 closed.
+- Updated `cognition/metacognition/universal-skill-curriculum-exam` to 1.3.1: card map: test and score cards by the member that covers them
+
+## 1.8.0 — 2026-09-27
+
+- Verified training ledger; composition prompts with needs lists and coverage scoring; leak-free routing sheet; MNT-0003 and MNT-0007 closed.
+- Updated `skillset-tools/write-subskill` to 1.4.0: composition prompts: needs lists and composition coverage
+- Updated `self-improvement/training-skills` to 1.5.0: verified training ledger: init, mark with evidence, reconcile against the inventory
+
+## 1.7.0 — 2026-09-27
+
+- Routing confusion matrix, rapid-route baseline and compare in routing_eval.py; rapid-route experiment and fallback lesson in self-memory.
+- Updated `skillset-tools/write-subskill` to 1.3.0: routing confusion matrix, rapid baseline and compare
+
+## 1.6.3 — 2026-09-27
+
+- Merge five self-memory items from a 1.0.0 branch: paging experiment, append-only context, three lessons.
+
+## 1.6.2 — 2026-09-27
+
+- Merge uploaded 1.0.0 snapshot: recover routing experiment EXP-0005 into self-memory.
+
+## 1.6.1 — 2026-09-27
+
+- approved command-database capability and evolution in self-memory.
+- Self-memory: approved CAP-0017 (command-database routing) and EVO-0007 (every member keeps a Commands tree), confirmed by the person.
+
+## 1.6.0 — 2026-09-27
+
+- command trees in every skill and a SQLite command database for rapid routing.
+- Every member keeps a `## Commands` emoji tree of the commands that trigger it, under meme headings, each saying how the skill uses it; a heading's command focuses its group and runs its children.
+- A SQLite command database (`scripts/commands.py`) routes typed commands rapidly: aliases, then exact commands inside the focus, then the fuzzy matcher. New verbs: `focus`, `unfocus`, `commands tree`, `why`, `db <sql>`, `prefer`, `disable`, `enable`, `alias`, `request command`, `advise commands`.
+- Missing and ambiguous commands are kept as Wanted; a menu pick repeated twice becomes a direct route. Preferences, aliases and requests travel in the person's own `my-commands.md`.
+- Every sub-skill rose one minor version for its new Commands tree (command-line, write-subskill and edit-subskill also gained the instructions for it).
+- `check` validates every tree (malformed is an error; missing, as in imported skills, or shared with another skill is a warning); templates start one.
+
+## 1.5.1 — 2026-09-27
+
+- Harvested another session's routing memories: re-numbered past id clashes, approved LES-0052, LES-0054 and MNT-0008, held LES-0053 and EXP-0004 as candidates; the apply test no longer assumes an empty candidate list.
+
 ## 1.5.0 — 2026-09-27
 
 - Harvested another session's memory: nine screened lessons, a limitation and a maintenance item, carried into verification, research, skill-composition and training-skills.

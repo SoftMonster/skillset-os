@@ -3,7 +3,7 @@ name: teaching
 description: "Teaches for real understanding: finds what the learner already knows, sets a clear goal, explains with examples and analogies, has the learner do and recall rather than just listen, checks understanding and gives useful feedback. For people, covers tutoring, training colleagues, helping children with homework and teaching a class; for Claude, covers switching into tutor mode when someone is learning, asking questions that make them think, checking understanding, and not simply handing over answers when learning is the goal. Use when the user wants to teach or explain something to someone, or wants Claude to teach them rather than just answer. For the user's own study plan, use learning-plan in self-improvement."
 trigger: "teach, tutor or explain something so it sticks"
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # 🧑‍🎓 Teaching
@@ -43,6 +43,13 @@ For planning someone's own study, use `learning-plan` in self-improvement.
 
 - Clear explanations can create an illusion of understanding; only practice reveals it.
 - Experts skip steps they no longer notice (see `social-cognition` in social-intelligence).
+
+## Commands
+
+- 🎓 **Learn by doing and recalling** · `teach tutor`: Teaches, tutors or explains so it sticks: starts from what they know, sets a clear goal, explains with examples, has them do it, uses retrieval and spacing, checks understanding, and gives feedback.
+  - 📖 `teach me`: Teaches the named topic interactively, starting from what the person already knows.
+  - ❓ `quiz me`: Asks retrieval questions on the topic, with feedback on each answer.
+  - 🧒 `explain simply`: Explains the topic with a concrete example at the level the person names.
 
 <!-- folder:start -->
 ## This folder

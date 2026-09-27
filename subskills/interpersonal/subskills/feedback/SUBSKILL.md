@@ -3,7 +3,7 @@ name: feedback
 description: "Covers feedback in both directions: gives specific, behaviour-based feedback and praise that lands, and helps the user receive criticism without defensiveness, sort useful from not, and act on it. Use when the user needs to give feedback to a colleague, report, friend or family member, write a performance review, was criticised and is upset, or wants to ask for better feedback. Also guides how Claude gives and takes feedback."
 trigger: "give or receive feedback well"
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # Feedback
@@ -47,6 +47,12 @@ Claude gives the person feedback on their work the same way: specific, tied to i
 
 - Feedback about identity or protected characteristics is not feedback; it may be discrimination.
 - Harsh criticism that sticks for days may be hitting self-criticism; `mindset-resilience` in self-improvement helps.
+
+## Commands
+
+- 🎁 **Behaviour, impact, question** · `give feedback`: Gives or receives feedback well: situation, behaviour, impact and a request; or listening, asking for specifics, sorting and acting.
+  - ✍️ `draft sbi feedback`: Drafts feedback in situation-behaviour-impact form with a question or request.
+  - 📥 `receive feedback`: Helps the person take in feedback, ask for specifics and decide what to act on.
 
 <!-- folder:start -->
 ## This folder

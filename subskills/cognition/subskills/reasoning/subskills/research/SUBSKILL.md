@@ -3,7 +3,7 @@ name: research
 description: "Runs research that reaches reliable answers: frames the question, plans sources, searches systematically, evaluates source quality and evidence strength, triangulates, tracks what is known and unknown, and synthesises with citations. For people, covers researching a topic, reading studies critically and spotting misinformation; for Claude, covers searching for anything current or specific instead of relying on memory, preferring primary sources, reporting conflicts between sources and paraphrasing rather than copying. Use when the user wants to research something, check a claim, evaluate a source or study, or learn how to research, or when Claude needs evidence it does not reliably have."
 trigger: "research a question or judge how good a source is"
 metadata:
-  version: "1.1.0"
+  version: "1.2.0"
 ---
 
 # 🔬 Research
@@ -47,6 +47,13 @@ Find out what is true, how sure we can be, and where the evidence comes from. Go
 - Searching for confirmation finds it; search for the opposite too.
 - The absence of evidence in a quick search is not evidence of absence.
 - On contested political topics, present the range of well-supported views fairly.
+
+## Commands
+
+- 🔬 **Search the opposite too** · `research question`: Researches a question and judges source quality: frame, plan sources, search, evaluate, triangulate and synthesise.
+  - 🗂️ `plan sources`: Lists which kinds of source can answer the question and how to reach them.
+  - ⚖️ `evaluate source`: Judges how good a source is: evidence, independence, date and track record.
+  - 🧵 `synthesise findings`: Combines findings, noting where sources agree, disagree and are thin.
 
 <!-- folder:start -->
 ## This folder
