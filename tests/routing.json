@@ -1,0 +1,356 @@
+{
+  "about": "Routing fixture: realistic prompts and the member each should reach (null: the skillset should not open). 'also' lists other acceptable members. Grade blind with scripts/routing_eval.py.",
+  "prompts": [
+    {
+      "id": 1,
+      "prompt": "I keep procrastinating on my thesis",
+      "expect": "self-improvement/plan-and-prioritise"
+    },
+    {
+      "id": 2,
+      "prompt": "help me actually stick to going to the gym",
+      "expect": "self-improvement/habit-building"
+    },
+    {
+      "id": 3,
+      "prompt": "I want to set some proper goals for next year",
+      "expect": "self-improvement/goal-setting"
+    },
+    {
+      "id": 4,
+      "prompt": "train me",
+      "expect": "self-improvement/training-skills"
+    },
+    {
+      "id": 5,
+      "prompt": "should I take the job in Leeds or stay where I am?",
+      "expect": "self-improvement/decision-making"
+    },
+    {
+      "id": 6,
+      "prompt": "help me budget my salary so I actually save something",
+      "expect": "self-improvement/money-habits"
+    },
+    {
+      "id": 7,
+      "prompt": "I'm completely burnt out and exhausted",
+      "expect": "self-improvement/energy-and-wellbeing",
+      "also": [
+        "self-improvement/mindset-resilience"
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "help me negotiate my salary offer",
+      "expect": "interpersonal/negotiation",
+      "also": [
+        "self-improvement/career-growth"
+      ]
+    },
+    {
+      "id": 9,
+      "prompt": "my friend's dad just died, what do I say to her?",
+      "expect": "interpersonal/supporting-others"
+    },
+    {
+      "id": 10,
+      "prompt": "how do I say no to my boss without seeming difficult",
+      "expect": "interpersonal/boundaries-assertiveness",
+      "also": [
+        "interpersonal/workplace-relationships"
+      ]
+    },
+    {
+      "id": 11,
+      "prompt": "my partner and I keep arguing about chores",
+      "expect": "interpersonal/close-relationships",
+      "also": [
+        "interpersonal/conflict-resolution"
+      ]
+    },
+    {
+      "id": 12,
+      "prompt": "I feel lonely since moving city",
+      "expect": "interpersonal/friendships-connection"
+    },
+    {
+      "id": 13,
+      "prompt": "I snapped at my sister and need to apologise properly",
+      "expect": "interpersonal/apologies-repair"
+    },
+    {
+      "id": 14,
+      "prompt": "I'm so awkward at parties, I never know what to say",
+      "expect": "interpersonal/social-confidence"
+    },
+    {
+      "id": 15,
+      "prompt": "is this text message a scam?",
+      "expect": "cognition/safety-governance/threat-detection"
+    },
+    {
+      "id": 16,
+      "prompt": "how confident should I be in this forecast?",
+      "expect": "cognition/perception-sensing/uncertainty-awareness"
+    },
+    {
+      "id": 17,
+      "prompt": "summarise this article as an emoji list",
+      "expect": "cognition/communication-regulation/emoji-list-generator"
+    },
+    {
+      "id": 18,
+      "prompt": "write a slogan for our charity fun run",
+      "expect": "cognition/communication-regulation/memetic-ethics"
+    },
+    {
+      "id": 19,
+      "prompt": "teach me statistics step by step",
+      "expect": "cognition/human-ai-augmentation/teaching"
+    },
+    {
+      "id": 20,
+      "prompt": "check your own reasoning on that answer",
+      "expect": "cognition/metacognition/metacognition",
+      "also": [
+        "cognition/reasoning/reasoning"
+      ]
+    },
+    {
+      "id": 21,
+      "prompt": "does intermittent fasting actually work? look into the evidence",
+      "expect": "cognition/reasoning/research"
+    },
+    {
+      "id": 22,
+      "prompt": "what could go wrong with this launch plan?",
+      "expect": "cognition/reasoning/adversarial-thinking",
+      "also": [
+        "cognition/reasoning/second-order-reasoning"
+      ]
+    },
+    {
+      "id": 23,
+      "prompt": "am I being biased about this candidate?",
+      "expect": "cognition/reasoning/bias-detection"
+    },
+    {
+      "id": 24,
+      "prompt": "my friend is having a panic attack right now, what do I do",
+      "expect": "cognition/communication-regulation/regulation-support",
+      "also": [
+        "interpersonal/supporting-others"
+      ]
+    },
+    {
+      "id": 25,
+      "prompt": "a customer is shouting at me at the till",
+      "expect": "cognition/communication-regulation/de-escalation",
+      "also": [
+        "interpersonal/conflict-resolution"
+      ]
+    },
+    {
+      "id": 26,
+      "prompt": "two people on my team are feuding and asked me to sort it out",
+      "expect": "cognition/communication-regulation/conflict-mediation"
+    },
+    {
+      "id": 27,
+      "prompt": "how do I get better at remembering names",
+      "expect": "cognition/memory-context/long-term-memory"
+    },
+    {
+      "id": 28,
+      "prompt": "I can't concentrate, my phone keeps pulling me away",
+      "expect": "cognition/perception-sensing/attention"
+    },
+    {
+      "id": 29,
+      "prompt": "how do I get more out of AI tools at work",
+      "expect": "cognition/human-ai-augmentation/human-ai-collaboration"
+    },
+    {
+      "id": 30,
+      "prompt": "what are you actually able to do, and what are your limits?",
+      "expect": "cognition/memory-context/self-model",
+      "also": [
+        null
+      ]
+    },
+    {
+      "id": 31,
+      "prompt": "he keeps telling me things I remember never happened",
+      "expect": "cognition/safety-governance/manipulation-detection",
+      "also": [
+        "interpersonal/close-relationships"
+      ]
+    },
+    {
+      "id": 32,
+      "prompt": "fix this failing test",
+      "expect": "software-dev/debug-issue"
+    },
+    {
+      "id": 33,
+      "prompt": "review this pull request",
+      "expect": "software-dev/code-review"
+    },
+    {
+      "id": 34,
+      "prompt": "improve this repo in 20 minutes",
+      "expect": "software-dev/time-bounded-file-improvement"
+    },
+    {
+      "id": 35,
+      "prompt": "write a README for this project",
+      "expect": "software-dev/technical-docs"
+    },
+    {
+      "id": 36,
+      "prompt": "set up GitHub Actions for this repo",
+      "expect": "software-dev/ci-cd-pipeline"
+    },
+    {
+      "id": 37,
+      "prompt": "this API endpoint takes 4 seconds to respond",
+      "expect": "software-dev/performance-tuning",
+      "also": [
+        "software-dev/database-design"
+      ]
+    },
+    {
+      "id": 38,
+      "prompt": "find a skill for making spreadsheets",
+      "expect": "skillset-tools/find-skills"
+    },
+    {
+      "id": 39,
+      "prompt": "add a skill for writing meeting minutes",
+      "expect": "skillset-tools/write-subskill"
+    },
+    {
+      "id": 40,
+      "prompt": "get rid of the money skill, I never use it",
+      "expect": "skillset-tools/retire-subskill"
+    },
+    {
+      "id": 41,
+      "prompt": "import this zip into the skillset",
+      "expect": "skillset-tools/import-skill"
+    },
+    {
+      "id": 42,
+      "prompt": "give me a copy of the skillset for GitHub",
+      "expect": "sync-skillset"
+    },
+    {
+      "id": 43,
+      "prompt": "what's the capital of France?",
+      "expect": null
+    },
+    {
+      "id": 44,
+      "prompt": "translate 'good morning' into Spanish",
+      "expect": "apps"
+    },
+    {
+      "id": 45,
+      "prompt": "who won the 2022 World Cup?",
+      "expect": null
+    },
+    {
+      "id": 46,
+      "prompt": "write a haiku about autumn",
+      "expect": null
+    },
+    {
+      "id": 47,
+      "prompt": "convert 5 miles to kilometres",
+      "expect": null
+    },
+    {
+      "id": 51,
+      "prompt": "here's my other app as a zip, make a develop skill for it so you can keep working on it",
+      "expect": "software-dev/repo-adoption/adopt-repository"
+    },
+    {
+      "id": 52,
+      "prompt": "can you bring my github repo alice/tally into the skillset so you can work on it",
+      "expect": "software-dev/repo-adoption/adopt-repository"
+    },
+    {
+      "id": 53,
+      "prompt": "run the universal skill curriculum exam on yourself",
+      "expect": "cognition/metacognition/universal-skill-curriculum-exam"
+    },
+    {
+      "id": 54,
+      "prompt": "how good are you at your skills really? test yourself and score it",
+      "expect": "cognition/metacognition/universal-skill-curriculum-exam"
+    },
+    {
+      "id": 55,
+      "prompt": "ls",
+      "expect": "command-line"
+    },
+    {
+      "id": 56,
+      "prompt": "cd cognition && cat SKILLSET.md",
+      "expect": "command-line"
+    },
+    {
+      "id": 57,
+      "prompt": "give me a list of the most useful commands",
+      "expect": "command-line"
+    },
+    {
+      "id": 58,
+      "prompt": "Get-ChildItem -Recurse -Filter *.md",
+      "expect": "command-line"
+    },
+    {
+      "id": 59,
+      "prompt": "review code",
+      "expect": "software-dev/code-review",
+      "also": [
+        "command-line"
+      ]
+    },
+    {
+      "id": 60,
+      "prompt": "weather Staines",
+      "expect": "apps"
+    },
+    {
+      "id": 61,
+      "prompt": "calc 17.5% of 2340",
+      "expect": "apps"
+    },
+    {
+      "id": 62,
+      "prompt": "show bbc.co.uk/news",
+      "expect": "apps"
+    },
+    {
+      "id": 63,
+      "prompt": "sql load sales.csv",
+      "expect": "apps"
+    },
+    {
+      "id": 64,
+      "prompt": "pdf merge a.pdf b.pdf",
+      "expect": "apps"
+    },
+    {
+      "id": 65,
+      "prompt": "why do some winters in England get so much more rain than others?",
+      "expect": null
+    },
+    {
+      "id": 66,
+      "prompt": "what is an RSS feed, in simple terms?",
+      "expect": null
+    }
+  ]
+}

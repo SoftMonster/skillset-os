@@ -1,0 +1,44 @@
+# Changelog
+
+## Unreleased
+
+- Donationware licensing: Andrew Wright, GitHub Sponsors Softmonster.
+- Donationware: Andrew Wright named as copyright holder; GitHub Sponsors (Softmonster) in LICENSE note, NOTICE, README badge and section, CONTRIBUTING, pyproject and `.github/FUNDING.yml` (restored from a template); one optional support suggestion per conversation in SKILL.md.
+- Ambiguity routing: numbered menus with 0 infer, conversation openers with a Skillset-OS review, phone-autocorrect readings; apps date/confidence and deliverable-options rules; shorter training reports.
+- Updated `self-improvement/training-skills` to 1.1.0: short drill reports, self-graded ticks disclosed, stop when lessons run out
+- Updated `apps` to 1.1.0: date-and-confidence checks, and only offering deliverable next steps
+- Updated `cognition/social-intelligence/intent-inference` to 1.1.0: resolve ambiguity with a numbered menu the person answers with one number
+- Updated `command-line` to 1.1.0: ambiguous and near-miss commands resolve through a numbered menu answered by a bare number
+- Harvest exam lessons into verification, evidence-hygiene, self-memory, edit-subskill, sync-skillset and the exam skill; add memory harvesting as a standing suggestion; trim memetic-ethics.
+- Updated `sync-skillset` to 1.0.1.
+- Updated `skillset-tools/edit-subskill` to 1.0.1.
+- Updated `cognition/action-agency/evidence-hygiene` to 1.0.2.
+- Updated `cognition/communication-regulation/memetic-ethics` to 1.0.3.
+- Updated `skillset-tools/self-memory` to 1.0.2.
+- Updated `cognition/communication-regulation/memetic-ethics` to 1.0.2.
+- Updated `cognition/metacognition/universal-skill-curriculum-exam` to 1.0.1.
+- Updated `skillset-tools/self-memory` to 1.0.1.
+- Updated `cognition/action-agency/evidence-hygiene` to 1.0.1.
+- Updated `cognition/action-agency/verification` to 1.0.1.
+- Numbered next-step suggestions replace the fixed closing line; add evidence-hygiene and exam-regression-battery sub-skills.
+- Updated `cognition/communication-regulation/communication` to 1.0.1.
+- Updated `cognition/communication-regulation/memetic-ethics` to 1.0.1.
+- Added sub-skill `cognition/action-agency/evidence-hygiene` 1.0.0: A pre-flight checklist for any claim of success: prove each check can fail, measure effects instead of exit codes, keep unknowns visible, evaluate on data you did not tune on, keep evidence cumulative, and route irreversible or promotion decisions to a human.
+- Updated `cognition/metacognition/exam-regression-battery` to 1.0.1: description follows the Use-when convention (found by E45 skill tester)
+- Added sub-skill `cognition/metacognition/exam-regression-battery` 1.0.0: Reruns every earlier self-examination check in seconds and reports PASS, FAIL or KNOWN with evidence, so each new exam run starts from reproduced evidence instead of losing it.
+- apps: twenty mimic apps merged into one sub-skill with a section per app; no nested zips in the upload.
+- Import 20 mimic apps as a packed apps skillset, wired into the command line; command-line review fixes.
+- Imported 20 mimic apps as the nested skillset `apps`, packed as one file: archive, browse, calc, define, drive, ed, feed, git, img, inbox, near, pdftool, pics, pkg, score, sheet, sql, translate, watch, weather. Placeholders in their descriptions changed from `<x>` to `X` (descriptions cannot hold angle brackets), their install note now names Skillset-OS, and `git` hands shell and commit work to command-line and git-workflow. The command line opens an app from its command words, read from each description; new `apps` verb; fixed `show changes` resolving to `save changes`.
+- Packed `apps` into a zip (22 files).
+- Imported `apps`: a collection of 20 skills.
+- Added skillset `apps` 1.0.0: Mimic apps: twenty short-command skills that behave like everyday apps inside the chat, built on Claude's own tools: archive (zip, unzip), browse (show a web page as Markdown), calc, define, drive (Google Drive), ed (line editor), feed (RSS), git (read public GitHub repositories), img (image editing), inbox (email and calendar), near (places and routes), pdftool, pics (image search), pkg (npm, PyPI, crates.io), score (sports), sheet (spreadsheets), sql, translate, watch (page changes) and weather.
+- Command line review fixes: wildcards in `ls`/`dir` (`*.md`, cmd's `*.*`) with a message when nothing matches; names match without case or a unique extension (`more changelog`); `display` and `view` read files; bare `commands` and `commands all` list commands; new `review commands`; unknown verbs get "I don't know that command" instead of a low-confidence guess. Docs: favourites word order, adventure-style verbs vs plain replies, `open` with member names, known naming gaps. Fixed "skillset set" typo in `adopt-repository`.
+- Command line: navigate the skills in bash, PowerShell or cmd syntax, remembered edits applied only on request, verb-noun commands resolved to skills, built-in skills and tools, a generated command list, and a person's command list kept only in the session or a file they hold.
+- Added sub-skill `command-line` 1.0.0: Runs Skillset-OS as a command line as well as in plain English: navigates the skills as a file system in bash, PowerShell or cmd syntax (ls, cd, cat, dir, type, Get-ChildItem, grep, tree...), remembers edits without applying them until an updated repository is requested, turns verb-noun commands like review code, plan feature or create spreadsheet into the skill, built-in skill or tool that does them, generates the most useful commands from what the skillset knows, and keeps a person's own command list only for the session or in a file they hold.
+- Imported universal-skill-curriculum-exam into cognition/metacognition for timed self-examination; exam technique moved beside it; results feed self-memory to monitor performance over time.
+- Updated `cognition/metacognition/universal-skill-curriculum-exam` to 1.1.0: core meme, 30-minute deadline fix, Skillset-OS monitoring through self-memory
+- Imported `cognition/metacognition/universal-skill-curriculum-exam` 1.0.0 as a skill.
+- One upload at any size: up to 190 files as they are, beyond that the largest groups are zipped inside the upload and unzipped with Python to read; --split keeps separate part skills as an option; self-memory updated.
+- AI self-memory (Step 5): memory store, user-protection screen, review and approval, supersession, SELF.md entry point, memory-pack.zip export and import, acceptance test; self-memory member; pre-release packaging.
+- Added sub-skill `skillset-tools/self-memory` 1.0.0: Keeps the AI's own persistent self-memory for Skillset-OS: turns a conversation's evidence into reviewed lessons, successes, failures, experiments, limitations and other self-knowledge, screens every item against the user-protection boundary, and exports or imports memory-pack.zip so another AI can carry on.
+- First version of Skillset-OS.

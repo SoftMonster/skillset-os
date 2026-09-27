@@ -1,0 +1,24 @@
+# Tool settings for developing the skillset. Nothing here is needed to use the skill.
+[project]
+name = "skillset-os"
+version = "3.0.0"
+description = "A personal skillset: one Agent Skill made of sub-skills and nested skillsets."
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Andrew Wright" }]
+dependencies = ["pyyaml>=6.0"]
+
+[project.urls]
+Repository = "https://github.com/Softmonster"
+Funding = "https://github.com/sponsors/Softmonster"
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "ruff>=0.5"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 120
+# Only the skillset's own code; imported members keep their authors' style (check still syntax-checks them).
+include = ["scripts/**/*.py", "tests/**/*.py"]

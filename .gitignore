@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.env
+.DS_Store
+# Build outputs at the top only: packed members under subskills/ are part of the skillset
+/*.zip
+/*.patch
