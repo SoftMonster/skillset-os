@@ -3,7 +3,7 @@ name: write-subskill
 description: "Writes a new sub-skill for the skillset. It captures what the sub-skill should do, picks a clear name, and writes a trigger and description that route requests to it reliably. Then it writes a lean SUBSKILL.md with any scripts or reference files and tests it against realistic prompts. Use when the user asks to create, write, draft, build or add a new skill or sub-skill, or to turn a workflow or this conversation into one."
 trigger: "write, add or draft a new skill, or turn a workflow or this chat into one"
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # Write a sub-skill
@@ -60,6 +60,8 @@ Put scripts, references and templates in the sub-skill's own folder and link the
 ### 6. Test
 
 Run `python3 <wc>/scripts/skillset.py check`, fix every error, then follow [testing.md](testing.md). For a script worth protecting, add a test to `<wc>/tests/`.
+
+Then offer the optional exam-to-memory loop ("The enhancement loop" in `cognition/metacognition/universal-skill-curriculum-exam`): take the exam with the new member in scope, self-mark it (pre-authorisation allowed), then form and harvest memories.
 
 ## Gotchas
 

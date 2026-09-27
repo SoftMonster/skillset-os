@@ -3,7 +3,7 @@ name: find-skills
 description: "Finds existing skills and learns from them instead of copying them in: searches skill registries, marketplaces and GitHub, studies the best candidates with the skillset's own faculties, extracts the lessons worth having (techniques, rules, gotchas, script ideas), rewrites them in the skillset's own words and structure, and applies them across every member they improve, then verifies, credits the sources and packages the whole repository. Use when the user asks to find, search for, discover or browse skills or plugins, asks whether a skill exists for something, wants to learn from or benchmark against other people's skills, or when a request needs a capability no member covers. Do not use for bringing in the person's own skill or an explicit verbatim copy; use import-skill."
 trigger: "find existing skills and learn from them to improve the skillset"
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # Find skills and learn from them
@@ -98,7 +98,7 @@ Work in the working copy from `sync-skillset`. For each change:
 ### 8. Verify
 *Faculties: `verification`, `feedback-processing`, `ethical-skill-evolution`.*
 
-Run `skillset.py check`. Walk two realistic prompts through each changed member (see `write-subskill`'s testing guide), including one where the lesson matters and one where it should not change behaviour. Confirm no edit weakens Claude's values, safety behaviour or care rules; if one does, drop it.
+Run `skillset.py check`. Walk two realistic prompts through each changed member (see `write-subskill`'s testing guide), including one where the lesson matters and one where it should not change behaviour. Confirm no edit weakens Claude's values, safety behaviour or care rules; if one does, drop it. Then offer the optional exam-to-memory loop ("The enhancement loop" in `cognition/metacognition/universal-skill-curriculum-exam`) to measure the gain and turn it into memories and harvested lessons.
 
 ### 9. Credit, package and reflect
 *Faculties: `transparency`, `continuous-self-correction`, `reflect-and-review`.*

@@ -3,7 +3,7 @@ name: edit-subskill
 description: "Changes an existing sub-skill, a nested skillset's router text, or the skillset's own tooling. It makes the smallest edit that does what was asked, and renames the sub-skill when needed. It bumps the sub-skill's version, re-tests both the changed and unchanged behaviour, and leaves the skillset ready to package. Use when the user asks to edit, fix, improve, update, extend, tweak, rename, shorten or rewrite a skill or sub-skill, says one did the wrong thing or was not used when it should have been, or wants the skillset itself to work differently."
 trigger: "edit, fix, improve or rename a skill, or fix one that did the wrong thing or was not used"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # Edit a sub-skill
@@ -73,6 +73,8 @@ git -C <wc> add -N . && git -C <wc> diff --stat synced && git -C <wc> diff synce
 Every hunk should trace back to the change you wrote down. Revert anything else.
 
 ### 6. Bump and test
+
+Once `check` and the tests pass, and the edit enhances what a skill can do, offer the optional exam-to-memory loop ("The enhancement loop" in `cognition/metacognition/universal-skill-curriculum-exam`): take the exam, self-mark it (the person can pre-authorise this), then form and harvest memories.
 
 ```bash
 python3 <wc>/scripts/skillset.py bump <name> --part patch|minor|major --message "<what changed>"

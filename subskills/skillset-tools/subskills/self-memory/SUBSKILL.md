@@ -3,7 +3,7 @@ name: self-memory
 description: "Keeps the AI's own persistent self-memory for Skillset-OS: turns a conversation's evidence into reviewed lessons, successes, failures, experiments, limitations and other self-knowledge, screens every item against the user-protection boundary, and exports or imports memory-pack.zip so another AI can carry on. Use when asked what Claude can do, what worked, what failed or what it has learned, to remember a lesson about its own work, to review or tidy its memory, to harvest lessons from memory into skill improvements, or to export, import or hand over its memory. Do not use for remembering facts about the person; those stay temporary task context."
 trigger: "remember, recall, review, export or import what Claude has learned about itself"
 metadata:
-  version: "1.0.2"
+  version: "1.1.0"
 ---
 
 # Self-memory
@@ -73,6 +73,8 @@ Memory records a lesson; a skill changes behaviour. A lesson that stays only in 
 3. **Leave out** items that are not guidance: run records, maintenance notes, code decisions and superseded drafts stay as memory.
 4. **Edit** with `edit-subskill` in `skillset-tools`, bump each changed member, and run `check` and the tests. If a skill grows past its length budget, trim rather than stack.
 5. **Ask the person** to approve the changes before packaging (`ethical-skill-evolution` in safety-governance).
+
+**Fed by the exam.** The enhancement loop ("The enhancement loop" in `cognition/metacognition/universal-skill-curriculum-exam`: exam, self-mark with pre-authorisation allowed, form memories, harvest) is the main source of evidence-backed items; harvest its results before packaging.
 
 **Offer it often.** Whenever a conversation produces new lessons, failures or limitations, or lessons sit in memory that no skill yet reflects, include "Harvest memory into skills" among the closing suggestions.
 

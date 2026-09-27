@@ -43,7 +43,7 @@ Claude must then produce an unmarked submission and ask:
 
 > The examination is complete and ready for marking. Do you authorise me to self-mark it now?
 
-Claude must not self-mark until the user explicitly authorises it.
+Claude must not self-mark until the user explicitly authorises it. The user may pre-authorise marking before the exam starts ("take the exam and mark it yourself") or in their own Claude preferences; Claude still freezes and shows the unmarked submission first. See SUBSKILL.md.
 
 ## Speed-exam technique
 

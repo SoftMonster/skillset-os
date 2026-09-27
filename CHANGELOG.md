@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Enhancement loop: skill enhancements offer exam, self-marking (pre-authorisation allowed), then forming and harvesting memories.
+- Updated `skillset-tools/self-memory` to 1.1.0: Enhancement loop: exam, self-mark with pre-authorisation, form and harvest memories
+- Updated `skillset-tools/find-skills` to 1.1.0: Enhancement loop: exam, self-mark with pre-authorisation, form and harvest memories
+- Updated `skillset-tools/write-subskill` to 1.1.0: Enhancement loop: exam, self-mark with pre-authorisation, form and harvest memories
+- Updated `skillset-tools/edit-subskill` to 1.1.0: Enhancement loop: exam, self-mark with pre-authorisation, form and harvest memories
+- Updated `cognition/metacognition/universal-skill-curriculum-exam` to 1.2.0: Enhancement loop: exam, self-mark with pre-authorisation, form and harvest memories
 - Liability review: disclaimers (no warranty, not professional advice, not affiliated with Anthropic, no data collected, donations buy nothing) in README, NOTICE, LICENSE and SKILL.md; copied third-party descriptions removed from the curriculum exam.
 - Updated `cognition/metacognition/universal-skill-curriculum-exam` to 1.1.0: Removed third-party skill descriptions (capability cues); names only, with a provenance note
 - Shared edition: skillset-os-shared.zip built from editions/shared patches (quiet style, narrower triggers, built-in tools first, care first, no in-chat donation prompts, full mode on request).
