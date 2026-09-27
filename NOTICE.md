@@ -6,7 +6,7 @@ Anthropic's built-in skills are never included: every Claude account already has
 
 ## Donationware
 
-Skillset-OS is donationware by Andrew Wright: free to use, change and share under [LICENSE](LICENSE), with voluntary donations welcome through [GitHub Sponsors](https://github.com/sponsors/Softmonster). Donations are never a condition of use. The donation request covers only the parts Andrew Wright wrote; imported members below belong to their authors and carry no request.
+Skillset-OS is donationware by Andrew Wright: free to use, change and share under [LICENSE](LICENSE), with voluntary donations welcome through [GitHub Sponsors](https://github.com/sponsors/Softmonster). Donations are never a condition of use. Skillset-OS is in early access (pre-release); sponsoring supports the work towards 1.0.0. The donation request covers only the parts Andrew Wright wrote; imported members below belong to their authors and carry no request.
 
 ## Imported members with their own licences
 

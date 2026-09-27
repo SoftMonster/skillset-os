@@ -6,6 +6,8 @@ A personal set of Agent Skills packaged as **one skill**, `skillset-os` (Skillse
 
 Donationware: free under MIT, donations welcome. See [Licence and support](#licence-and-support).
 
+> **Early access.** Skillset-OS is in early access: version 1.0.0 is being prepared but not yet released, and no GitHub release or tag exists. It works and is tested, but members, commands and file layout may still change without notice, and upgrades may need a fresh install. Feedback and issues are welcome. See [Early access](#early-access).
+
 ## How it works
 
 A skillset is a folder with a router and a `subskills/` folder of members. Each member is one of:
@@ -106,6 +108,18 @@ ruff check .
 ```
 
 CI runs the same three commands. `.gitignore`, `.github/workflows/ci.yml` and `.github/FUNDING.yml` are generated from `scripts/templates/` (uploads may drop hidden files), so edit the templates and run `python scripts/skillset.py index`.
+
+## Early access
+
+Status: **early access (pre-release)**, working towards 1.0.0.
+
+- **What works:** the whole skillset installs as one skill, routes requests to its members, and passes its checks and tests.
+- **What may change:** member names, commands, triggers and folder layout, so a later upload can behave differently from this one.
+- **Upgrading:** remove the old `skillset-os` skill in Claude and upload the new zip; don't rely on keeping local edits between versions.
+- **Changes so far:** listed under "Unreleased" in [CHANGELOG.md](CHANGELOG.md).
+- **1.0.0:** will be published as a GitHub release with the upload zip attached, and the changelog section will be dated. Until then, the version in `SKILL.md` stays 1.0.0 and means "the version being prepared".
+
+Sponsoring is open during early access. It supports the work towards 1.0.0 and is never required.
 
 ## Licence and support
 
