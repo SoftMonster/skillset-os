@@ -134,6 +134,17 @@ Install only one of them. In the shared edition, say **"Skillset-OS full mode"**
 
 The repository itself is the personal edition. `editions/shared/edition.json` holds the shared edition as small, exact text patches with a reason for each. `package` applies them to a copy, regenerates the routers, checks and verifies the result, and refuses if a patch no longer matches, so the two editions can't silently drift apart. To build just the shared upload: `python scripts/skillset.py build --edition shared`.
 
+## Disclaimers
+
+- **No warranty.** Skillset-OS is provided "as is", without warranty of any kind, and its author accepts no liability for its use, as set out in [LICENSE](LICENSE). You use it at your own risk.
+- **Not professional advice.** Its members offer general information, coaching frameworks and coding help. They are not medical, mental-health, legal, financial, tax or security advice, and they don't replace a qualified professional. Check anything important with one before relying on it.
+- **In an emergency,** contact your local emergency services or a crisis line; don't rely on an AI.
+- **Review before you run.** It contains scripts that Claude may run, and Claude's output can be wrong. Review code, commands and changes before you use them, especially on real systems or data.
+- **Not affiliated with Anthropic.** Skillset-OS is an independent project by Andrew Wright. It is not made, endorsed or supported by Anthropic. Claude is a trademark of Anthropic, used here only to say what this skill works with.
+- **Your data stays with you.** Skillset-OS collects nothing and sends nothing to its author. It runs inside your own Claude account, and any service it uses (such as Google Drive or email) is reached only through connectors you choose to enable there, under your own account and Anthropic's terms.
+- **Donations buy nothing.** Sponsoring is a gift. It doesn't buy support, features, fixes, priority, a warranty or any other obligation.
+- **Other people's work.** Imported members keep their own licences ([NOTICE.md](NOTICE.md)). If you believe something here infringes your rights, open an issue or a private security advisory and it will be reviewed and removed if needed.
+
 ## Licence and support
 
 Skillset-OS is **donationware** by Andrew Wright. The tooling and the members written for this skillset are free under the MIT licence; see [LICENSE](LICENSE). Imported members keep their own licences; see [NOTICE.md](NOTICE.md).

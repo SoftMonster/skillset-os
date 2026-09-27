@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Liability review: disclaimers (no warranty, not professional advice, not affiliated with Anthropic, no data collected, donations buy nothing) in README, NOTICE, LICENSE and SKILL.md; copied third-party descriptions removed from the curriculum exam.
+- Updated `cognition/metacognition/universal-skill-curriculum-exam` to 1.1.0: Removed third-party skill descriptions (capability cues); names only, with a provenance note
 - Shared edition: skillset-os-shared.zip built from editions/shared patches (quiet style, narrower triggers, built-in tools first, care first, no in-chat donation prompts, full mode on request).
 - Updated `sync-skillset` to 1.1.0: Hand-over covers edition uploads such as skillset-os-shared.zip
 - Early access: status documented in README, NOTICE and SKILL.md; 1.0.0 stays unreleased until published.

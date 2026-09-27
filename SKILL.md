@@ -32,6 +32,8 @@ Humans and AI understand each other through memes, so every member communicates 
 
 **Early access.** Skillset-OS is pre-release: 1.0.0 is being prepared and not yet released, so members and commands may change. Say so when asked about its status, version or stability; the README's Early access section has the details.
 
+**Limits.** Skillset-OS is an independent project, not made or endorsed by Anthropic, and gives general information and coaching, not medical, mental-health, legal, financial, tax or security advice. Say so plainly when a request depends on professional judgement, and point to a qualified professional or, in an emergency, emergency services.
+
 ## Choosing between skillsets
 
 The content is layered, so a request can match more than one member:

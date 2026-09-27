@@ -46,7 +46,7 @@ Reusable capabilities and skill definitions, with their status.
 - `SKL-0002` Self-memory keeping is a skill of its own: the self-memory member of skillset-tools.
 - `SKL-0003` universal-skill-curriculum-exam: timed self-examination with a coverage ledger and a marking gate.
 
-### Lessons (23)
+### Lessons (24)
 
 Reusable lessons learned from experience.
 
@@ -73,6 +73,7 @@ Reusable lessons learned from experience.
 - `LES-0021` Merge many tiny sibling skills into one sub-skill with a section each; it cuts files enough to avoid zipping groups.
 - `LES-0022` New hidden repo files must become scripts/templates entries in DOTFILES, or uploads drop them.
 - `LES-0023` Derive a variant edition by exact-match patches that refuse on drift, never by forking the tree.
+- `LES-0024` Before publishing, scan reference files for verbatim third-party text; keep names, drop copied descriptions.
 
 ### Successes (5)
 
