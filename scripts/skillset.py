@@ -22,7 +22,8 @@ Commands (run `skillset.py COMMAND --help` for options):
   import SRC   Add a skill, skillset, repository or collection (folder or zip).
   add-source NAME --repo OWNER/REPO   Link a GitHub repository.   refresh [PATH]
   pull         Copy a skillset into a git working copy.
-  package      Version, test, commit, and write the upload zip (also the GitHub copy) and a patch.
+  package      Version, test, commit, and write the upload zip (also the GitHub copy) and a patch,
+               plus one extra upload per edition in editions/ (for example <name>-shared.zip).
 
 The top is the folder above this script unless --root is given.
 Exit codes: 0 success, 1 check failed or action refused, 2 bad arguments.
@@ -56,6 +57,9 @@ HERE = Path(__file__).resolve().parent
 TOP_ROUTER, SET_ROUTER, LEAF = "SKILL.md", "SKILLSET.md", "SUBSKILL.md"
 MEMBERS = "subskills"
 MANIFEST = "skillsets.json"
+# editions/<edition>/edition.json derives another upload from this skillset: exact text patches applied to a
+# copy (without editions/), then the routers are regenerated and the result is checked, zipped and verified.
+EDITIONS, EDITION_SPEC = "editions", "edition.json"
 CACHE = Path(tempfile.gettempdir()) / "skillsets-cache"
 NAME_RE = re.compile(r"^[a-z0-9]+(-[a-z0-9]+)*$")
 RESERVED_WORDS = ("claude", "anthropic")
@@ -2063,6 +2067,72 @@ def installed_view(root: Path) -> Path:
     return dest
 
 
+def edition_names(root: Path) -> list[str]:
+    """Editions this skillset can build: editions/<edition>/edition.json."""
+    folder = root / EDITIONS
+    return sorted(d.name for d in folder.iterdir() if (d / EDITION_SPEC).is_file()) if folder.is_dir() else []
+
+
+def load_edition(root: Path, edition: str) -> dict:
+    path = root / EDITIONS / edition / EDITION_SPEC
+    if not path.is_file():
+        raise Refused(f"no edition '{edition}': {path.relative_to(root).as_posix()} does not exist")
+    try:
+        spec = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        raise Refused(f"{path.relative_to(root).as_posix()}: not valid JSON ({exc})") from exc
+    for i, patch in enumerate(spec.get("patches", []), 1):
+        if not isinstance(patch, dict) or not {"file", "old", "new"} <= set(patch):
+            raise Refused(f"{path.relative_to(root).as_posix()}: patch {i} needs file, old and new")
+    return spec
+
+
+def stage_edition(root: Path, edition: str, dest: Path, files: list[Path]) -> None:
+    """Write the edition's tree into DEST: FILES minus editions/, patched, re-indexed and checked."""
+    spec = load_edition(root, edition)
+    where = f"{EDITIONS}/{edition}/{EDITION_SPEC}"
+    for f in files:
+        rel = f.relative_to(root)
+        if rel.parts[0] == EDITIONS or (f.suffix == ".zip" and f.parent == root):
+            continue
+        (dest / rel).parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(f, dest / rel)
+    for i, patch in enumerate(spec.get("patches", []), 1):
+        target = dest / patch["file"]
+        text = target.read_text(encoding="utf-8") if target.is_file() else ""
+        found = text.count(patch["old"])
+        if found != 1:
+            raise Refused(f"edition {edition}: patch {i} ({patch['file']}) expects its old text exactly once but "
+                          f"found it {found} time(s); the source changed, so update {where}")
+        target.write_text(text.replace(patch["old"], patch["new"]), encoding="utf-8")
+    write_index(dest)
+    top_text = (dest / TOP_ROUTER).read_text(encoding="utf-8")
+    for needle in spec.get("absent_from_top", []):
+        if needle in top_text:
+            raise Refused(f"edition {edition}: {TOP_ROUTER} still contains {needle!r}; update {where}")
+    errors, _ = check_skillset(dest)
+    if errors:
+        raise Refused(f"edition {edition} fails its checks: " + "; ".join(errors[:3]))
+
+
+def build_edition(root: Path, edition: str, out_dir: Path, files: list[Path] | None = None) -> tuple[Path, int]:
+    """Write <name>-<edition>.zip: the edition's tree as one upload, verified like the main one."""
+    name, version = top_info(root)
+    files = files if files is not None else committable_files(root)
+    dest_zip = (out_dir / f"{name}-{edition}.zip").resolve()
+    files = [f for f in files if f.resolve() != dest_zip and not f.name.endswith(".zip.part")]
+    out_dir.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory() as tmp:
+        stage = Path(tmp) / name
+        stage_edition(root, edition, stage, files)
+        staged = tree_files(stage)
+        uploads = write_uploads(stage, out_dir, name, version, staged, main_path=dest_zip)
+        if len(uploads) != 1:
+            raise Refused(f"edition {edition} would need {len(uploads)} uploads; editions must fit in one")
+        verify_uploads(stage, staged, uploads)
+    return uploads[0]
+
+
 def cmd_build(args) -> int:
     """Zip the skillset as it would be committed into an upload for Claude, overwriting the last build.
 
@@ -2074,6 +2144,13 @@ def cmd_build(args) -> int:
     if errors:
         raise Refused(f"{len(errors)} check error(s); run `skillset.py check` and fix them before building")
     name, version = top_info(root)
+    if args.edition:
+        out_dir = (args.out.parent if args.out else root).resolve()
+        path, count = build_edition(root, args.edition, out_dir)
+        if args.out and path != args.out.resolve():
+            path = path.replace(args.out.resolve())
+        print(f"built {path} ({count} files, {args.edition} edition, version {version})")
+        return 0
     out = (args.out or root / f"{name}.zip").resolve()
     files = [f for f in committable_files(root) if f.resolve() != out and not f.name.endswith(".zip.part")]
     if not (root / ".git").exists():
@@ -2191,7 +2268,10 @@ def cmd_package(args) -> int:
     uploads = write_uploads(root, out, name, version, files, split=args.split)
     verify_uploads(root, [f for f in files if not (f.suffix == ".zip" and f.parent == root)], uploads)
     print(f"ok   release gate: the {len(uploads)} upload(s) unpack and merge back into this exact skillset")
-    written[0:0] = [p for p, _ in uploads]
+    editions = [build_edition(root, e, out, files) for e in edition_names(root)]
+    for (p, count), e in zip(editions, edition_names(root)):
+        print(f"ok   {p.name}: {count} files, the {e} edition, patched, checked and verified")
+    written[0:0] = [p for p, _ in uploads] + [p for p, _ in editions]
     if (root / "memory").is_dir() and (HERE / "memory.py").is_file():
         mem = memory_module()
         pack = mem.export(root, out / "memory-pack.zip")
@@ -2256,6 +2336,7 @@ def main(argv: list[str] | None = None) -> int:
     p = sub.add_parser("build", help="zip the skillset as it would be committed into an upload for Claude")
     p.add_argument("--out", type=Path, help="output zip (default: <root>/<name>.zip, which is gitignored)")
     p.add_argument("--split", action="store_true", help="over the limit, write part skills instead of zipping groups")
+    p.add_argument("--edition", help="build this edition from editions/<edition>/edition.json instead")
     p = sub.add_parser("rename")
     p.add_argument("path")
     p.add_argument("new")

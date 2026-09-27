@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Shared edition: skillset-os-shared.zip built from editions/shared patches (quiet style, narrower triggers, built-in tools first, care first, no in-chat donation prompts, full mode on request).
+- Updated `sync-skillset` to 1.1.0: Hand-over covers edition uploads such as skillset-os-shared.zip
 - Early access: status documented in README, NOTICE and SKILL.md; 1.0.0 stays unreleased until published.
 - Donationware: Andrew Wright named as copyright holder; GitHub Sponsors (Softmonster) in LICENSE note, NOTICE, README badge and section, CONTRIBUTING, pyproject and `.github/FUNDING.yml` (restored from a template); one optional support suggestion per conversation in SKILL.md.
 - Ambiguity routing: numbered menus with 0 infer, conversation openers with a Skillset-OS review, phone-autocorrect readings; apps date/confidence and deliverable-options rules; shorter training reports.

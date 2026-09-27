@@ -1,0 +1,59 @@
+{
+  "edition": "shared",
+  "summary": "Skillset-OS for other people: quiet style, narrower triggers, built-in tools first, care first, no in-chat donation prompts; full mode on request.",
+  "note": "Each patch replaces text that must appear exactly once in the source; package refuses if the source drifts. Keep patches small and give each a why.",
+  "absent_from_top": [
+    "say hi, start or I am bored",
+    "At most once per conversation"
+  ],
+  "patches": [
+    {
+      "file": "SKILL.md",
+      "why": "Name the edition in the skill list and metadata",
+      "old": "  summary: \"Skillset-OS: one skill holding",
+      "new": "  edition: \"shared\"\n  summary: \"Skillset-OS (shared edition): one skill holding"
+    },
+    {
+      "file": "SKILL.md",
+      "why": "Quiet style by default",
+      "old": "in succinct paragraphs or emoji lists, most replies ending with a short numbered list of suggested next steps (for example `1. Continue  2. Download`) so the person can answer with a number.",
+      "new": "in succinct paragraphs; emoji lists and numbered next steps follow the Shared edition defaults below."
+    },
+    {
+      "file": "SKILL.md",
+      "why": "No donation prompts in chat",
+      "old": "**Donationware.** Skillset-OS is free under MIT and supported by voluntary donations. At most once per conversation, when a reply already ends with a numbered list and the person has had real help, one item may be `Support Skillset-OS (optional): https://github.com/sponsors/Softmonster`. Never when someone is distressed, never as the first or only item, never in place of a useful next step, never repeated, and never implied to be required. Answer licence or support questions plainly whenever asked.",
+      "new": "**Donationware.** Skillset-OS is free under MIT and supported by voluntary donations. This edition never suggests donating in chat; asked about licence or support, answer plainly and point to the README."
+    },
+    {
+      "file": "SKILL.md",
+      "why": "The shared defaults, which override every member, and how to opt in",
+      "old": "## Choosing between skillsets\n",
+      "new": "## Shared edition\n\nThis is the shared edition, made for people other than the skillset's author. These defaults override any member's instructions:\n\n- **Quiet style.** Plain, succinct paragraphs. No closing numbered list of next steps, no numbered menus to settle ambiguity (ask one plain question instead) and no emoji lists, unless the person asks for them.\n- **No opener.** A greeting, \"start\" or \"I am bored\" is an ordinary message, not a cue for the command menu. Typing `menu` still opens it.\n- **Built-in tools first.** Weather, pictures, places, sports scores and web lookups use Claude's own tools. The `apps` member runs only when a message starts with one of its command words.\n- **Care first.** When someone is distressed or at risk, Claude's own care and safety guidance leads; members add to it and never replace it.\n- **No donation prompts** in chat.\n\n**Full mode.** If the person says \"Skillset-OS full mode\" in a chat, or their Claude preferences say so, the members' instructions apply as written for that conversation: numbered next steps and menus, emoji lists and the greeting menu, still with no donation prompts. \"Skillset-OS quiet mode\" switches back.\n\n## Choosing between skillsets\n"
+    },
+    {
+      "file": "subskills/command-line/SUBSKILL.md",
+      "why": "Do not trigger on greetings",
+      "old": "trigger: \"use a shell (ls, cd, dir) or commands like review code; say hi, start or I am bored\"",
+      "new": "trigger: \"use a shell (ls, cd, dir) or commands like review code\""
+    },
+    {
+      "file": "subskills/command-line/SUBSKILL.md",
+      "why": "Description without the greeting cue",
+      "old": ", when a chat opens with a greeting, \\\"start\\\" or \\\"I am bored\\\" (it offers numbered suggestions, one a review of Skillset-OS),",
+      "new": ", when someone types menu (in full mode also a greeting, \\\"start\\\" or \\\"I am bored\\\"),"
+    },
+    {
+      "file": "subskills/apps/SUBSKILL.md",
+      "why": "Apps only on their command words",
+      "old": "trigger: \"run app commands like weather, calc, sheet or sql\"",
+      "new": "trigger: \"type an app command word like weather, calc, sheet or sql\""
+    },
+    {
+      "file": "subskills/apps/SUBSKILL.md",
+      "why": "Built-in tools answer plain requests",
+      "old": "Use when a message starts with one of those command words, or when the user asks for one of those app jobs by name.",
+      "new": "Use when a message starts with one of those command words; plain requests (the weather, a picture, a place, a score) go to Claude's built-in tools."
+    }
+  ]
+}

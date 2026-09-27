@@ -627,3 +627,30 @@ def test_release_gate_refuses_a_packed_group_that_lost_a_file(top, tmp_path, mon
     out = tmp_path / "up"
     out.mkdir()
     assert run(top, "build", "--out", str(out / "skillset-os.zip")) == 1
+
+
+# ---------------------------------------------------------------- editions
+
+def test_shared_edition_builds_patched_and_leaves_the_source_alone(top, tmp_path):
+    if not (top / "editions" / "shared" / "edition.json").is_file():
+        pytest.skip("no shared edition in this skillset")
+    before = {f.relative_to(top).as_posix(): f.read_bytes() for f in ss.tree_files(top)}
+    out = tmp_path / "out" / "skillset-os-shared.zip"
+    assert run(top, "build", "--edition", "shared", "--out", str(out)) == 0
+    assert {f.relative_to(top).as_posix(): f.read_bytes() for f in ss.tree_files(top)} == before
+    with zipfile.ZipFile(out) as zf:
+        names = zf.namelist()
+        doc = zf.read("skillset-os/SKILL.md").decode("utf-8")
+    assert not any(n.startswith("skillset-os/editions/") for n in names)
+    assert "shared edition" in doc and "## Shared edition" in doc
+    assert "say hi, start or I am bored" not in doc
+    assert "say hi, start or I am bored" in (top / "SKILL.md").read_text(encoding="utf-8")
+
+
+def test_edition_refuses_when_its_source_text_has_drifted(top, tmp_path):
+    spec_dir = top / "editions" / "probe"
+    spec_dir.mkdir(parents=True)
+    (spec_dir / "edition.json").write_text(json.dumps({"patches": [
+        {"file": "SKILL.md", "old": "text that is not in the skill anywhere", "new": "x"}]}), encoding="utf-8")
+    assert run(top, "build", "--edition", "probe", "--out", str(tmp_path / "p.zip")) == 1
+    assert not (tmp_path / "skillset-os-probe.zip").exists()

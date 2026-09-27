@@ -121,6 +121,19 @@ Status: **early access (pre-release)**, working towards 1.0.0.
 
 Sponsoring is open during early access. It supports the work towards 1.0.0 and is never required.
 
+## Editions
+
+Every package writes two uploads from this one repository:
+
+| Upload | Who it's for | How it behaves |
+|---|---|---|
+| `skillset-os.zip` | The author, and anyone who wants everything | The full personal edition: greeting menu, numbered next steps and menus, emoji lists, and at most one optional support suggestion per conversation. |
+| `skillset-os-shared.zip` | Everyone else | Quiet by default: plain replies, no greeting menu, apps only on their command words (Claude's built-in tools handle plain weather, picture, place and score requests), Claude's own care guidance first, and no donation prompts in chat. |
+
+Install only one of them. In the shared edition, say **"Skillset-OS full mode"** in a chat (or put it in your Claude preferences) to switch on the numbered lists, menus, emoji lists and greeting menu; **"Skillset-OS quiet mode"** switches back. Donation prompts stay off either way.
+
+The repository itself is the personal edition. `editions/shared/edition.json` holds the shared edition as small, exact text patches with a reason for each. `package` applies them to a copy, regenerates the routers, checks and verifies the result, and refuses if a patch no longer matches, so the two editions can't silently drift apart. To build just the shared upload: `python scripts/skillset.py build --edition shared`.
+
 ## Licence and support
 
 Skillset-OS is **donationware** by Andrew Wright. The tooling and the members written for this skillset are free under the MIT licence; see [LICENSE](LICENSE). Imported members keep their own licences; see [NOTICE.md](NOTICE.md).

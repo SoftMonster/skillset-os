@@ -3,7 +3,7 @@ name: sync-skillset
 description: "Gets a working copy of the skillset (from the installed skill, an attached zip or an earlier step in this chat), and at the end packages it: versions it, runs the checks and tests, commits, and writes the one zip that is both the upload for Claude and the copy for GitHub, plus a patch. Use first for any change to the skillset, and on its own to download it, sync it with GitHub, refresh linked repositories or check which version is installed."
 trigger: "download, sync or update the skillset, or copy it to GitHub"
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # Sync skillset
@@ -58,6 +58,7 @@ It regenerates every router and every member's "This folder" section, then check
 - **When the skillset has more than 190 files**, the upload is still one skill. `package` zips its largest groups inside `<name>.zip` (for example `subskills/cognition.zip`), regenerates the routers to point at them, and adds `PACKED.json` with each group's checksum. Claude reads a zipped member with `skillset.py open`, which unzips it with Python, so code execution must be on. `pull` unpacks the zips back into folders, `check` on an installed copy confirms each zip is exact, and the repository itself always stays plain folders. With `package --split`, the upload is instead split into separate part skills (`<name>-<folder>.zip`, each with a generated `SKILL.md` and a shared `PARTS.json`) plus `<name>-repo.zip` for GitHub; use that only when code execution can't be relied on.
 - **The release gate:** before delivering, `package` unpacks the zips it wrote (and any zipped groups inside them), puts them back together and refuses unless the result is exactly the working copy and passes `check`.
 - `<name>-<version>.patch`: every commit since the pull, for people who prefer `git am`.
+- `<name>-<edition>.zip` for each edition in `editions/` (for example `<name>-shared.zip`): the same skillset with that edition's patches applied, checked and verified. It is a separate upload for other people, never installed alongside `<name>.zip`, and not the GitHub copy; offer it as a release asset.
 
 It stops at the first problem and says how to fix it. Use `--bump minor` for new members or new behaviour, `--bump major` for renames or removals; the default is patch. Share the files with `present_files`, zip first.
 
