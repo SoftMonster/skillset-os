@@ -4,7 +4,7 @@ description: "Reruns every earlier self-examination check in seconds and reports
 trigger: "rerun my earlier exam checks as a quick regression battery"
 command: "rerun exam"
 metadata:
-  version: "1.1.0"
+  version: "1.1.1"
 ---
 
 # Exam regression battery

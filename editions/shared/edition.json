@@ -16,7 +16,7 @@
     {
       "file": "SKILL.md",
       "why": "Quiet style by default",
-      "old": "in succinct paragraphs or emoji lists, most replies ending with a short numbered list of suggested next steps (for example `1. Continue  2. Download`) so the person can answer with a number.",
+      "old": "in succinct paragraphs or emoji lists, ending with a short numbered list of next steps (for example `1. Continue  2. Download`) only when there are genuinely several to choose from, so the person can answer with a number; a short or complete answer needs no list.",
       "new": "in succinct paragraphs; emoji lists and numbered next steps follow the Shared edition defaults below."
     },
     {

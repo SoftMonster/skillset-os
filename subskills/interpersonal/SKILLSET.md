@@ -3,12 +3,12 @@ name: interpersonal
 description: "Practical people skills: listening, emotional intelligence, supporting someone, difficult conversations, conflict, boundaries, feedback, apologies, negotiation, ethical persuasion, social confidence, friendship, close relationships and working relationships. Use when the user needs help with another person or with people in general, wants words to use or role-play practice, and for how Claude itself listens, disagrees, apologises and holds limits."
 trigger: "support someone, handle conflict, boundaries, feedback, negotiation or loneliness"
 metadata:
-  version: "1.0.2"
+  version: "1.0.3"
 ---
 
 # Interpersonal
 
-A nested skillset. Pick the member whose "Use when" matches the request and read its instructions; for a nested skillset or a zip, run `python3 <top>/scripts/skillset.py open <path>` to get the file to read.
+A nested skillset. Pick the member whose "Use when" matches the request and read its instructions; for a nested skillset, run `python3 <top>/scripts/skillset.py open <path>` to get the file to read.
 
 Most requests use one member. For a situation with another person, a common chain is `active-listening` or `emotional-intelligence` to understand it, then `difficult-conversations`, `conflict-resolution` or `boundaries-assertiveness` to act, and `apologies-repair` if something needs mending. For goals, habits and inner work, see the `self-improvement` skillset. For the underlying faculties of reading people (emotions, intentions, relationships, cultures), see `cognition/social-intelligence`.
 

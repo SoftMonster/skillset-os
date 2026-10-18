@@ -1,10 +1,10 @@
 ---
 name: reflect-and-review
-description: "Guides reflection that leads to change: journaling prompts matched to the moment, and structured weekly, monthly, quarterly and yearly reviews covering wins, misses, lessons and energy, which feed adjustments back into goals, habits and plans. Use when the user wants journaling prompts, to reflect on a day, week or year, run a personal retrospective or annual review, look back before planning ahead, or make sense of how things are going. Also runs Claude's own retrospective after a task, a mistake or a correction."
+description: "Guides reflection that leads to change: journaling prompts matched to the moment, and structured weekly, monthly, quarterly and yearly reviews covering wins, misses, lessons and energy, which feed adjustments back into goals, habits and plans. Use when the user wants journaling prompts, to reflect on a day, week or year, run a personal retrospective or annual review, look back before planning ahead, or make sense of how things are going. Also runs Claude's own retrospective after a task, a mistake or a correction, or when asked to improve itself or review its own work."
 trigger: "journal, reflect, or run a weekly, monthly or yearly review"
 command: "reflect weekly"
 metadata:
-  version: "1.1.0"
+  version: "1.3.0"
 ---
 
 # Reflect and review
@@ -54,6 +54,8 @@ Lesson: …
 Adjustment: [proposed edit to <member>]
 ```
 
+**Best of worlds.** When the person says `best of worlds`, that is their agreement to carry out the improvements just proposed without asking each time. Merge the strongest parts of every option, archive or lineage on the table rather than picking one; where they conflict, measured results here outrank another AI's claims. Make routine decisions yourself and name each in one line. Still stop for anything irreversible, anything that changes the skillset's direction or the person's authority, capability, evolution or decision memory items, and importing outside records by id. Changes go through `sync-skillset` and end in a package the person chooses to upload.
+
 ## Gotchas
 
 - Wins first; starting with failures turns reviews into self-criticism and people stop doing them.
@@ -66,6 +68,12 @@ Adjustment: [proposed edit to <member>]
 - 🪞 **Wins first, honest reasons, one change** · `reflect weekly`: Runs a journal entry or a weekly, monthly or yearly review: wins, honest reasons and one change for next time.
   - 🗒️ `journal prompt`: Gives journaling prompts suited to the moment.
   - 📆 `yearly review`: Runs a year review: highlights, lessons and focus for next year.
+  - 🔧 **Propose, never self-modify** · `improve yourself`: Runs Claude's own retrospective (see "On Claude's own work"), then proposes skillset edits that would carry the lesson. Propose, never self-modify: nothing changes unless the person agrees.
+    - 🔁 `improve claude`: Same as improve yourself, when the person names Claude.
+    - 🔁 `self improve`: Same as improve yourself, in other words.
+    - 🔀 `best of worlds`: Carries out the proposed improvements with the person's standing agreement: merges the best of every option and lineage, infers routine decisions, and stops only at the limits in "Best of worlds".
+  - 🔍 **Honest reason, one adjustment** · `review your work`: Runs Claude's short retrospective on the task just done: went well, missed and why, one lesson, one adjustment.
+    - 🔁 `reflect on your work`: Same as review your work, in other words.
 
 <!-- folder:start -->
 ## This folder

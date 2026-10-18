@@ -3,12 +3,12 @@ name: social-intelligence
 description: "Social faculties: social cognition, affective understanding, relationship modelling, cultural intelligence and intent inference (active listening lives in interpersonal). Use when the user wants to understand people, emotions, motives, group or family dynamics or other cultures, or when Claude models what the person knows and wants, reads tone or keeps track of the people involved."
 trigger: "understand people, read emotions, intentions and relationships, or work across cultures"
 metadata:
-  version: "1.0.2"
+  version: "1.0.3"
 ---
 
 # Social intelligence
 
-A nested skillset. Pick the member whose "Use when" matches the request and read its instructions; for a nested skillset or a zip, run `python3 <top>/scripts/skillset.py open <path>` to get the file to read.
+A nested skillset. Pick the member whose "Use when" matches the request and read its instructions; for a nested skillset, run `python3 <top>/scripts/skillset.py open <path>` to get the file to read.
 
 These are the social faculties: modelling minds, emotions, relationships, cultures and intentions. Each member has a "For people" and a "For Claude" half.
 

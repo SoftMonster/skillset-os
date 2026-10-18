@@ -460,6 +460,21 @@
         "skillset-tools/write-subskill",
         "sync-skillset"
       ]
+    },
+    {
+      "id": 79,
+      "prompt": "improve yourself using all available means",
+      "expect": "self-improvement/reflect-and-review"
+    },
+    {
+      "id": 80,
+      "prompt": "can you reflect on how you handled that last task",
+      "expect": "self-improvement/reflect-and-review"
+    },
+    {
+      "id": 81,
+      "prompt": "what would make you better at helping me",
+      "expect": "self-improvement/reflect-and-review"
     }
   ]
 }

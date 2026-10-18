@@ -7,10 +7,9 @@ The repository is one Agent Skill. Claude loads it in stages. First it sees the 
 | `SKILL.md` | Top router: generated description and member table, plus how to navigate |
 | `subskills/<name>/SUBSKILL.md` | A sub-skill's instructions, with `trigger`, `description` and `metadata.version` |
 | `subskills/<name>/SKILLSET.md` | A nested skillset's router: authored description and trigger, generated table |
-| `subskills/<name>.zip` | A packed member: skill, skillset or repository (may contain zips). Storage, not a skill: Claude never loads a zip, so it is read with `skillset.py open` where code execution is on |
-| `skillsets.json` | Linked GitHub repositories and trigger overrides for packed members |
+| `skillsets.json` | Linked GitHub repositories (members are always plain folders; zips are refused, since claude.ai rejects uploads holding one) |
 | `scripts/routing_eval.py` | blind routing sheet, scoring with a confusion matrix, rapid-route baseline and comparison, against `tests/routing.json` |
-| `scripts/skillset.py` | check, index, tree, open, new, new-set, bump, replace, build, rename, move, retire, pack, unpack, import, add-source, refresh, pull, package |
+| `scripts/skillset.py` | check, index, tree, open, new, new-set, bump, replace, build, rename, move, retire, unpack (migration), import, add-source, refresh, pull, package |
 | `scripts/templates/` | Member templates, and sources for the generated dotfiles |
 | `tests/` | Tests for the tooling and for the skillset itself |
 
@@ -19,7 +18,7 @@ flowchart LR
   A[installed skill or attached zip] -->|pull| B[working copy with git baseline]
   G[GitHub repositories] -->|add-source / refresh| B
   Z[skills, skillsets, repos, zips] -->|import| B
-  B -->|new, edit, move, pack, retire| B
+  B -->|new, edit, move, retire| B
   B -->|package| C[skillset-os.zip]
   B -->|package| D[.patch]
   C --> E[upload to Claude]
@@ -53,3 +52,18 @@ These invariants decide between competing changes. Claude's built-in values and 
 8. **Verify separately when the stakes justify it,** and let the check disagree with the work.
 9. **Say how sure you are.** Keep what is measured apart from what is inferred or assumed.
 10. **Know when not to use the machinery.** The cheapest sufficiently reliable path to the outcome is the right one, including answering without the skillset.
+
+## Portability
+
+The methodology is portable; the mechanisms are not. A host AI keeps each job and substitutes its own tool, and reports the substitution when it matters.
+
+| Job | Claude here | Another host | Boundary |
+|---|---|---|---|
+| Routing | this router and `shell.py do` | reading the router tables | a method, not a hidden router API |
+| Checks, packaging, self-memory tools | Python in the container | the host's code runner, if any | report only what actually ran |
+| Files and archives | uploads and outputs | the host's file tools | read the source before quoting it |
+| Research | web search with citations | the host's search | only when freshness matters |
+| Self-memory | `memory/` through `self-memory` | the same files; host memory only for the AI's own lessons | never a profile of the person |
+
+Its adoption state is one of: **adopted** (applying the methodology), **partial** (some jobs unavailable, the rest applied), or **reference-only** (a higher instruction, missing access, or the person's request keeps it as reading). A copy supplied for review is reference-only by default. Platform-specific wording lives in an edition, so the source stays portable and fixes flow back with `upstream`.
+

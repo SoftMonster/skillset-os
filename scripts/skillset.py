@@ -2,24 +2,23 @@
 """Tooling for a skillset: one uploadable skill made of sub-skills and nested skillsets.
 
 A skillset folder has a router (SKILL.md at the top, SKILLSET.md when nested) and a
-subskills/ folder of members. Each member is one of:
-  subskills/<name>/SUBSKILL.md        a sub-skill (folder)
-  subskills/<name>/SKILLSET.md        a nested skillset (folder, with its own subskills/)
-  subskills/<name>.zip                a packed member: a skill, a skillset or a whole
-                                      repository, possibly holding further zips inside
-Packed members may be linked to a GitHub repository (see add-source and refresh).
-skillsets.json at the top records linked repositories and trigger overrides for packed
-members. Members are addressed by path: "team/meeting-minutes".
+subskills/ folder of members. Each member is a plain folder:
+  subskills/<name>/SUBSKILL.md        a sub-skill
+  subskills/<name>/SKILLSET.md        a nested skillset (with its own subskills/)
+Zipped members are retired (2.0.0): claude.ai rejects any skill upload holding a zip, so `check`
+refuses zips in the tree and `unpack` turns a zipped member from an older copy into a folder.
+Members may be linked to a GitHub repository (see add-source and refresh); skillsets.json at the
+top records those links. Members are addressed by path: "team/meeting-minutes".
 
 Commands (run `skillset.py COMMAND --help` for options):
-  check        Validate everything, at every depth, including inside zips.
+  check        Validate everything, at every depth (and refuse any zip in the upload).
   index        Regenerate the top description, every router table and the dotfiles.
-  tree         Show the whole skillset, descending into nested skillsets and zips.
-  open PATH    Print the instructions file for a member, extracting zips as needed.
+  tree         Show the whole skillset, descending into nested skillsets.
+  open PATH    Print the instructions file for a member.
   new PATH     Create a sub-skill.            new-set PATH  Create a nested skillset.
   bump PATH    Raise a member's version.      rename PATH NEW / move PATH --into SET
-  retire PATH  Remove a member.               pack PATH / unpack PATH
-  import SRC   Add a skill, skillset, repository or collection (folder or zip).
+  retire PATH  Remove a member.               unpack PATH  Migrate an old zipped member.
+  import SRC   Add a skill, skillset, repository or collection (from a folder or zip; stored as folders).
   add-source NAME --repo OWNER/REPO   Link a GitHub repository.   refresh [PATH]
   pull         Copy a skillset into a git working copy.
   package      Version, test, commit, and write the upload zip (also the GitHub copy) and a patch,
@@ -32,6 +31,7 @@ Exit codes: 0 success, 1 check failed or action refused, 2 bad arguments.
 from __future__ import annotations
 
 import argparse
+import ast
 import datetime as dt
 import hashlib
 import importlib.util
@@ -43,6 +43,7 @@ import re
 import shutil
 import subprocess
 import sys
+import tarfile
 import tempfile
 import urllib.error
 import urllib.parse
@@ -76,14 +77,13 @@ MAX_LINES = 500
 # claude.ai's uploader has been reported to reject zips with more than 200 files; the API caps skills at 30 MB.
 MAX_FILES, WARN_FILES = 200, 170
 MAX_BYTES = 30 * 1024 * 1024
-CORE = {"sync-skillset", "command-line"}   # always at the top, never packed
+CORE = {"sync-skillset", "command-line"}   # always at the top, never split off into a part
 TABLE_START, TABLE_END = "<!-- subskills:start -->", "<!-- subskills:end -->"
 # Every folder member (and the top) carries a generated "This folder" section, so each one can list,
 # discuss and review its own folder when asked. `index` writes it; `check` requires it.
 FOLDER_START, FOLDER_END = "<!-- folder:start -->", "<!-- folder:end -->"
-# An upload over SPLIT_AT files stays ONE skill: its largest groups are zipped inside it (read through
-# `skillset.py open`, which unzips with Python) and `pull` unpacks them again. With --split it is instead the
-# main skill plus one part skill per member folder. Either way the repository itself stays plain folders.
+# An upload over SPLIT_AT files becomes the main skill plus one plain-folder part skill per member folder.
+# Zipping groups inside one upload is retired: claude.ai rejects skill uploads that hold a zip (LIM-0019).
 SPLIT_AT = 190
 PART_KEY = "part-of"
 # Kept short: it is part of the 1024-character description. The pattern also matches the older, longer wording.
@@ -94,7 +94,7 @@ SKIP_FILES = {".DS_Store", "Thumbs.db", "desktop.ini"}
 DOTFILES = {"gitignore": ".gitignore", "ci.yml": ".github/workflows/ci.yml", "FUNDING.yml": ".github/FUNDING.yml"}
 TODO_RE = re.compile(r"\bTODO:")  # the templates' placeholders; plain prose such as "a TODO file" is fine
 LINK_RE = re.compile(r"\]\(([^)#\s]+)\)")
-ZIP_TIME = (1980, 1, 1, 0, 0, 0)  # fixed timestamps make packed zips byte-for-byte reproducible
+ZIP_TIME = (1980, 1, 1, 0, 0, 0)  # fixed timestamps make upload zips byte-for-byte reproducible
 
 
 class Refused(RuntimeError):
@@ -158,14 +158,39 @@ def version_of(data: dict) -> str:
     return str(meta.get("version") or data.get("version") or "1.0.0")
 
 
+PART_NAMES = {"major": 1, "minor": 2, "patch": 3, "revision": 4}   # a version may have any number of parts
+
+
+def version_part(value: str) -> str:
+    """argparse type for a part: a name above, or its position counted from 1 (major), so `5` is the fifth."""
+    value = str(value).strip().lower()
+    if value in PART_NAMES or (value.isdigit() and int(value) >= 1):
+        return value
+    raise argparse.ArgumentTypeError(f"{value!r}: use {', '.join(PART_NAMES)} or a position such as 5")
+
+
 def vtuple(version: str | None) -> tuple[int, ...]:
-    parts = [int(p) for p in re.findall(r"\d+", version or "1.0.0")[:3]]
-    return tuple(parts + [0] * (3 - len(parts)))
+    """MAJOR.MINOR.PATCH plus any further parts, normalised so versions of any length compare correctly:
+    at least three numbers, trailing zeros past the third dropped. 1.9.1 == 1.9.1.0 < 1.9.1.0.1 < 1.9.1.1 < 1.9.2."""
+    parts = [int(p) for p in re.findall(r"\d+", version or "1.0.0")] + [0, 0, 0]
+    parts = parts[:max(3, len(parts) - 3)]
+    while len(parts) > 3 and parts[-1] == 0:
+        parts.pop()
+    return tuple(parts)
+
+
+def vstr(parts: tuple[int, ...]) -> str:
+    """Write a version back in its normal form: three numbers, and further parts only up to the last non-zero one."""
+    return ".".join(map(str, vtuple(".".join(map(str, parts)))))
 
 
 def bumped(version: str, part: str) -> str:
-    major, minor, patch = vtuple(version)
-    return {"major": f"{major + 1}.0.0", "minor": f"{major}.{minor + 1}.0"}.get(part, f"{major}.{minor}.{patch + 1}")
+    """Raise one part (a name or a position from 1) and reset every part after it."""
+    position = PART_NAMES.get(str(part), None) or (int(part) if str(part).isdigit() else PART_NAMES["patch"])
+    parts = list(vtuple(version)) + [0] * max(0, position - len(vtuple(version)))
+    parts = parts[:position]
+    parts[-1] += 1
+    return vstr(tuple(parts))
 
 
 def set_front(path: Path, key: str, value: str) -> None:
@@ -375,7 +400,7 @@ def load_member(location: Path, rel: str, path: str, manifest: dict) -> Member:
                                  derive_trigger(m.description)).split()).rstrip(".")
         m.version = version_of(data)
         if m.doc != TOP_ROUTER and str(data.get("name") or name) != name:
-            # (a packed standalone skill or repository keeps its own SKILL.md name; the member name wins)
+            # (a zipped 1.x standalone skill or repository keeps its own SKILL.md name; the member name wins)
             raise Refused(f"name '{data.get('name')}' does not match '{name}'")
     except Refused as exc:
         m.error = str(exc)
@@ -383,7 +408,7 @@ def load_member(location: Path, rel: str, path: str, manifest: dict) -> Member:
 
 
 def context_for(folder: Path, root: Path, ctx: tuple[Path, dict]) -> tuple[Path, dict]:
-    """Inside a zip, a skillset with its own skillsets.json (a packed repository) uses that manifest."""
+    """Inside a 1.x zipped member, a skillset with its own skillsets.json (a repository) uses that manifest."""
     if root not in folder.parents and folder != root and (folder / MANIFEST).is_file():
         return folder, load_manifest(folder)
     return ctx
@@ -448,14 +473,14 @@ def set_folder_for(root: Path, set_path: str) -> Path:
     if m.kind != "skillset":
         raise Refused(f"'{set_path}' is a sub-skill, not a skillset")
     if m.form == "zip" or root not in m.location.parents:
-        raise Refused(f"'{m.path}' is packed (or inside a packed member); run `skillset.py unpack {m.path}` first")
+        raise Refused(f"'{m.path}' is a zipped member (or inside one); run `skillset.py unpack {m.path}` first")
     return m.location
 
 
 def editable(root: Path, path: str) -> Member:
     m = resolve(root, path)
     if root not in m.location.parents:
-        raise Refused(f"'{m.path}' is inside a packed member; unpack its parent first")
+        raise Refused(f"'{m.path}' is inside a zipped member; unpack its parent first")
     return m
 
 
@@ -930,15 +955,13 @@ def check_skillset(root: Path) -> tuple[list[str], list[str]]:
                                     "typing it offers both until one is picked twice")
                 owners.setdefault(node["command"], owner)
     seen: dict[str, str] = {}
-    packed_upload = (root / "PACKED.json").is_file()
     for _, m in walk(root, manifest):
         e, w = check_member(m, root)
         errors += e
         warnings += w
-        if m.form == "zip" and not packed_upload and root in m.location.parents and "/" not in m.path:
-            warnings.append(f"{m.path} is a zip: Claude's skill system cannot load a zip as a skill, so it works only "
-                            "where code execution can run `skillset.py open`. Unpack it (organise-skillsets) to make "
-                            "it a usable skill")
+        if m.form == "zip" and root in m.location.parents:
+            errors.append(f"{m.path} is a zipped member: zipped members are retired, because claude.ai rejects any "
+                          f"skill upload that holds a zip; run `skillset.py unpack {m.path}`")
         parent = m.path.rsplit("/", 1)[0] if "/" in m.path else ""
         key = f"{parent}/{m.name}"
         if key in seen:
@@ -955,8 +978,8 @@ def check_skillset(root: Path) -> tuple[list[str], list[str]]:
     for f in tree_files(root):
         rel = f.relative_to(root)
         if f.name == TOP_ROUTER and rel != Path(TOP_ROUTER):
-            errors.append(f"{rel.as_posix()}: only the top may have a {TOP_ROUTER} outside zips; rename it to "
-                          f"{LEAF} or {SET_ROUTER}, or pack its member")
+            errors.append(f"{rel.as_posix()}: only the top may have a {TOP_ROUTER}; rename it to "
+                          f"{LEAF} or {SET_ROUTER}")
     for number, line in code_free_lines(top.read_text(encoding="utf-8")):
         for target in LINK_RE.findall(line):
             if not target.startswith(("http:", "https:", "/")) and not (root / target).exists():
@@ -972,19 +995,33 @@ def check_skillset(root: Path) -> tuple[list[str], list[str]]:
             errors.append(f"{target} differs from scripts/templates; run `skillset.py index`")
     files = tree_files(root)
     size = sum(f.stat().st_size for f in files)
-    try:
-        packs = plan_packing(root, files)
-        rels = [f.relative_to(root).as_posix() for f in files]
-        in_upload = len(rels) - sum(1 for r in rels for g in packs if r.startswith(g + "/")) + len(packs) + (1 if packs else 0)
-        if in_upload > MAX_FILES:
-            errors.append(f"the upload would hold {in_upload} files; claude.ai rejects more than {MAX_FILES}")
-        if packs:
-            warnings.append(f"{len(files)} files (over {SPLIT_AT}), so the upload zips {len(packs)} group(s) inside it: "
-                            + ", ".join(packs) + ". Reading them needs code execution")
-    except Refused as exc:
-        errors.append(str(exc))
+    zips = [f.relative_to(root).as_posix() for f in files if f.suffix.lower() in {".zip", ".skill"} and f.parent != root]
+    if zips:                                            # LIM-0019; a zip at the top is a build output, left out
+        errors.append("zip files in the tree: " + ", ".join(zips[:5]) + (" ..." if len(zips) > 5 else "")
+                      + "; claude.ai rejects any skill upload that holds a zip. Keep the files as plain folders "
+                      "(a deliverable can be zipped on demand by a script)")
+    if (root / PACKED_FILE).is_file():
+        errors.append(f"{PACKED_FILE}: this is an old upload with zipped groups; `pull` it to unpack them")
+    if len(files) <= SPLIT_AT and len(files) > MAX_FILES:
+        errors.append(f"the upload would hold {len(files)} files; claude.ai rejects more than {MAX_FILES}")
+    if len(files) > SPLIT_AT:
+        try:
+            plan = plan_parts(root, files)
+            warnings.append(f"{len(files)} files (over {SPLIT_AT}), so the upload is {len(plan)} plain-folder skills "
+                            "that are installed together")
+        except Refused as exc:
+            errors.append(str(exc))
     if size > MAX_BYTES:
         errors.append(f"upload would be {size / 1e6:.1f} MB; keep it under {MAX_BYTES // (1024 * 1024)} MB")
+    for f in tree_files(root):                          # same secret scan as `review`, so a clean check means clean
+        if f.suffix == ".zip":
+            continue
+        try:
+            if SECRET_RE.search(f.read_text(encoding="utf-8")):
+                errors.append(f"{f.relative_to(root).as_posix()}: looks like it contains a secret (key or token); "
+                              "remove it and rotate it")
+        except (UnicodeDecodeError, OSError):
+            pass
     return errors, warnings
 
 
@@ -1124,7 +1161,7 @@ def stray_routers(folder: Path, doc: str) -> list[str]:
             if f.name == TOP_ROUTER and f != folder / doc]
 
 
-def place_member(root: Path, source: Path, set_path: str, name: str, *, packed: bool, trigger: str | None,
+def place_member(root: Path, source: Path, set_path: str, name: str, *, trigger: str | None,
                  replace: bool, origin: dict | None = None) -> Member:
     """Add SOURCE (a folder with instructions at its top) as member NAME of the skillset at SET_PATH."""
     found = instructions_in(source)
@@ -1153,11 +1190,14 @@ def place_member(root: Path, source: Path, set_path: str, name: str, *, packed: 
         problems.append("could not derive a trigger from the description; pass --trigger")
     if len(chosen) > MAX_TRIGGER:
         problems.append(f"trigger is {len(chosen)} characters (max {MAX_TRIGGER}); pass a shorter --trigger")
-    if not packed:
-        strays = stray_routers(source, doc)
-        if strays:
-            problems.append(f"it contains other {TOP_ROUTER} files ({', '.join(strays[:3])}); the upload allows "
-                            "only one outside zips, so import it with --packed")
+    strays = stray_routers(source, doc)
+    if strays:
+        problems.append(f"it contains other {TOP_ROUTER} files ({', '.join(strays[:3])}); the upload allows only "
+                        "one, so import it as a collection (--name, --description, --trigger) or rename them")
+    zips = [f.relative_to(source).as_posix() for f in tree_files(source) if f.suffix.lower() in {".zip", ".skill"}]
+    if zips:
+        problems.append(f"it contains zip files ({', '.join(zips[:3])}); claude.ai rejects skill uploads that hold "
+                        "a zip, so extract them into plain folders first")
     if problems:
         raise Refused("; ".join(problems))
 
@@ -1165,44 +1205,28 @@ def place_member(root: Path, source: Path, set_path: str, name: str, *, packed: 
         manifest.pop(p.relative_to(root).as_posix(), None)
         remove(root, p)
     base.mkdir(parents=True, exist_ok=True)
-    if packed:
-        dest = base / f"{name}.zip"
-        if doc != TOP_ROUTER and str(data.get("name") or name) != name:
-            work = Path(tempfile.mkdtemp(prefix="skillset-pack-")) / name
-            shutil.copytree(source, work, ignore=shutil.ignore_patterns(*SKIP_PARTS, "*.pyc"))
-            text = (work / doc).read_text(encoding="utf-8")
-            (work / doc).write_text(re.sub(r"^name:.*$", f"name: {name}", text, count=1, flags=re.MULTILINE),
-                                    encoding="utf-8")
-            source = work
-        write_zip(source, dest, name)
-        entry = dict(origin or {})
-        if trigger or not own_trigger:
-            entry["trigger"] = chosen
-        if entry:
-            manifest[dest.relative_to(root).as_posix()] = entry
-    else:
-        dest = base / name
-        shutil.copytree(source, dest, ignore=shutil.ignore_patterns(*SKIP_PARTS, "*.pyc"))
-        if (dest / MANIFEST).is_file():  # a repository's own links now live in the top manifest
-            put_subtree(manifest, dest.relative_to(root).as_posix(), load_manifest(dest))
-            (dest / MANIFEST).unlink()
-        new_doc = SET_ROUTER if kind == "skillset" else LEAF
-        if doc != new_doc:
-            (dest / doc).rename(dest / new_doc)
-        path = dest / new_doc
-        text = path.read_text(encoding="utf-8").replace("\r\n", "\n")
-        front, body = split_frontmatter(text)
-        front = re.sub(r"^name:.*$", f"name: {name}", front, count=1, flags=re.MULTILINE)
-        front = re.sub(r"^description:.*?(?=^\S|\Z)", f"description: {quote(description)}\n", front, count=1,
-                       flags=re.MULTILINE | re.DOTALL).rstrip("\n")
-        if kind == "skillset" and TABLE_START not in body:
-            body = body.rstrip("\n") + f"\n\n## Members\n\n{TABLE_START}\n{TABLE_END}\n"
-        path.write_text(f"---\n{front}\n---\n\n{body}", encoding="utf-8")
-        set_front(path, "trigger", chosen)
-        if "version" not in json.dumps(data):
-            set_version(path, "1.0.0")
-        if origin:
-            manifest[dest.relative_to(root).as_posix()] = dict(origin)
+    dest = base / name
+    shutil.copytree(source, dest, ignore=shutil.ignore_patterns(*SKIP_PARTS, "*.pyc"))
+    if (dest / MANIFEST).is_file():  # a repository's own links now live in the top manifest
+        put_subtree(manifest, dest.relative_to(root).as_posix(), load_manifest(dest))
+        (dest / MANIFEST).unlink()
+    new_doc = SET_ROUTER if kind == "skillset" else LEAF
+    if doc != new_doc:
+        (dest / doc).rename(dest / new_doc)
+    path = dest / new_doc
+    text = path.read_text(encoding="utf-8").replace("\r\n", "\n")
+    front, body = split_frontmatter(text)
+    front = re.sub(r"^name:.*$", f"name: {name}", front, count=1, flags=re.MULTILINE)
+    front = re.sub(r"^description:.*?(?=^\S|\Z)", f"description: {quote(description)}\n", front, count=1,
+                   flags=re.MULTILINE | re.DOTALL).rstrip("\n")
+    if kind == "skillset" and TABLE_START not in body:
+        body = body.rstrip("\n") + f"\n\n## Members\n\n{TABLE_START}\n{TABLE_END}\n"
+    path.write_text(f"---\n{front}\n---\n\n{body}", encoding="utf-8")
+    set_front(path, "trigger", chosen)
+    if "version" not in json.dumps(data):
+        set_version(path, "1.0.0")
+    if origin:
+        manifest[dest.relative_to(root).as_posix()] = dict(origin)
     save_manifest(root, manifest)
     rel = dest.relative_to(root).as_posix()
     return load_member(dest, rel, f"{set_path}/{name}".strip("/"), load_manifest(root))
@@ -1228,7 +1252,7 @@ def github_fetch(repo: str, ref: str) -> tuple[Path, str]:
                                     timeout=60) as resp:
             data = resp.read()
     except urllib.error.HTTPError as exc:
-        hint = " (private repositories cannot be fetched: download the zip and use `import --packed`)" \
+        hint = " (private repositories cannot be fetched: download the zip and use `import`)" \
             if exc.code == 404 else ""
         raise Refused(f"could not download {repo}@{ref}: HTTP {exc.code}{hint}") from exc
     except urllib.error.URLError as exc:
@@ -1252,7 +1276,7 @@ def remote_commit(repo: str, ref: str) -> str | None:
     return (peeled or [sha for sha, _ in lines] or [None])[0]
 
 
-def fetch_source(root: Path, set_path: str, name: str, origin: dict, packed: bool, trigger: str | None,
+def fetch_source(root: Path, set_path: str, name: str, origin: dict, trigger: str | None,
                  replace: bool) -> Member:
     zip_file, commit = github_fetch(origin["repo"], origin.get("commit") or origin["ref"])
     folder = locate_source(zip_file, max_unwrap=1)  # GitHub zips have exactly one wrapper: owner-repo-ref/
@@ -1265,7 +1289,7 @@ def fetch_source(root: Path, set_path: str, name: str, origin: dict, packed: boo
                       "--path at one, or import it as a collection with `import`")
     entry = {k: v for k, v in origin.items() if k in {"repo", "ref", "path"} and v}
     entry["commit"] = commit or origin.get("commit", "")
-    return place_member(root, folder, set_path, name, packed=packed, trigger=trigger, replace=replace, origin=entry)
+    return place_member(root, folder, set_path, name, trigger=trigger, replace=replace, origin=entry)
 
 
 # ================================================================ commands
@@ -1283,12 +1307,10 @@ def cmd_check(args) -> int:
                 print(f"ERROR {p}")
             return 1
         args.root = installed_view(args.root)
-    elif (args.root / PACKED_FILE).is_file() and not (args.root / ".git").exists():
-        try:                                            # an installed packed upload: every zip must be exact
-            args.root = installed_view(args.root)
-        except Refused as exc:
-            print(f"ERROR {exc}")
-            return 1
+    elif (args.root / PACKED_FILE).is_file():           # a 1.x upload with zipped groups can no longer be uploaded
+        print(f"ERROR this is a 1.x upload with zipped groups ({PACKED_FILE}), which claude.ai now rejects; "
+              "`pull` it (that unpacks the groups) and package it again")
+        return 1
     errors, warnings = check_skillset(args.root)
     for e in errors:
         print(f"ERROR {e}")
@@ -1368,7 +1390,7 @@ def cmd_new(args, kind: str = "skill") -> int:
 def cmd_bump(args) -> int:
     m = editable(args.root, args.path)
     if m.form == "zip":
-        raise Refused(f"'{m.path}' is packed; its version comes from inside. Unpack it to edit, or re-import it")
+        raise Refused(f"'{m.path}' is a zipped member; run `skillset.py unpack {m.path}` first")
     new = bumped(m.version, args.part)
     set_version(m.folder / m.doc, new)
     changelog_add(args.root, f"- Updated `{m.path}` to {new}" + (f": {args.message}" if args.message else "."))
@@ -1385,7 +1407,7 @@ def cmd_replace(args) -> int:
     """
     m = editable(args.root, args.path)
     if m.form == "zip":
-        raise Refused(f"'{m.path}' is packed; unpack it before editing")
+        raise Refused(f"'{m.path}' is a zipped member; run `skillset.py unpack {m.path}` first")
     target = m.folder / (args.file or m.doc)
     if not target.is_file():
         raise Refused(f"'{m.path}' has no {args.file or m.doc}")
@@ -1523,36 +1545,27 @@ def cmd_retire(args) -> int:
     return 0
 
 
-def cmd_pack(args) -> int:
-    root = args.root
-    m = editable(root, args.path)
-    if m.form == "zip":
-        raise Refused(f"'{m.path}' is already packed")
-    if m.path in CORE:
-        raise Refused(f"'{m.path}' is a core member and stays unpacked")
-    dest = m.location.with_name(f"{m.name}.zip")
-    manifest = load_manifest(root)
-    subtree = take_subtree(manifest, m.rel)
-    if subtree:  # links inside the member travel with it
-        (m.location / MANIFEST).write_text(json.dumps(dict(sorted(subtree.items())), indent=2) + "\n",
-                                           encoding="utf-8")
-    count = write_zip(m.location, dest, m.name)
-    entry = manifest.pop(m.rel, None)
-    if entry:
-        manifest[dest.relative_to(root).as_posix()] = entry
-    save_manifest(root, manifest)
-    remove(root, m.location)
-    changelog_add(root, f"- Packed `{m.path}` into a zip ({count} files).")
-    write_index(root)
-    print(f"packed {m.path}: {count} files → {dest.relative_to(root).as_posix()} (1 file in the upload)")
-    return 0
+def unzip_members(folder: Path) -> int:
+    """Replace every zipped member under FOLDER (subskills/<name>.zip) with its folder, at every depth."""
+    count = 0
+    while True:
+        found = sorted(z for z in folder.rglob(f"{MEMBERS}/*.zip") if z.is_file())
+        if not found:
+            return count
+        for z in found:
+            with zipfile.ZipFile(z) as zf:
+                safe_names(zf)
+                extract_all(zf, z.parent)
+            z.unlink()
+            count += 1
 
 
 def cmd_unpack(args) -> int:
+    """Migration from 1.x: turn a zipped member (and any zipped members inside it) into plain folders."""
     root = args.root
     m = editable(root, args.path)
     if m.form != "zip":
-        raise Refused(f"'{m.path}' is not packed")
+        raise Refused(f"'{m.path}' is already a folder")
     set_path, _ = split_path(m.path)
     manifest = load_manifest(root)
     entry = manifest.get(m.rel, {})
@@ -1560,8 +1573,10 @@ def cmd_unpack(args) -> int:
         print(f"NOTE {m.path} was linked to {entry['repo']}; unpacking detaches it (refresh will skip it)")
     work = Path(tempfile.mkdtemp(prefix="skillset-unpack-")) / m.name
     shutil.copytree(m.folder, work)
-    place_member(root, work, set_path, m.name, packed=False, trigger=entry.get("trigger") or m.trigger,
-                 replace=True)
+    inner = unzip_members(work)
+    if inner:
+        print(f"unpacked {inner} zipped member(s) inside it too")
+    place_member(root, work, set_path, m.name, trigger=entry.get("trigger") or m.trigger, replace=True)
     manifest = load_manifest(root)
     manifest.pop(f"{m.rel[:-4]}", None)
     save_manifest(root, manifest)
@@ -1579,8 +1594,7 @@ def cmd_import(args) -> int:
         name = args.name or str(data.get("name") or source.name)
         if instructions_in(source)[0] == TOP_ROUTER and not NAME_RE.match(name):
             name = re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
-        m = place_member(root, source, args.into.strip("/"), name, packed=args.packed, trigger=args.trigger,
-                         replace=args.replace)
+        m = place_member(root, source, args.into.strip("/"), name, trigger=args.trigger, replace=args.replace)
         note_licence(root, m)
         changelog_add(root, f"- Imported `{m.path}` {m.version} as a {m.label}.")
         imported = [m]
@@ -1609,7 +1623,7 @@ def cmd_import(args) -> int:
             data, _ = read(folder / TOP_ROUTER)
             name = str(data.get("name") or folder.name)
             try:
-                m = place_member(root, folder, set_path, name, packed=args.packed, trigger=None, replace=False)
+                m = place_member(root, folder, set_path, name, trigger=None, replace=False)
             except Refused as exc:
                 skipped.append(f"{name}: {exc}")
                 continue
@@ -1629,8 +1643,7 @@ def cmd_import(args) -> int:
 def cmd_add_source(args) -> int:
     origin = {"repo": args.repo, "ref": args.ref, "path": args.path or ""}
     set_path, name = split_path(args.name)
-    m = fetch_source(args.root, set_path, name, origin, packed=not args.folder, trigger=args.trigger,
-                     replace=args.replace)
+    m = fetch_source(args.root, set_path, name, origin, trigger=args.trigger, replace=args.replace)
     note_licence(args.root, m)
     changelog_add(args.root, f"- Linked `{m.path}` to {args.repo}@{args.ref} ({m.source.get('commit', '')[:10]}).")
     write_index(args.root)
@@ -1657,7 +1670,7 @@ def cmd_refresh(args) -> int:
             print(f"up to date  {path}  {entry['repo']}@{entry.get('ref')} {latest[:10]}")
             continue
         set_path, name = split_path(path)
-        new = fetch_source(root, set_path, name, {**entry, "commit": latest or ""}, packed=m.form == "zip",
+        new = fetch_source(root, set_path, name, {**entry, "commit": latest or ""},   # a 1.x zipped link becomes a folder
                            trigger=entry.get("trigger"), replace=True)
         if new.source.get("commit") == entry.get("commit"):
             print(f"up to date  {path}")
@@ -1669,6 +1682,41 @@ def cmd_refresh(args) -> int:
         print(f"refreshed   {path}  {entry.get('commit', '')[:10]} → {new.source.get('commit', '')[:10]}")
     write_index(root)
     print(f"{changed} linked member(s) updated")
+    return 0
+
+
+def fingerprint(folder: Path) -> tuple[str, int]:
+    """(12-hex content fingerprint, file count) over what an upload carries, dotfiles left out (uploads drop them).
+
+    Two copies with the same version and different fingerprints are different builds: another lineage
+    reused the number, or someone edited without packaging."""
+    h, n = hashlib.sha256(), 0
+    for f in sorted(tree_files(folder), key=lambda p: p.relative_to(folder).as_posix()):
+        rel = f.relative_to(folder).as_posix()
+        if rel == PARTS_FILE or any(part.startswith(".") for part in Path(rel).parts):
+            continue
+        h.update(rel.encode("utf-8") + b"\0" + hashlib.sha256(f.read_bytes()).digest())
+        n += 1
+    return h.hexdigest()[:12], n
+
+
+def cmd_fingerprint(args) -> int:
+    """Name, version and content fingerprint of this skillset and of any other copies (folders or zips) given."""
+    rows = []
+    for given in [None, *args.others]:
+        folder = args.root if given is None else locate_source(Path(given).resolve())
+        name, version = top_info(folder)
+        fp, n = fingerprint(folder)
+        rows.append((name, version, fp, n, "this copy" if given is None else given))
+    for name, version, fp, n, where in rows:
+        print(f"{name} {version}  fingerprint {fp}  {n} files  ({where})")
+    base = rows[0]
+    for name, version, fp, _n, where in rows[1:]:
+        if version == base[1] and fp != base[2]:
+            print(f"WARN  {where} claims {version} too but its content differs: two builds share one number. "
+                  f"Compare with `git diff` before trusting either; a harvest ships under a new version")
+        elif fp == base[2]:
+            print(f"same  {where} is identical in content to this copy")
     return 0
 
 
@@ -1700,7 +1748,7 @@ def cmd_pull(args) -> int:
         git(dest, "add", "-A")
         git(dest, *ident(dest), "commit", "-q", "-m", f"baseline: {name} {version}")
         git(dest, "tag", "synced")
-    print(f"pulled {name} {version} → {dest}")
+    print(f"pulled {name} {version} → {dest}  (fingerprint {fingerprint(source)[0]})")
     if edition_of(dest):
         print(f"note this is the {edition_of(dest)} edition. Fixes made here go back to the source with "
               f"`skillset.py upstream --into <source working copy>`, then the source is packaged")
@@ -1713,6 +1761,8 @@ def cmd_pull(args) -> int:
                     print(f"installed {parent} is the old name '{other_name}': remove it (and its parts) in Customize → Skills")
                 relation = "newer" if vtuple(other_version) > vtuple(version) else \
                     "older" if vtuple(other_version) < vtuple(version) else "same version"
+                if relation == "same version" and fingerprint(parent)[0] != fingerprint(source)[0]:
+                    relation = "same version, DIFFERENT content: ask which is current before changing anything"
                 print(f"installed {parent} {other_version} ({relation})")
     print(f"NEXT work in {dest}; finish with `python3 {dest}/scripts/skillset.py package`")
     return 0
@@ -1848,7 +1898,7 @@ def plan_parts(root: Path, files: list[Path]) -> list[tuple[str, list[Path]]]:
         folders = [d for d in folders if not (prefix == "" and d.split("/")[-1] in CORE)]
         if not folders:
             raise Refused(f"'{prefix or 'the top'}' holds {len(owned)} files and has no member folder to split off "
-                          f"(the limit per upload part is {SPLIT_AT}); pack its largest member")
+                          f"(the limit per upload part is {SPLIT_AT}); give its files their own member folders")
         for d in folders:
             sub = {r for r in owned if r.startswith(d + "/")}
             owned = owned - sub
@@ -1925,77 +1975,12 @@ def is_part_zip(path: Path) -> bool:
         return False
 
 
-PACKED_FILE = "PACKED.json"   # in an upload whose largest groups were zipped to fit claude.ai's file limit
+PACKED_FILE = "PACKED.json"   # in a 1.x upload whose largest groups were zipped; read only, to migrate it
 PACKED_NOTE = "\n## Packed groups\n"
 
 
-def plan_packing(root: Path, files: list[Path]) -> list[str]:
-    """Member folders to zip inside the upload, largest first, until it holds at most SPLIT_AT files."""
-    rels = [f.relative_to(root).as_posix() for f in files]
-    count = len(rels) + 1                                   # + PACKED.json
-    if count - 1 <= SPLIT_AT:
-        return []
-    base = MEMBERS + "/"
-    groups: dict[str, int] = {}
-    for r in rels:
-        if r.startswith(base) and "/" in r[len(base):]:
-            name = r[len(base):].split("/")[0]
-            if name not in CORE:
-                groups[base + name] = groups.get(base + name, 0) + 1
-    chosen = []
-    for g, n in sorted(groups.items(), key=lambda x: (-x[1], x[0])):
-        if count <= SPLIT_AT:
-            break
-        chosen.append(g)
-        count -= n - 1
-    if count > SPLIT_AT:
-        raise Refused(f"even with every group zipped the upload would hold {count} files (limit {SPLIT_AT}); "
-                      "move top-level files into members, or package with --split")
-    return sorted(chosen)
-
-
-def write_packed_upload(root: Path, main_path: Path, top: str, version: str, files: list[Path],
-                        packs: list[str]) -> int:
-    """One upload: the tree with PACKS zipped in place, routers regenerated for them, and PACKED.json."""
-    with tempfile.TemporaryDirectory() as tmp:
-        staged = Path(tmp) / top
-        for f in files:
-            (staged / f.relative_to(root)).parent.mkdir(parents=True, exist_ok=True)
-            shutil.copy2(f, staged / f.relative_to(root))
-        manifest = load_manifest(staged)
-        before = dict(manifest)
-        entries = []
-        for rel in packs:
-            loc = staged / rel
-            digest, count = tree_digest(loc)
-            subtree = take_subtree(manifest, rel)
-            if subtree:                                     # links inside the group travel with it, as `pack` does
-                (loc / MANIFEST).write_text(json.dumps(dict(sorted(subtree.items())), indent=2) + "\n", encoding="utf-8")
-            write_zip(loc, loc.with_name(loc.name + ".zip"), loc.name)
-            entry = manifest.pop(rel, None)
-            if entry:
-                manifest[rel + ".zip"] = entry
-            shutil.rmtree(loc)
-            entries.append({"path": rel, "files": count, "sha256": digest, "nested_manifest": bool(subtree)})
-        if manifest != before:
-            save_manifest(staged, manifest)
-        write_index(staged)                                 # routers now point at the zips
-        doc = staged / TOP_ROUTER
-        note = [PACKED_NOTE.strip("\n"), "",
-                ("To fit claude.ai's file limit, these groups are zipped inside this upload: "
-                 + ", ".join(f"`{e['path']}.zip`" for e in entries)
-                 + ". Read their members with `python3 <top>/scripts/skillset.py open <path>`, which unzips them with "
-                 "Python (so code execution must be on); `tree`, `contents` and `review` see through them too. "
-                 f"`pull` unpacks them into ordinary folders for editing, and `{PACKED_FILE}` lets `check` confirm "
-                 "each zip holds exactly what was packaged.")]
-        doc.write_text(doc.read_text(encoding="utf-8").rstrip("\n") + "\n" + "\n".join(note) + "\n", encoding="utf-8")
-        (staged / PACKED_FILE).write_text(json.dumps({"skillset": top, "version": version, "packed": entries},
-                                                     indent=2) + "\n", encoding="utf-8")
-        return write_zip(staged, main_path, top, tree_files(staged))
-
-
 def restore_packed(dest: Path) -> int:
-    """Turn a packed upload (a writable copy) back into the plain tree: unzip each group and verify it."""
+    """Migration from 1.x: turn an upload with zipped groups (a writable copy) back into the plain tree."""
     data = json.loads((dest / PACKED_FILE).read_text(encoding="utf-8"))
     manifest = load_manifest(dest)
     before = dict(manifest)
@@ -2028,7 +2013,7 @@ def restore_packed(dest: Path) -> int:
 
 
 def write_uploads(root: Path, out_dir: Path, top: str, version: str, files: list[Path],
-                  main_path: Path | None = None, split: bool = False) -> list[tuple[Path, int]]:
+                  main_path: Path | None = None) -> list[tuple[Path, int]]:
     """Write the upload zip(s): one when the skillset fits in SPLIT_AT files, else the main skill plus parts."""
     main_path = (main_path or out_dir / f"{top}.zip").resolve()
     files = [f for f in files if f.resolve() != main_path and not f.name.endswith((".zip.part",))
@@ -2038,8 +2023,6 @@ def write_uploads(root: Path, out_dir: Path, top: str, version: str, files: list
             old.unlink()
     if len(files) <= SPLIT_AT:
         return [(main_path, write_zip(root, main_path, top, files))]
-    if not split:
-        return [(main_path, write_packed_upload(root, main_path, top, version, files, plan_packing(root, files)))]
     plan = plan_parts(root, files)
     if len(plan) == 1:
         return [(main_path, write_zip(root, main_path, top, files))]
@@ -2202,7 +2185,7 @@ def build_edition(root: Path, edition: str, out_dir: Path, files: list[Path] | N
         if (root / EDITIONS / edition / PLUGIN_SPEC).is_file():
             add_plugin(root, edition, stage)
         staged = tree_files(stage)
-        uploads = write_uploads(stage, out_dir, name, version, staged, main_path=dest_zip, split=True)
+        uploads = write_uploads(stage, out_dir, name, version, staged, main_path=dest_zip)
         if len(uploads) != 1:
             raise Refused(f"edition {edition} would need {len(uploads)} uploads; editions must fit in one")
         verify_uploads(stage, staged, uploads)
@@ -2306,7 +2289,7 @@ def cmd_build(args) -> int:
     files = [f for f in committable_files(root) if f.resolve() != out and not f.name.endswith(".zip.part")]
     if not (root / ".git").exists():
         print("note: no git repository here, so .gitignore could not be applied; check the file list", file=sys.stderr)
-    uploads = write_uploads(root, out.parent, name, version, files, main_path=out, split=not getattr(args, 'pack_groups', False))
+    uploads = write_uploads(root, out.parent, name, version, files, main_path=out)
     verify_uploads(root, [f for f in files if f.resolve() != out.resolve() and not is_part_zip(f)], uploads)
     for p, count in uploads:
         print(f"built {p} ({count} files, version {version}); upload it in Customize → Skills")
@@ -2464,6 +2447,112 @@ def cmd_upstream(args) -> int:
     return 1 if rejected or errors else 0
 
 
+# ================================================================ release stats
+
+STATS_HEADING = "Core stats"
+
+
+def core_stats(root: Path) -> dict:
+    """The skillset's core numbers, for the release notes: cheap to compute, so they can run on every package."""
+    members = [m for _, m in walk(root) if not m.error]
+    tests = 0
+    for f in sorted((root / "tests").glob("test_*.py")) if (root / "tests").is_dir() else []:
+        try:
+            tests += sum(1 for n in ast.walk(ast.parse(f.read_text(encoding="utf-8")))
+                         if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef)) and n.name.startswith("test_"))
+        except (SyntaxError, OSError):
+            pass
+    approved = lessons = 0
+    store = root / "memory" / "items.jsonl"
+    if store.is_file():
+        for line in store.read_text(encoding="utf-8").splitlines():
+            try:
+                item = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            if item.get("status") == "approved":
+                approved += 1
+                lessons += item.get("type") == "lesson"
+    data = read(root / TOP_ROUTER)[0]
+    errors, warnings = check_skillset(root)
+    with tempfile.TemporaryDirectory() as tmp:   # the upload zip is deterministic, so this is its exact size
+        archive = Path(tmp) / "size.zip"
+        write_zip(root, archive, str(data.get("name") or root.name), committable_files(root))
+        archive_bytes = archive.stat().st_size
+    return {"version": version_of(data), "members": len(members), "files": len(tree_files(root)), "tests": tests,
+            "archive": archive_bytes,
+            "memory": approved, "lessons": lessons,
+            "description": len(" ".join(str(data.get("description") or "").split())),
+            "errors": len(errors), "warnings": len(warnings)}
+
+
+def stats_before(root: Path) -> dict | None:
+    """Core stats of the last commit (the previous release), from a clean export of it; None without one."""
+    if not has_git(root) or not ref_exists(root, "HEAD"):
+        return None
+    with tempfile.TemporaryDirectory() as tmp:
+        archive = subprocess.run(["git", "-C", str(root), "archive", "HEAD"], capture_output=True, check=False)
+        if archive.returncode:
+            return None
+        with tarfile.open(fileobj=io.BytesIO(archive.stdout)) as tf:
+            tf.extractall(tmp, filter="data")
+        try:
+            return core_stats(Path(tmp))
+        except (Refused, OSError, ValueError):
+            return None
+
+
+def render_stats(before: dict | None, after: dict, effect: str | None, tests_run: str | None) -> list[str]:
+    """The standard emoji list: every line shows before → after and the change, so the effect is readable."""
+    def delta(key: str) -> str:
+        if before is None:
+            return f"{after[key]}"
+        d = after[key] - before[key]
+        return f"{before[key]} → {after[key]} ({'+' if d > 0 else '±' if d == 0 else ''}{d})"
+    old_version = before["version"] if before else "none"
+    raised = next((i + 1 for i, (a, b) in enumerate(zip(vtuple(old_version), vtuple(after["version"]))) if a != b),
+                  None) if before else None
+    part = ({1: "major", 2: "minor", 3: "patch", 4: "revision"}.get(raised, f"part {raised}") if raised
+            else "unchanged" if before else "first release")
+    def plural(n: int, word: str) -> str:
+        return f"{n} {word}{'' if n == 1 else 's'}"
+
+    def size(n: int) -> str:
+        return f"{n / 1024:.1f} KB" if abs(n) < 1024 * 1024 else f"{n / (1024 * 1024):.2f} MB"
+    if before is None:
+        archive = size(after["archive"])
+    else:
+        d = after["archive"] - before["archive"]
+        archive = f"{size(before['archive'])} → {size(after['archive'])} ({'+' if d > 0 else '±' if d == 0 else '-'}{size(abs(d))})"
+    tests = f"{delta('tests')} test functions" + (f"; this run: {tests_run}" if tests_run else
+                                                  "; suite run outside package")
+    return [f"### {STATS_HEADING}", "",
+            f"- 🎯 **Effect:** {effect.rstrip('.') + '.' if effect else 'not stated (pass --effect next time)'}",
+            f"- 📦 **Version:** {old_version} → {after['version']} ({part})",
+            f"- 🧩 **Members:** {delta('members')}",
+            f"- 📄 **Files:** {delta('files')} of {SPLIT_AT} before the upload splits",
+            f"- 🗜️ **Archive:** {archive} of {MAX_BYTES // (1024 * 1024)} MB upload limit",
+            f"- 🧪 **Tests:** {tests}",
+            f"- 🧠 **Self-memory:** {delta('memory')} approved items, of which lessons {delta('lessons')}",
+            f"- 📝 **Description:** {delta('description')} of {MAX_DESCRIPTION} characters",
+            f"- ✅ **Check:** {plural(after['errors'], 'error')}, {plural(after['warnings'], 'warning')}"
+            + (f" (was {before['errors']} and {before['warnings']})" if before else "")]
+
+
+def changelog_stats(root: Path, version: str, block: list[str]) -> None:
+    """Put the stats block at the end of VERSION's changelog section, replacing any block already there."""
+    path = root / "CHANGELOG.md"
+    text = path.read_text(encoding="utf-8")
+    m = re.search(rf"^## {re.escape(version)} .*$", text, re.MULTILINE)
+    if not m:
+        return
+    end = text.find("\n## ", m.end())
+    end = len(text) if end == -1 else end
+    section = text[m.end():end]
+    section = section.split(f"\n### {STATS_HEADING}")[0].rstrip("\n")
+    path.write_text(text[:m.end()] + section + "\n\n" + "\n".join(block) + "\n" + text[end:], encoding="utf-8")
+
+
 def cmd_package(args) -> int:
     root = args.root
     copy_of = edition_of(root)
@@ -2471,6 +2560,8 @@ def cmd_package(args) -> int:
         print(f"note this working copy is the {copy_of} edition, not the source. If you keep the source (the "
               f"personal repository), push these fixes into it with `skillset.py upstream --into <source working "
               f"copy>` and package there instead; never copy this build over the source repository")
+    before_stats = stats_before(root)   # the previous release, for the core-stats list in the release notes
+    tests_run = None
     write_index(root)
     name, version = top_info(root)
     since = args.since or ("synced" if ref_exists(root, "synced") else None)
@@ -2481,7 +2572,7 @@ def cmd_package(args) -> int:
     log_base = (file_at(root, since, "CHANGELOG.md") if since and ref_exists(root, since) else None) or log_now
     # what has actually shipped: the changelog as committed (an interrupted package may have edited the file)
     log_head = (file_at(root, "HEAD", "CHANGELOG.md") if ref_exists(root, "HEAD") else None) or log_now
-    released_heading = re.compile(r"^## \d+\.\d+\.\d+ ", re.MULTILINE)
+    released_heading = re.compile(r"^## \d+(?:\.\d+){2,} ", re.MULTILINE)
     # A release cut earlier in this working copy counts too: after it, every change bumps again.
     never_released = ("## Unreleased" in log_base and not released_heading.search(log_base)
                       and not released_heading.search(log_head))
@@ -2539,7 +2630,8 @@ def cmd_package(args) -> int:
     if version != top_info(root)[1]:
         set_version(root / TOP_ROUTER, version)
         print(f"version → {version}")
-    if not prerelease and (changed or not since or never_released):
+    releasing = not prerelease and (changed or not since or never_released)
+    if releasing:
         if args.message:
             changelog_add(root, f"- {args.message.rstrip('.')}.")
         changelog_release(root, version)
@@ -2562,7 +2654,20 @@ def cmd_package(args) -> int:
                                check=False)
             if r.returncode:
                 raise Refused(f"pytest failed:\n{r.stdout[-3000:]}{r.stderr[-1000:]}")
-            print(f"ok   pytest: {r.stdout.strip().splitlines()[-1]}")
+            tests_run = r.stdout.strip().splitlines()[-1]
+            print(f"ok   pytest: {tests_run}")
+    if releasing and re.search(rf"^## {re.escape(version)} ", (root / "CHANGELOG.md").read_text(encoding="utf-8"),
+                               re.MULTILINE):
+        block: list[str] = []
+        for _ in range(5):   # the block is inside the archive it measures: rewrite until the figures settle
+            new = render_stats(before_stats, core_stats(root), getattr(args, "effect", None), tests_run)
+            if new == block:
+                break
+            block = new
+            changelog_stats(root, version, block)
+        if not getattr(args, "effect", None):
+            print("WARN  no --effect given: the release notes say the effect was not stated")
+        print("\n".join(["", *block, ""]))
 
     out = args.out.resolve()
     out.mkdir(parents=True, exist_ok=True)
@@ -2579,7 +2684,7 @@ def cmd_package(args) -> int:
                              encoding="utf-8")
             written.append(patch)
     files = committable_files(root)
-    uploads = write_uploads(root, out, name, version, files, split=not getattr(args, 'pack_groups', False))
+    uploads = write_uploads(root, out, name, version, files)
     verify_uploads(root, [f for f in files if not (f.suffix == ".zip" and f.parent == root)], uploads)
     print(f"ok   release gate: the {len(uploads)} upload(s) unpack and merge back into this exact skillset")
     editions = [build_edition(root, e, out, files) for e in edition_names(root)]
@@ -2607,11 +2712,8 @@ def cmd_package(args) -> int:
         written.insert(len(uploads), repo_zip)
         print(f"ok   {repo_zip.name}: {count} files, the plain tree for GitHub and for review")
         if len(uploads) > 1:
-            print(f"note {len(uploads)} uploads: packaged with --split, so each part is its own skill. Upload all of "
-                  f"them. To review or archive the skillset, use {repo_zip.name}: {name}.zip alone is incomplete.")
-        else:
-            print(f"note one upload with zipped groups (--pack-groups, over {SPLIT_AT} files). They are not skills Claude can load; reading them needs code execution. "
-                  f"For GitHub or a review, use {repo_zip.name}.")
+            print(f"note {len(uploads)} uploads: over {SPLIT_AT} files, so each part is its own plain-folder skill. Upload "
+                  f"all of them. To review or archive the skillset, use {repo_zip.name}: {name}.zip alone is incomplete.")
     print("\nDELIVERED")
     for p in written:
         print(f"  {p}")
@@ -2628,6 +2730,8 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--depth", type=int)
     p = sub.add_parser("open")
     p.add_argument("path")
+    p = sub.add_parser("fingerprint", help="version and content fingerprint of this copy and others, to tell builds apart")
+    p.add_argument("others", nargs="*", help="other copies: folders or zips")
     p = sub.add_parser("contents", help="list a folder's files with a line on what each is")
     p.add_argument("path", nargs="?", default=".", help="member path, folder inside the skillset, or . for the top")
     p.add_argument("--depth", type=int, help="how many folder levels to show (default: all)")
@@ -2642,7 +2746,8 @@ def main(argv: list[str] | None = None) -> int:
         p.add_argument("--command", help="the root command of its Commands tree (default: the name in words)")
     p = sub.add_parser("bump")
     p.add_argument("path")
-    p.add_argument("--part", choices=["patch", "minor", "major"], default="patch")
+    p.add_argument("--part", type=version_part, default="patch",
+                   help="major, minor, patch, revision, or a position from 1 (5 is the fifth number)")
     p.add_argument("--message")
     p = sub.add_parser("replace", help="replace one exact passage in a member's file, then optionally bump it")
     p.add_argument("path", help="member path, e.g. cognition/reasoning/research")
@@ -2651,14 +2756,11 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--old-file", help="read the passage from this file instead (for multi-line text)")
     p.add_argument("--new-file", help="read the replacement from this file instead")
     p.add_argument("--file", help="a file in the member's folder other than its instructions file")
-    p.add_argument("--part", choices=["patch", "minor", "major"], help="bump the member after a successful edit")
+    p.add_argument("--part", type=version_part, help="bump the member after a successful edit (a part name or position)")
     p.add_argument("--message", help="changelog line for the bump")
     p = sub.add_parser("build", help="zip the skillset as it would be committed into an upload for Claude")
     p.add_argument("--out", type=Path, help="output zip (default: <root>/<name>.zip, which is gitignored)")
-    p.add_argument("--split", action="store_true", help="over the limit, write plain-folder part skills (the default)")
-    p.add_argument("--pack-groups", action="store_true",
-                   help="over the limit, zip groups inside one upload instead; those groups are not skills Claude "
-                        "can load, and work only where code execution is on")
+    p.add_argument("--split", action="store_true", help=argparse.SUPPRESS)   # 1.x flag; splitting is the only way now
     p.add_argument("--edition", help="build this edition from editions/<edition>/edition.json instead")
     p.add_argument("--plugin", action="store_true",
                    help="build the edition that is the Claude plugin (the one with a plugin.json)")
@@ -2674,15 +2776,13 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--reason")
     p.add_argument("--replaced-by")
     p.add_argument("--allow-mentions", action="store_true")
-    for cmd in ("pack", "unpack"):
-        sub.add_parser(cmd).add_argument("path")
+    sub.add_parser("unpack", help="turn a zipped member from a 1.x copy into a plain folder").add_argument("path")
     p = sub.add_parser("import")
     p.add_argument("source", help="skill, skillset, repository or collection: folder, .zip or .skill")
     p.add_argument("--into", default="", help="skillset to import into (default: the top)")
     p.add_argument("--name")
     p.add_argument("--trigger")
     p.add_argument("--description", help="for a collection: the new nested skillset's description")
-    p.add_argument("--packed", action="store_true", help="store as a zip (one file in the upload)")
     p.add_argument("--replace", action="store_true")
     p = sub.add_parser("add-source")
     p.add_argument("name", help="member path, e.g. team/their-skills")
@@ -2690,7 +2790,7 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--ref", default="main", help="branch, tag or commit (default: main)")
     p.add_argument("--path", help="folder inside the repository holding the skill or skillset")
     p.add_argument("--trigger")
-    p.add_argument("--folder", action="store_true", help="store unpacked instead of as a zip")
+    p.add_argument("--folder", action="store_true", help=argparse.SUPPRESS)   # 1.x flag; links are always folders
     p.add_argument("--replace", action="store_true")
     p = sub.add_parser("refresh")
     p.add_argument("paths", nargs="*", help="linked members to refresh (default: all)")
@@ -2705,22 +2805,21 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--edition", help="edition name (default: this copy's SKILL.md metadata edition)")
     p = sub.add_parser("package")
     p.add_argument("--out", type=Path, default=Path("/mnt/user-data/outputs"))
-    p.add_argument("--bump", choices=["patch", "minor", "major"], help="top version part (default: patch)")
+    p.add_argument("--bump", type=version_part, help="top version part (default: patch): major, minor, patch, revision or a position from 1")
     p.add_argument("--message", help="one line for the changelog and commit")
     p.add_argument("--since", help="commit to diff against (default: the 'synced' tag made by pull)")
     p.add_argument("--skip-tests", action="store_true", help="skip ruff and pytest (used by the tests)")
-    p.add_argument("--split", action="store_true", help="over the limit, write plain-folder part skills (the default)")
-    p.add_argument("--pack-groups", action="store_true",
-                   help="over the limit, zip groups inside one upload instead; those groups are not skills Claude "
-                        "can load, and work only where code execution is on")
+    p.add_argument("--effect", help="one line on what the release changes for people using it; heads the core-stats list")
+    p.add_argument("--split", action="store_true", help=argparse.SUPPRESS)   # 1.x flag; splitting is the only way now
     p.add_argument("--release", action="store_true", help="ship a never-released skillset's version (else it stays unreleased)")
     args = ap.parse_args(argv)
     args.root = args.root.resolve()
     commands = {"check": cmd_check, "index": cmd_index, "tree": cmd_tree, "open": cmd_open, "new": cmd_new,
                 "new-set": lambda a: cmd_new(a, kind="skillset"), "bump": cmd_bump, "replace": cmd_replace, "build": cmd_build, "rename": cmd_rename,
-                "move": cmd_move, "retire": cmd_retire, "pack": cmd_pack, "unpack": cmd_unpack,
+                "move": cmd_move, "retire": cmd_retire, "unpack": cmd_unpack,
                 "import": cmd_import, "add-source": cmd_add_source, "refresh": cmd_refresh, "pull": cmd_pull, "upstream": cmd_upstream,
-                "package": cmd_package, "contents": cmd_contents, "review": cmd_review}
+                "package": cmd_package, "contents": cmd_contents, "review": cmd_review,
+                "fingerprint": cmd_fingerprint}
     if args.cmd != "pull" and not (args.root / TOP_ROUTER).exists():
         print(f"error: {args.root} has no {TOP_ROUTER}; pass --root with the skillset folder", file=sys.stderr)
         return 2

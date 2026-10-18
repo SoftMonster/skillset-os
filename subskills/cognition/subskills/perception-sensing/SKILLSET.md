@@ -3,12 +3,12 @@ name: perception-sensing
 description: "Input faculties: perception, attention, uncertainty awareness and feedback processing. Use when the user wants to be more observant, focused, calibrated or responsive to feedback, or when Claude must read inputs carefully, stay on the key details, state its confidence honestly or adjust to a correction or surprise."
 trigger: "notice more, focus attention, gauge uncertainty or learn from feedback"
 metadata:
-  version: "1.0.2"
+  version: "1.0.3"
 ---
 
 # Perception sensing
 
-A nested skillset. Pick the member whose "Use when" matches the request and read its instructions; for a nested skillset or a zip, run `python3 <top>/scripts/skillset.py open <path>` to get the file to read.
+A nested skillset. Pick the member whose "Use when" matches the request and read its instructions; for a nested skillset, run `python3 <top>/scripts/skillset.py open <path>` to get the file to read.
 
 These are the input faculties: what comes in, what gets focus, how sure to be about it, and how results feed back. They run in a loop: **perceive → attend → estimate certainty → act → process feedback → perceive again**. Each member has a "For people" and a "For Claude" half.
 

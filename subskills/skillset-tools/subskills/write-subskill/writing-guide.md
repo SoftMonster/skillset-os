@@ -100,7 +100,8 @@ Use forward slashes in all paths.
 - Offering several equal options where one default would do.
 - Instructions overfitted to the one example that prompted the skill.
 - Duplicating the same guidance in SUBSKILL.md and a reference file.
-- A file named `SKILL.md` anywhere but the top of the skillset (outside zips): the uploader expects exactly one.
+- A file named `SKILL.md` anywhere but the top of the skillset: the uploader expects exactly one.
+- A zip file anywhere in the skillset: the uploader rejects it. Keep files plain; zip a deliverable on demand with a script.
 - Time-sensitive statements ("the new API released this month"). Write "current" behaviour and put legacy notes in a clearly marked section.
 - Scripts that fail silently or print stack traces with no advice.
 - Deeply nested reference chains.

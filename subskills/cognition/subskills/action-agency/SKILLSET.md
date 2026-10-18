@@ -3,12 +3,12 @@ name: action-agency
 description: "Faculties of doing: tool use, agentic execution, skill composition, skill acquisition, verification and error correction (feedback processing lives in perception-sensing). Use when the user or Claude uses tools, runs a multi-step task, learns or combines skills, checks work before calling it done, or fixes a mistake."
 trigger: "use tools, carry out tasks, learn or combine skills, verify work or fix errors"
 metadata:
-  version: "1.0.2"
+  version: "1.0.3"
 ---
 
 # Action agency
 
-A nested skillset. Pick the member whose "Use when" matches the request and read its instructions; for a nested skillset or a zip, run `python3 <top>/scripts/skillset.py open <path>` to get the file to read.
+A nested skillset. Pick the member whose "Use when" matches the request and read its instructions; for a nested skillset, run `python3 <top>/scripts/skillset.py open <path>` to get the file to read.
 
 These are the faculties of doing: using tools, carrying out tasks, building and combining skills, and checking and correcting the result. Each member has a "For people" and a "For Claude" half. They run as a loop: **act → verify → process feedback → correct → act again**.
 

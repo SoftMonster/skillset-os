@@ -96,7 +96,7 @@ PII_RES = [
     (re.compile(r"\b[\w.+-]+@[\w-]+\.[\w.-]+\b"), "an email address"),
     (re.compile(r"(?<![\w.])\+?\d[\d ()-]{8,}\d(?![\w.])"), "a phone number or long personal number"),
     (re.compile(r"\b[A-Z]{2}\d{2}[A-Z0-9]{11,30}\b"), "a bank account number (IBAN)"),
-    (re.compile(r"\b(?:\d{1,3}\.){3}\d{1,3}\b"), "an IP address"),
+    (re.compile(r"(?<!\d\.)\b(?:\d{1,3}\.){3}\d{1,3}\b(?!\.\d)"), "an IP address"),   # not inside a longer dotted version
     (re.compile(r"\b\d{1,5}\s+\w+\s+(street|st|road|rd|avenue|ave|lane|ln|drive|dr)\b", re.IGNORECASE), "a street address"),
 ]
 # A fact about the user, not a lesson about the AI (spec: keep those as temporary task context).

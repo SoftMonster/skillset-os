@@ -79,6 +79,16 @@ def zip_dir(folder: Path, dest: Path, top: str | None = None) -> Path:
     return dest
 
 
+def legacy_zip(root: Path, path: str) -> Path:
+    """Turn member PATH into a 1.x zipped member (subskills/<name>.zip), as the retired `pack` did."""
+    m = ss.resolve(root, path)
+    dest = m.location.with_name(f"{m.name}.zip")
+    ss.write_zip(m.location, dest, m.name)
+    shutil.rmtree(m.location)
+    ss.write_index(root)
+    return dest
+
+
 @pytest.fixture
 def top(tmp_path):
     ignore = shutil.ignore_patterns(".git", "__pycache__", ".pytest_cache", ".ruff_cache", "*.egg-info")
@@ -123,24 +133,41 @@ def test_nested_sets_route_and_index(top):
     assert ss.resolve(top, f"{G}/{B}/{C}").doc == "SUBSKILL.md"
 
 
-def test_pack_unpack_round_trip_and_zip_inside_zip(top):
+def test_zipped_members_fail_check_and_unpack_migrates_them_at_every_depth(top):
     make_set(top, G)
     make(top, f"{G}/{A}")
     make_set(top, f"{G}/{B}")
     make(top, f"{G}/{B}/{C}")
-    assert run(top, "pack", f"{G}/{B}") == 0          # inner zip
-    assert run(top, "pack", G) == 0                   # zip holding a zip
-    assert (top / "subskills" / f"{G}.zip").exists()
-    assert ss.check_skillset(top)[0] == []
-    m = ss.resolve(top, f"{G}/{B}/{C}")                # reached through two zips
-    assert m.doc == "SUBSKILL.md" and "skillsets-cache" in str(m.folder)
-    assert run(top, "new", f"{G}/{A}-new", "--description", DESC, "--trigger", "x") == 1  # sealed
-    assert run(top, "unpack", G) == 0
-    assert (top / "subskills" / G / "subskills" / f"{B}.zip").exists()
+    legacy_zip(top, f"{G}/{B}")                        # a 1.x zip inside
+    legacy_zip(top, G)                                 # and a zip holding it
+    errors = ss.check_skillset(top)[0]
+    assert any(f"{G} is a zipped member" in e and "unpack" in e for e in errors)
+    assert any("zip files in the tree" in e for e in errors)
+    assert run(top, "new", f"{G}/{A}-new", "--description", DESC, "--trigger", "x") == 1  # sealed until unpacked
+    assert run(top, "unpack", G) == 0                  # one step unpacks the inner zip too
+    assert (top / "subskills" / G / "subskills" / B / "SKILLSET.md").is_file()
+    assert not list((top / "subskills").rglob("*.zip"))
     assert ss.check_skillset(top)[0] == []
 
 
-def test_packing_is_reproducible(top, tmp_path):
+def test_pack_and_the_zip_options_are_gone(top):
+    make(top, A)
+    for argv in (["pack", A], ["import", "x", "--packed"], ["build", "--pack-groups"], ["package", "--pack-groups"]):
+        with pytest.raises(SystemExit):
+            run(top, *argv)
+
+
+def test_check_refuses_any_zip_in_the_tree(top):
+    folder = make(top, A)
+    (folder / "assets").mkdir()
+    zip_dir(folder / "assets", folder / "assets.zip", "assets")
+    assert any("zip files in the tree" in e and "assets.zip" in e for e in ss.check_skillset(top)[0])
+    (folder / "assets.zip").unlink()
+    (top / "skillset-os.zip").write_bytes(b"")          # a build output at the top is not part of the upload
+    assert not any("zip files in the tree" in e for e in ss.check_skillset(top)[0])
+
+
+def test_upload_zips_are_reproducible(top, tmp_path):
     folder = make(top, A)
     one, two = tmp_path / "1.zip", tmp_path / "2.zip"
     ss.write_zip(folder, one, A)
@@ -190,17 +217,25 @@ def test_check_catches_nested_skill_md_limits_and_stale_tables(top, monkeypatch)
 
 # ---------------------------------------------------------------- import
 
-def test_import_skill_as_folder_and_packed(top, tmp_path):
+def test_import_skill_from_a_folder_or_a_zip_is_always_a_folder(top, tmp_path):
     src = skill_folder(tmp_path / "src", B)
     assert run(top, "import", str(src)) == 0
     data, _ = ss.read(top / "subskills" / B / "SUBSKILL.md")
     assert data["trigger"] == "tidy meeting notes"
-    assert run(top, "import", str(zip_dir(src, tmp_path / "b.zip")), "--packed", "--name", C) == 0
+    assert run(top, "import", str(zip_dir(src, tmp_path / "b.zip")), "--name", C) == 0
     m = ss.resolve(top, C)
-    assert m.form == "zip" and m.trigger == "tidy meeting notes"
+    assert m.form == "folder" and m.trigger == "tidy meeting notes"
+    assert not list((top / "subskills").rglob("*.zip"))
     assert ss.check_skillset(top)[0] == []
     assert f"`{B}`" in (top / "NOTICE.md").read_text(encoding="utf-8")
     assert run(top, "import", str(src)) == 1  # exists
+
+
+def test_import_refuses_a_source_holding_a_zip(top, tmp_path):
+    src = skill_folder(tmp_path / "src", B)
+    zip_dir(src / "scripts", src / "bundle.zip", "bundle")
+    assert run(top, "import", str(src)) == 1
+    assert not (top / "subskills" / B).exists()
 
 
 def test_import_repository_zip_wrapped_twice(top, tmp_path):
@@ -218,15 +253,11 @@ def test_import_repository_zip_wrapped_twice(top, tmp_path):
     inner = tmp_path / "wrap"
     shutil.copytree(repo.parent, inner / "download")
     outer = zip_dir(inner, tmp_path / "wrapped.zip", "wrapper")
-    assert run(top, "import", str(outer), "--packed", "--name", G, "--trigger", "use the other skillset") == 0
+    assert run(top, "import", str(outer), "--name", G, "--trigger", "use the other skillset") == 0
     m = ss.resolve(top, G)
-    assert m.kind == "skillset" and m.form == "zip"
+    assert m.kind == "skillset" and m.form == "folder" and m.trigger == "use the other skillset"
+    assert (top / "subskills" / G / "SKILLSET.md").exists()   # one SKILL.md at its top, so it becomes a folder skillset
     assert ss.resolve(top, f"{G}/sync-skillset").doc == "SUBSKILL.md"
-    assert json.loads((top / "skillsets.json").read_text())[f"subskills/{G}.zip"]["trigger"] == "use the other skillset"
-    assert ss.check_skillset(top)[0] == []
-    assert run(top, "unpack", G) == 0  # one SKILL.md at its top, so it can become a folder skillset
-    assert (top / "subskills" / G / "SKILLSET.md").exists()
-    assert ss.check_skillset(top)[0] == []
 
 
 def test_import_collection_becomes_nested_set(top, tmp_path):
@@ -236,24 +267,23 @@ def test_import_collection_becomes_nested_set(top, tmp_path):
     (coll.parent / "README.md").write_text("A repo of skills.\n", encoding="utf-8")
     source = zip_dir(coll.parent, tmp_path / "coll.zip")
     assert run(top, "import", str(source)) == 1  # needs a name, description and trigger
-    assert run(top, "import", str(source), "--name", G, "--description", DESC, "--trigger", "use team skills",
-               "--packed") == 0
+    assert run(top, "import", str(source), "--name", G, "--description", DESC, "--trigger", "use team skills") == 0
     assert {m.path for _, m in ss.walk(top)} >= {G, f"{G}/{A}", f"{G}/{B}"}
-    assert ss.resolve(top, f"{G}/{A}").form == "zip"
+    assert ss.resolve(top, f"{G}/{A}").form == "folder"
     assert ss.check_skillset(top)[0] == []
 
 
-def test_manifest_travels_with_pack_move_and_unpack(top, tmp_path):
+def test_unpack_keeps_a_zipped_members_manifest_trigger(top, tmp_path):
     make_set(top, G)
     src = skill_folder(tmp_path / "src", A)
-    assert run(top, "import", str(src), "--into", G, "--packed", "--trigger", "custom trigger") == 0
+    assert run(top, "import", str(src), "--into", G) == 0
+    legacy_zip(top, f"{G}/{A}")
     key = f"subskills/{G}/subskills/{A}.zip"
-    assert key in json.loads((top / "skillsets.json").read_text())
-    assert run(top, "pack", G) == 0
-    assert not (top / "skillsets.json").exists()                   # moved inside the zip
-    assert ss.resolve(top, f"{G}/{A}").trigger == "custom trigger"  # read from the zip's own manifest
-    assert run(top, "unpack", G) == 0
-    assert key in json.loads((top / "skillsets.json").read_text())
+    (top / "skillsets.json").write_text(json.dumps({key: {"trigger": "custom trigger"}}), encoding="utf-8")
+    assert ss.resolve(top, f"{G}/{A}").trigger == "custom trigger"
+    assert run(top, "unpack", f"{G}/{A}") == 0
+    assert ss.resolve(top, f"{G}/{A}").trigger == "custom trigger"    # now in its own frontmatter
+    assert not (top / "skillsets.json").exists()
     assert ss.check_skillset(top)[0] == []
 
 
@@ -270,10 +300,11 @@ def test_github_source_links_and_refreshes(top, tmp_path, monkeypatch):
     monkeypatch.setattr(ss, "github_fetch", fake_fetch)
     monkeypatch.setattr(ss, "remote_commit", lambda repo, ref: "b" * 40)
     assert run(top, "add-source", A, "--repo", "someone/skills", "--path", A) == 0
-    entry = json.loads((top / "skillsets.json").read_text())[f"subskills/{A}.zip"]
+    assert ss.resolve(top, A).form == "folder"
+    entry = json.loads((top / "skillsets.json").read_text())[f"subskills/{A}"]
     assert entry["repo"] == "someone/skills" and entry["commit"] == "a" * 40
     assert run(top, "refresh") == 0
-    entry = json.loads((top / "skillsets.json").read_text())[f"subskills/{A}.zip"]
+    entry = json.loads((top / "skillsets.json").read_text())[f"subskills/{A}"]
     assert entry["commit"] == "b" * 40
     assert "Refreshed" in (top / "CHANGELOG.md").read_text(encoding="utf-8")
     assert ss.check_skillset(top)[0] == []
@@ -292,6 +323,19 @@ def test_pull_restores_dropped_dotfiles(tmp_path, top):
     assert run(top, "pull", "--source", str(zipped), "--dest", str(dest), "--installed", str(tmp_path)) == 0
     assert (dest / ".gitignore").exists() and (dest / ".github" / "workflows" / "ci.yml").exists()
     assert git(dest, "tag") == "synced"
+
+
+def test_fingerprint_tells_same_numbered_builds_apart_and_ignores_caches_and_dotfiles(tmp_path, top, capsys):
+    fork = Path(shutil.copytree(top, tmp_path / "fork" / "skillset-os"))
+    assert ss.fingerprint(fork) == ss.fingerprint(top)
+    (fork / "__pycache__").mkdir()
+    (fork / "__pycache__" / "x.cpython-313.pyc").write_bytes(b"junk")      # caches never count
+    (fork / ".gitignore").write_text("changed\n", encoding="utf-8")        # uploads drop dotfiles
+    assert ss.fingerprint(fork) == ss.fingerprint(top)
+    (fork / "docs" / "EXTRA.md").write_text("# A fork's addition\n", encoding="utf-8")
+    assert ss.fingerprint(fork)[0] != ss.fingerprint(top)[0]
+    assert run(top, "fingerprint", str(fork)) == 0
+    assert "content differs: two builds share one number" in capsys.readouterr().out
 
 
 def test_package_unchanged_is_a_plain_download(pulled, tmp_path):
@@ -315,18 +359,103 @@ def test_package_bumps_nested_sets_and_requires_leaf_bumps(pulled, tmp_path):
     assert list(out.glob("*.patch"))
 
 
+@pytest.mark.parametrize(("version", "part", "expected"), [
+    ("1.9.0", "revision", "1.9.0.1"),
+    ("1.9.1.1", "revision", "1.9.1.2"),
+    ("1.9.1.1", "patch", "1.9.2"),          # a higher part resets the revision and drops it
+    ("1.9.1.1", "minor", "1.10.0"),
+    ("1.9.1.1", "major", "2.0.0"),
+    ("1.9.0", "patch", "1.9.1"),            # three-part versions are unchanged
+    ("1.9.1.1", "5", "1.9.1.1.1"),          # any part by position, counted from 1 (major)
+    ("1.9.1.1.1", "5", "1.9.1.1.2"),
+    ("1.9.1.1.1", "revision", "1.9.1.2"),   # every part after the raised one resets
+    ("1.9.0", "7", "1.9.0.0.0.0.1"),        # missing parts count as zero
+    ("1.9.0", "1", "2.0.0"),
+    ("2.0.0.0.0", "minor", "2.1.0"),        # trailing zeros past the third are not kept
+])
+def test_n_part_versions_bump(version, part, expected):
+    assert ss.bumped(version, part) == expected
+
+
+def test_n_part_versions_compare():
+    v = ss.vtuple
+    assert v("1.9.1") == v("1.9.1.0") == v("1.9.1.0.0")
+    assert v("1.9.1") < v("1.9.1.0.1") < v("1.9.1.1") < v("1.9.1.1.1") < v("1.9.1.2") < v("1.9.2") < v("1.10.0")
+
+
+@pytest.mark.parametrize("bad", ["0", "tiny", "-1"])
+def test_bump_refuses_parts_that_do_not_exist(pulled, bad):
+    with pytest.raises(SystemExit) as exc:
+        run(pulled, "bump", "skillset-tools/write-subskill", "--part", bad)
+    assert exc.value.code == 2
+
+
+def test_package_revision_bump_ships_a_four_part_release(pulled, tmp_path):
+    out = tmp_path / "out"
+    leaf = ss.resolve(pulled, "skillset-tools/write-subskill").location / "SUBSKILL.md"
+    leaf.write_text(leaf.read_text(encoding="utf-8") + "\nOne more line.\n", encoding="utf-8")
+    assert run(pulled, "bump", "skillset-tools/write-subskill", "--part", "revision") == 0
+    before = ss.top_info(pulled)[1]
+    assert run(pulled, "package", "--out", str(out), "--skip-tests", "--bump", "revision",
+               "--message", "revision") == 0
+    after = ss.top_info(pulled)[1]
+    assert after == ss.bumped(before, "revision") and after.count(".") == 3
+    assert f"## {after} " in (pulled / "CHANGELOG.md").read_text(encoding="utf-8")
+    leaf.write_text(leaf.read_text(encoding="utf-8") + "A fifth-part line.\n", encoding="utf-8")
+    assert run(pulled, "bump", "skillset-tools/write-subskill", "--part", "5") == 0
+    assert run(pulled, "package", "--out", str(out), "--skip-tests", "--bump", "5", "--message", "fifth") == 0
+    fifth = ss.top_info(pulled)[1]
+    assert fifth == after + ".1" and f"## {fifth} " in (pulled / "CHANGELOG.md").read_text(encoding="utf-8")
+    after = fifth
+    leaf.write_text(leaf.read_text(encoding="utf-8") + "Another line.\n", encoding="utf-8")
+    assert run(pulled, "bump", "skillset-tools/write-subskill") == 0
+    assert run(pulled, "package", "--out", str(out), "--skip-tests", "--message", "patch") == 0
+    assert ss.vtuple(ss.top_info(pulled)[1]) > ss.vtuple(after)        # the four-part release counts as shipped
+
+def test_every_release_notes_carry_the_core_stats_list(pulled, tmp_path, capsys):
+    out = tmp_path / "out"
+    leaf = ss.resolve(pulled, "skillset-tools/write-subskill").location / "SUBSKILL.md"
+    leaf.write_text(leaf.read_text(encoding="utf-8") + "\nOne more line.\n", encoding="utf-8")
+    assert run(pulled, "bump", "skillset-tools/write-subskill") == 0
+    (pulled / "tests" / "test_extra.py").write_text("def test_one():\n    pass\n", encoding="utf-8")
+    before = ss.core_stats(pulled)
+    assert run(pulled, "package", "--out", str(out), "--skip-tests", "--message", "stats",
+               "--effect", "Makes the stats visible") == 0
+    printed = capsys.readouterr().out
+    version = ss.top_info(pulled)[1]
+    log = (pulled / "CHANGELOG.md").read_text(encoding="utf-8")
+    section = log.split(f"## {version} ", 1)[1].split("\n## ", 1)[0]
+    for label in ("🎯 **Effect:** Makes the stats visible.", "📦 **Version:**", "🧩 **Members:**", "📄 **Files:**",
+                  "🗜️ **Archive:**",
+                  "🧪 **Tests:**", "🧠 **Self-memory:**", "📝 **Description:**", "✅ **Check:**"):
+        assert label in section and label in printed                    # in the notes and in the hand-over output
+    assert f"{before['tests'] - 1} → {before['tests']} (+1) test functions" in section   # deltas are from the last release
+    assert section.count("### Core stats") == 1
+    real = (out / "skillset-os.zip").stat().st_size                   # the archive figure is the real upload's size
+    assert f"→ {real / 1024:.1f} KB" in section or f"→ {real / (1024 * 1024):.2f} MB" in section
+
+
+def test_a_release_without_an_effect_says_so(pulled, tmp_path, capsys):
+    leaf = ss.resolve(pulled, "skillset-tools/write-subskill").location / "SUBSKILL.md"
+    leaf.write_text(leaf.read_text(encoding="utf-8") + "\nOne more line.\n", encoding="utf-8")
+    assert run(pulled, "bump", "skillset-tools/write-subskill") == 0
+    assert run(pulled, "package", "--out", str(tmp_path / "out"), "--skip-tests", "--message", "no effect") == 0
+    assert "no --effect given" in capsys.readouterr().out
+    assert "not stated (pass --effect next time)" in (pulled / "CHANGELOG.md").read_text(encoding="utf-8")
+
 def test_package_patch_applies_to_baseline(pulled, tmp_path):
     out = tmp_path / "out"
     make_set(pulled, G)
-    make(pulled, f"{G}/{A}")
-    assert run(pulled, "pack", G) == 0
+    folder = make(pulled, f"{G}/{A}")
+    (folder / "icon.png").write_bytes(bytes(range(256)) * 4)       # binary content travels in the patch too
     assert run(pulled, "package", "--out", str(out), "--skip-tests", "--bump", "minor") == 0
     clone = tmp_path / "clone"
     git(tmp_path, "clone", "-q", str(pulled), str(clone))
     git(clone, "reset", "-q", "--hard", "synced")
     subprocess.run(["git", "-c", "user.name=t", "-c", "user.email=t@t", "am", "-q", str(next(out.glob("*.patch")))],
                    cwd=clone, check=True)
-    assert (clone / "subskills" / f"{G}.zip").read_bytes() == (pulled / "subskills" / f"{G}.zip").read_bytes()
+    rel = Path("subskills") / G / "subskills" / A / "icon.png"
+    assert (clone / rel).read_bytes() == (pulled / rel).read_bytes()
 
 
 # ---------------------------------------------------------------- replace
@@ -436,8 +565,16 @@ def test_review_reports_real_problems(top, capsys):
     assert run(top, "review", "interpersonal") == 0
 
 
+def test_check_scans_for_secrets_like_review(top, capsys):
+    key = top / "subskills" / "interpersonal" / "key.txt"
+    key.write_text("token ghp_" + "a" * 36 + "\n", encoding="utf-8")
+    assert run(top, "check") == 1                                       # a clean check must mean no secrets
+    assert "secret" in capsys.readouterr().out
+    key.unlink()
+    assert run(top, "check") == 0
+
 def test_package_does_not_demand_bumps_for_folder_sections_alone(pulled):
-    doc = next(pulled.rglob("SUBSKILL.md"))
+    doc = next((pulled / "subskills").rglob("SUBSKILL.md"))
     doc.write_text(ss.strip_folder_block(doc.read_text(encoding="utf-8")), encoding="utf-8")
     subprocess.run(["git", "add", "-A"], cwd=pulled, check=True)
     subprocess.run(["git", "-c", "user.email=t@t", "-c", "user.name=t", "commit", "-qm", "x"], cwd=pulled, check=True)
@@ -547,7 +684,7 @@ def test_release_gate_refuses_uploads_that_do_not_rebuild_the_skillset(top, tmp_
     monkeypatch.setattr(ss, "SPLIT_AT", 50)   # cognition (69 files) splits again, one level down; leaves top-level headroom
     out = tmp_path / "up"
     out.mkdir()
-    assert run(top, "build", "--out", str(out / "skillset-os.zip"), "--split") == 1
+    assert run(top, "build", "--out", str(out / "skillset-os.zip")) == 1
 
 
 def test_a_never_released_skillset_stays_unreleased_until_release(pulled):
@@ -557,7 +694,7 @@ def test_a_never_released_skillset_stays_unreleased_until_release(pulled):
     subprocess.run(["git", "add", "-A"], cwd=pulled, check=True)
     subprocess.run(["git", "-c", "user.email=t@t", "-c", "user.name=t", "commit", "-qm", "fresh"], cwd=pulled, check=True)
     subprocess.run(["git", "tag", "-f", "synced"], cwd=pulled, check=True, capture_output=True)
-    doc = next(pulled.rglob("SUBSKILL.md"))
+    doc = next((pulled / "subskills").rglob("SUBSKILL.md"))
     doc.write_text(doc.read_text(encoding="utf-8") + "\nA new line.\n", encoding="utf-8")   # no bump needed yet
     out = str(pulled.parent / "out")
     assert run(pulled, "package", "--skip-tests", "--out", out, "--message", "first change") == 0
@@ -580,17 +717,9 @@ def test_a_never_released_skillset_stays_unreleased_until_release(pulled):
     assert ss.top_info(pulled)[1] == "1.0.2" and "## 1.0.2 — " in log and "## Unreleased" not in log
 
 
-# ---------------------------------------------------------------- one upload: groups zipped inside it
+# ---------------------------------------------------------------- over the limit: plain part skills only
 
-def _build_packed(top, tmp_path, monkeypatch, limit=100):
-    monkeypatch.setattr(ss, "SPLIT_AT", limit)
-    out = tmp_path / "up"
-    out.mkdir()
-    assert run(top, "build", "--out", str(out / "skillset-os.zip"), "--pack-groups") == 0
-    return sorted(out.glob("*.zip"))
-
-
-def test_over_the_limit_the_default_is_plain_part_skills_with_no_zipped_members(top, tmp_path, monkeypatch):
+def test_over_the_limit_the_upload_is_plain_part_skills_with_no_zips(top, tmp_path, monkeypatch):
     monkeypatch.setattr(ss, "SPLIT_AT", 100)
     out = tmp_path / "up"
     out.mkdir()
@@ -599,78 +728,33 @@ def test_over_the_limit_the_default_is_plain_part_skills_with_no_zipped_members(
     assert len(zips) > 1                                        # separate skills, each a plain folder
     for z in zips:
         with zipfile.ZipFile(z) as zf:
-            assert not [n for n in zf.namelist() if n.endswith(".zip")], z.name   # nothing Claude cannot load
+            assert not [n for n in zf.namelist() if n.endswith((".zip", ".skill"))], z.name  # the uploader rejects them
             assert "skillset-os/PACKED.json" not in zf.namelist()
 
 
-def test_check_warns_that_a_zipped_member_is_not_a_usable_skill(top):
-    shutil.make_archive(str(top / "subskills" / "apps"), "zip", top / "subskills", "apps")
-    shutil.rmtree(top / "subskills" / "apps")
-    ss.write_index(top)
-    _, warnings = ss.check_skillset(top)
-    assert any("apps is a zip" in w and "cannot load a zip as a skill" in w for w in warnings)
+def _legacy_packed_upload(top: Path, group: str) -> Path:
+    """A 1.x upload with GROUP zipped inside it and a PACKED.json, as the retired --pack-groups wrote."""
+    folder = top / "subskills" / group
+    digest, count = ss.tree_digest(folder)
+    ss.write_zip(folder, folder.with_name(group + ".zip"), group)
+    shutil.rmtree(folder)
+    (top / "PACKED.json").write_text(json.dumps({"skillset": "skillset-os", "version": ss.top_info(top)[1],
+                                                 "packed": [{"path": f"subskills/{group}", "files": count,
+                                                             "sha256": digest}]}), encoding="utf-8")
+    return top
 
 
-def test_over_the_limit_the_upload_stays_one_skill_with_zipped_groups(top, tmp_path, monkeypatch):
-    zips = _build_packed(top, tmp_path, monkeypatch)
-    assert [z.name for z in zips] == ["skillset-os.zip"]
-    with zipfile.ZipFile(zips[0]) as zf:
-        names = [n for n in zf.namelist() if not n.endswith("/")]
-        packed = json.loads(zf.read("skillset-os/PACKED.json"))
-        top_doc = zf.read("skillset-os/SKILL.md").decode("utf-8")
-    assert len(names) <= 100 and "skillset-os/subskills/cognition.zip" in names
-    assert "subskills/cognition" in [e["path"] for e in packed["packed"]]   # the largest group goes first
-    assert "subskills/cognition.zip" in top_doc and "## Packed groups" in top_doc   # routers point at the zip
-
-
-def test_an_installed_packed_upload_reads_checks_and_pulls_back_exactly(top, tmp_path, monkeypatch):
-    zips = _build_packed(top, tmp_path, monkeypatch)
-    installed = tmp_path / "skills" / "user"
-    installed.mkdir(parents=True)
-    with zipfile.ZipFile(zips[0]) as zf:
-        zf.extractall(installed)
-    script = installed / "skillset-os" / "scripts" / "skillset.py"
-    r = subprocess.run([sys.executable, str(script), "open", "cognition/reasoning/research"], capture_output=True,
-                       text=True, check=False)
-    assert r.returncode == 0 and "SUBSKILL.md" in r.stdout, r.stderr
-    r = subprocess.run([sys.executable, str(script), "check"], capture_output=True, text=True, check=False)
-    assert r.returncode == 0, r.stdout[-600:]
-    dest = tmp_path / "wc"
-    r = subprocess.run([sys.executable, str(script), "pull", "--dest", str(dest), "--installed", str(tmp_path / "skills")],
-                       capture_output=True, text=True, check=False)
-    assert r.returncode == 0, r.stderr
+def test_an_old_packed_upload_fails_check_and_pull_unpacks_it(top, tmp_path):
     original = {f.relative_to(top).as_posix(): f.read_bytes() for f in ss.tree_files(top)}
-    assert {f.relative_to(dest).as_posix(): f.read_bytes() for f in ss.tree_files(dest)} == original
-
-
-def test_a_changed_packed_group_fails_check(top, tmp_path, monkeypatch):
-    zips = _build_packed(top, tmp_path, monkeypatch)
-    installed = tmp_path / "skills" / "user"
-    installed.mkdir(parents=True)
-    with zipfile.ZipFile(zips[0]) as zf:
-        zf.extractall(installed)
-    inner = installed / "skillset-os" / "subskills" / "cognition.zip"
-    with zipfile.ZipFile(inner, "a") as zf:
-        zf.writestr("cognition/EXTRA.md", "added after packaging\n")
-    script = installed / "skillset-os" / "scripts" / "skillset.py"
-    r = subprocess.run([sys.executable, str(script), "check"], capture_output=True, text=True, check=False)
-    assert r.returncode == 1 and "differs from PACKED.json" in r.stdout
-
-
-def test_release_gate_refuses_a_packed_group_that_lost_a_file(top, tmp_path, monkeypatch):
-    real = ss.write_zip
-
-    def lossy(folder, dest, top_name, files=None):
-        files = sorted(files if files is not None else ss.tree_files(folder))
-        if dest.name == "cognition.zip":
-            files = files[:-1]
-        return real(folder, dest, top_name, files)
-
-    monkeypatch.setattr(ss, "write_zip", lossy)
-    monkeypatch.setattr(ss, "SPLIT_AT", 100)
-    out = tmp_path / "up"
-    out.mkdir()
-    assert run(top, "build", "--out", str(out / "skillset-os.zip"), "--pack-groups") == 1
+    legacy = Path(shutil.copytree(top, tmp_path / "old" / "skillset-os"))
+    _legacy_packed_upload(legacy, "interpersonal")
+    assert run(legacy, "check") == 1
+    dest = tmp_path / "wc"
+    assert run(legacy, "pull", "--dest", str(dest), "--installed", str(tmp_path / "none")) == 0
+    got = {f.relative_to(dest).as_posix(): f.read_bytes() for f in ss.tree_files(dest)}
+    assert {k: v for k, v in got.items() if not k.startswith(".")} == \
+           {k: v for k, v in original.items() if not k.startswith(".")}
+    assert ss.check_skillset(dest)[0] == []
 
 
 # ---------------------------------------------------------------- editions

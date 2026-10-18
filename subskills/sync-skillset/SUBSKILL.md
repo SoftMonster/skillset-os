@@ -3,7 +3,7 @@ name: sync-skillset
 description: "Gets a working copy of the skillset (from the installed skill, an attached zip or an earlier step in this chat), and at the end packages it: versions it, runs the checks and tests, commits, and writes the one zip that is both the upload for Claude and the copy for GitHub, plus a patch. Use first for any change to the skillset, and on its own to download it, sync it with GitHub, refresh linked repositories or check which version is installed."
 trigger: "download, sync or update the skillset or copy it to GitHub"
 metadata:
-  version: "1.4.0"
+  version: "1.9.1"
 ---
 
 # Sync skillset
@@ -18,7 +18,7 @@ Every change follows the same loop. Pull a working copy, change it using another
 
 - **Never edit the installed folder.** It is read-only and resets each session. Work on the working copy.
 - **One working copy per chat.** Pull once, make every change there, and package at the end. Each package covers everything since the pull.
-- **The newest copy wins.** If the person attaches a zip and an installed copy also exists, `pull` reports both versions; start from the newer one. If they differ at the same version, ask which is current.
+- **The newest copy wins.** If the person attaches a zip and an installed copy also exists, `pull` reports both versions; start from the newer one. If they differ at the same version, ask which is current: `skillset.py fingerprint <other>` shows whether two copies that claim one number are the same build. A copy from another lineage is a source to harvest, never a base to overwrite; what is taken from it ships under the next version here, crediting it in the changelog.
 - **Every change raises a version.** `package` raises the top version and every changed nested skillset automatically. Changed sub-skills must be bumped with `skillset.py bump`; the editing sub-skills do this.
 - **The source is the personal edition; editions flow from it, fixes flow back to it.** A copy built as an edition (the shared plugin, its repository, a shared zip) says so in `SKILL.md` (`metadata.edition`), and `pull` and `package` both say it too. Every fix made in such a copy goes back with `upstream` (step 2a) in the same chat, every time, and the source is packaged, which rebuilds the edition. Never copy an edition build over the source repository: it would erase the personal wording.
 - **Claude cannot upload or push.** The person uploads the zip and updates GitHub; give them the exact steps.
@@ -62,23 +62,25 @@ When the person works in the personal source and has a shared copy with unmerged
 ## 3. Package
 
 ```bash
-python3 <wc>/scripts/skillset.py package --message "<what changed, in a few words>" [--bump minor]
+python3 <wc>/scripts/skillset.py package --message "<what changed, in a few words>" --effect "<what it changes for people using it>" [--bump minor]
 ```
 
 It regenerates every router and every member's "This folder" section, then checks everything at every depth, including inside zips and the 1024-character description. It runs ruff and pytest, raises the versions and releases the changelog section. Until the first release (a changelog with only `## Unreleased`), the skillset is pre-release: nothing is bumped, changes collect under `## Unreleased`, and the version stays where it started. Only when the person says to release, run `package --release`, after sweeping every file for status text the release makes false ("early access", "not yet released") and rewriting it; it ships that version as it is (a fresh `1.0.0` ships as 1.0.0). Every package also writes `memory-pack.zip`, the AI's self-memory, after checking that a fresh AI could take over from it. Then it commits and writes to `/mnt/user-data/outputs/`:
 
 - `<name>.zip`: the upload for Claude and the copy for GitHub (one top-level `<name>/` folder).
-- **When the skillset has more than 190 files**, `package` splits the upload into separate part skills, each a plain folder (`<name>-<folder>.zip`, with a generated `SKILL.md` and a shared `PARTS.json`), plus `<name>-repo.zip` for GitHub. It never zips groups by default, because Claude's skill system cannot load anything inside a zip. `package --pack-groups` keeps one upload with zipped groups and `PACKED.json` for setups that knowingly rely on code execution (`skillset.py open` unzips them). Editions, and so the plugin, are refused over the limit rather than zipped.
-- **The release gate:** before delivering, `package` unpacks the zips it wrote (and any zipped groups inside them), puts them back together and refuses unless the result is exactly the working copy and passes `check`.
+- **When the skillset has more than 190 files**, `package` splits the upload into separate part skills, each a plain folder (`<name>-<folder>.zip`, with a generated `SKILL.md` and a shared `PARTS.json`), plus `<name>-repo.zip` for GitHub. It never zips anything inside an upload: claude.ai rejects skill uploads that hold a zip. Editions, and so the plugin, are refused over the limit; trim or split the members first. A 1.x upload with zipped groups (`PACKED.json`) fails `check`; `pull` unpacks it, then package again.
+- **The release gate:** before delivering, `package` unpacks the upload zips it wrote, puts them back together and refuses unless the result is exactly the working copy and passes `check`.
 - `<name>-<version>.patch`: every commit since the pull, for people who prefer `git am`.
 - The edition with a `plugin.json` (for example `editions/shared/plugin.json`) is the Claude plugin: its `<name>-<edition>.zip` carries `.claude-plugin/plugin.json` and `marketplace.json`, generated from `SKILL.md`. One download serves as the plugin upload (Customize → Plugins → Add → Upload plugin) and the plugin repository. It is not a skill upload: the Skills page rejects any zip holding a plugin manifest.
 - `<name>-<edition>.zip` for each edition in `editions/` (for example `<name>-shared.zip`): the same skillset with that edition's patches applied, checked and verified. It is a separate upload for other people, never installed alongside `<name>.zip`, and not the GitHub copy; offer it as a release asset.
 
-It stops at the first problem and says how to fix it. Use `--bump minor` for new members or new behaviour, `--bump major` for renames or removals; the default is patch. Share the files with `present_files`, zip first.
+It stops at the first problem and says how to fix it. Use `--bump minor` for new members or new behaviour, `--bump major` for renames or removals, `--bump revision` for the smallest touch-ups (a fourth number, 1.9.1 → 1.9.1.1), or `--bump N` for the Nth number (`--bump 5`: 1.9.1.1 → 1.9.1.1.1); raising a part resets every part after it. The default is patch. Share the files with `present_files`, zip first.
 
 ## 4. Hand over
 
-Keep it short: the new version, what changed, and these steps. When the upload was split, say how many skills to upload, and that **`<name>-repo.zip` is the file to review, share or archive**: `<name>.zip` alone is incomplete by design.
+Keep it short: the new version, what changed, the core-stats list, and these steps.
+
+**Core stats, every release, as a habit.** `package` writes a standard emoji list under `### Core stats` at the end of the release's changelog section and prints it: 🎯 effect, 📦 version (and which part rose), 🧩 members, 📄 files against the split limit, 🗜️ archive size (the upload zip, stats block included) against the upload limit, 🧪 tests, 🧠 self-memory and lessons, 📝 description length, ✅ check result, each shown as before → after with the change, measured against the previous release. Always pass `--effect`: one plain line on what the release changes for the people using it, not a repeat of `--message`; `package` warns when it is missing. Paste the printed list into the hand-over unchanged, then add one line reading the numbers where they matter (a limit coming close, tests or lessons added, a warning cleared or new). Never retype or round the numbers. When the upload was split, say how many skills to upload, and that **`<name>-repo.zip` is the file to review, share or archive**: `<name>.zip` alone is incomplete by design.
 
 **Claude**: in Customize → Skills, remove the old `<name>` skill (and any old `<name>-…` parts), then upload `<name>.zip` (the personal edition; the shared edition's zip goes to Customize → Plugins → Add → Upload plugin instead, after removing any old copy there) (and, when the upload was split, every `<name>-<folder>.zip` too). Start a new chat to use it. If standalone skills were imported, delete or switch off their old copies so they do not trigger twice. If they edit their own clone later, `python3 scripts/skillset.py build` there makes the same upload zip from exactly what git would commit, as `<name>.zip` at the repository root (gitignored, overwritten each time).
 
@@ -117,6 +119,7 @@ The patch only applies if the clone matches what was pulled. If it fails, use th
   - ⬇️ `download skillset`: Packages the current skillset unchanged so it can be downloaded or put on GitHub.
   - 🐙 `sync with github`: Gives the exact steps to put the packaged zip or patch into the GitHub repository.
   - 🔢 `check installed version`: Reports which version is installed and whether another copy is newer.
+  - 🔏 `compare builds`: Prints the version and content fingerprint of this copy and any others given, and warns when two builds share one version number.
 
 <!-- folder:start -->
 ## This folder

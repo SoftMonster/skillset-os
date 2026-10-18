@@ -3,12 +3,12 @@ name: memory-context
 description: "Memory faculties: working memory, long-term memory, semantic understanding, context awareness and self-model. Use when the user wants a better memory, deeper understanding, situational awareness or self-knowledge, or when Claude tracks state in a long task, states honestly what it remembers, pins down meanings, uses the conversation and date correctly, or describes its own abilities."
 trigger: "remember more, understand deeply, read context or know strengths and limits"
 metadata:
-  version: "1.0.2"
+  version: "1.0.3"
 ---
 
 # Memory context
 
-A nested skillset. Pick the member whose "Use when" matches the request and read its instructions; for a nested skillset or a zip, run `python3 <top>/scripts/skillset.py open <path>` to get the file to read.
+A nested skillset. Pick the member whose "Use when" matches the request and read its instructions; for a nested skillset, run `python3 <top>/scripts/skillset.py open <path>` to get the file to read.
 
 These are the memory faculties: what is held right now, what is stored over time, what things mean, what situation this is, and who is doing the thinking. Each member has a "For people" and a "For Claude" half. The Claude halves share one rule: be exact about what Claude actually holds and remembers, and never claim memory, context or capabilities it does not have.
 

@@ -4,7 +4,7 @@ description: "Conduct a comprehensive self-assessment of an AI against a large, 
 trigger: "run the skill curriculum exam, or test and score Claude's own skills and capability gaps"
 command: "run skill-exam"
 metadata:
-  version: "1.3.2"
+  version: "1.3.4"
 ---
 
 # Universal Skill Curriculum Exam

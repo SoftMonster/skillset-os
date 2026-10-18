@@ -3,12 +3,12 @@ name: human-ai-augmentation
 description: "Faculties where human and AI thinking combine: human-AI collaboration, cognitive offloading, teaching, scaffolding and decision support. Use when the user wants to work better with AI, decide what to offload, teach or tutor someone, support a learner or someone else's decision, or when Claude collaborates, holds information, teaches or informs a choice."
 trigger: "work well with AI, offload thinking, teach, scaffold learning or support someone's decision"
 metadata:
-  version: "1.0.2"
+  version: "1.0.3"
 ---
 
 # Human ai augmentation
 
-A nested skillset. Pick the member whose "Use when" matches the request and read its instructions; for a nested skillset or a zip, run `python3 <top>/scripts/skillset.py open <path>` to get the file to read.
+A nested skillset. Pick the member whose "Use when" matches the request and read its instructions; for a nested skillset, run `python3 <top>/scripts/skillset.py open <path>` to get the file to read.
 
 These are the faculties where human and AI thinking combine: collaborating, offloading, teaching, scaffolding and supporting decisions. Each member has a "For people" and a "For Claude" half. The shared aim is to leave the person more capable, not more dependent: the human keeps goals, judgement and accountability, and Claude makes its contribution easy to check.
 

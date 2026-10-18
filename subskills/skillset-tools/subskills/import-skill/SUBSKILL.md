@@ -1,9 +1,9 @@
 ---
 name: import-skill
-description: "Brings existing skills into the skillset: a standalone skill, another skillset, a whole repository, or a collection of skills. Each can come from a folder, a zip or .skill file (zips inside zips included), an installed skill, or a GitHub repository that stays linked and can be refreshed. Use when the user asks to import, add, merge, consolidate, nest or link an existing skill, skillset, zip or repository, or to replace standalone skills with the skillset. Do not use for writing a skill from scratch; use the write-subskill sub-skill."
+description: "Brings existing skills into the skillset: a standalone skill, another skillset, a whole repository, or a collection of skills. Each can come from a folder, a zip or .skill file, an installed skill, or a GitHub repository that stays linked and can be refreshed; whatever the source, it is stored as plain folders. Use when the user asks to import, add, merge, consolidate, nest or link an existing skill, skillset, zip or repository, or to replace standalone skills with the skillset. Do not use for writing a skill from scratch; use the write-subskill sub-skill."
 trigger: "import, nest or link an existing skill, skillset, zip or GitHub repository"
 metadata:
-  version: "1.2.0"
+  version: "2.0.0"
 ---
 
 # Import a skill, skillset or repository
@@ -21,15 +21,15 @@ Work in the working copy from `sync-skillset`. `<wc>` below is that folder, usua
 - **Never import Anthropic built-in skills.** Every account already has them, and several licences forbid copying. They live under `/mnt/skills/public` and `/mnt/skills/examples`.
 - **Check the licence.** The person's own skills are fine. Third-party skills keep their licence file; do not import one whose licence forbids copying. If a third-party skill has no licence, ask first.
 - **Change as little as possible.** An import only adapts names, adds a trigger and removes the standalone version note. Improvements are a separate edit.
-- **Unpack skills; pack only what is kept sealed.** A skill meant to be used imports unpacked, because Claude cannot load a zip as a skill. A repository, or any source with more than one `SKILL.md`, must be imported packed (`--packed`) or its skills imported one by one; a packed import is storage, readable only with `skillset.py open` where code execution is on, so tell the person which skills that leaves unusable without it.
+- **Always plain folders.** A zip source is extracted on import and stored as folders, because claude.ai rejects skill uploads that hold a zip. A source with zips inside it is refused until they are extracted. A source with more than one `SKILL.md` is imported as a collection, or its skills one by one.
 - **One copy afterwards.** Once uploaded, standalone copies must be deleted or switched off, or they compete with the skillset.
 
 ## What the source can be
 
 | Source | What `import` makes |
 |---|---|
-| A skill (one `SKILL.md` or `SUBSKILL.md` at its top) | a sub-skill, as a folder or `--packed` zip |
-| A skillset (a `SKILLSET.md`, or a `SKILL.md` with `subskills/`, like this repository) | a nested skillset, as a folder or zip, members and inner zips included |
+| A skill (one `SKILL.md` or `SUBSKILL.md` at its top) | a sub-skill folder |
+| A skillset (a `SKILLSET.md`, or a `SKILL.md` with `subskills/`, like this repository) | a nested skillset folder, members included |
 | A collection (no instructions at its top, several skill folders inside, like a repository of skills) | a new nested skillset holding each skill as a member; needs `--name`, `--description` and `--trigger` |
 | Any of these as a zip or `.skill`, however deeply wrapped | the same; single wrapper folders such as GitHub's `repo-main/` are skipped |
 | A GitHub repository | a linked member, pinned to a commit and refreshable (`add-source`) |
@@ -56,12 +56,12 @@ Decide the destination with `python3 <wc>/scripts/skillset.py tree`: the top (de
 
 ```bash
 # Skill, skillset, repository or collection, from a folder, zip or .skill
-python3 <wc>/scripts/skillset.py import <path> [--into <set>] [--name <name>] [--trigger "<phrase>"] [--packed] [--replace]
+python3 <wc>/scripts/skillset.py import <path> [--into <set>] [--name <name>] [--trigger "<phrase>"] [--replace]
 
 # A collection needs its group described
-python3 <wc>/scripts/skillset.py import <repo.zip> --name <group> --description "<what the group covers. Use when ...>" --trigger "<phrase>" [--packed]
+python3 <wc>/scripts/skillset.py import <repo.zip> --name <group> --description "<what the group covers. Use when ...>" --trigger "<phrase>"
 
-# A linked GitHub repository (packed by default; --folder to unpack)
+# A linked GitHub repository, stored as a folder pinned to a commit
 python3 <wc>/scripts/skillset.py add-source <path/name> --repo <owner/name> [--ref main] [--path <folder>] [--trigger "<phrase>"]
 ```
 
@@ -69,7 +69,7 @@ The trigger is derived from the source's "Use when ..." wording when it has one;
 
 ### 4. Tidy and test
 
-- For an unpacked import, text that still calls the skill's own file `SKILL.md` should now say `SUBSKILL.md` (or `SKILLSET.md`).
+- Text that still calls the skill's own file `SKILL.md` should now say `SUBSKILL.md` (or `SKILLSET.md`).
 - If a sibling now overlaps, add "Do not use for ...; use the X sub-skill" clauses so the router can tell them apart.
 - Run `python3 <wc>/scripts/skillset.py check` and `tree`, then open one imported member with `skillset.py open <path>` and walk through a realistic prompt.
 
@@ -77,9 +77,9 @@ Package with `--bump minor`. In the hand-over, list each standalone skill the pe
 
 ## Gotchas
 
-- Private GitHub repositories cannot be fetched. Ask the person to download the zip (Code → Download ZIP) and `import` it with `--packed`; it will not be linked.
-- Scripts inside an imported skill that use a fixed path to their own folder, such as `/mnt/skills/user/<name>/`, break once the skill moves. Point them at the path `skillset.py open` prints, or keep the member packed and note it.
-- A packed repository keeps its own `skillsets.json`, so members linked inside it stay linked and are shown by `tree`.
+- Private GitHub repositories cannot be fetched. Ask the person to download the zip (Code → Download ZIP) and `import` it; it will not be linked.
+- Scripts inside an imported skill that use a fixed path to their own folder, such as `/mnt/skills/user/<name>/`, break once the skill moves. Point them at the path `skillset.py open` prints.
+- An imported repository's own `skillsets.json` merges into the top one, so members linked inside it stay linked and are shown by `tree`.
 
 ## Commands
 

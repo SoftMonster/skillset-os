@@ -3,7 +3,7 @@ name: write-subskill
 description: "Writes a new sub-skill for the skillset. It captures what the sub-skill should do, picks a clear name, and writes a trigger and description that route requests to it reliably. Then it writes a lean SUBSKILL.md with any scripts or reference files and tests it against realistic prompts. Use when the user asks to create, write, draft, build or add a new skill or sub-skill, or to turn a workflow or this conversation into one."
 trigger: "write, add or draft a new skill, or turn a workflow or this chat into one"
 metadata:
-  version: "1.4.0"
+  version: "1.4.1"
 ---
 
 # Write a sub-skill

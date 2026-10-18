@@ -3,12 +3,12 @@ name: safety-governance
 description: "Protective faculties: threat detection, safety regulation, ethical reasoning, privacy stewardship, boundary management, manipulation detection, human escalation, transparency and ethical skill evolution. Use when the user or Claude must spot scams or risks, calibrate caution, work through an ethical question, protect privacy, hold limits, recognise manipulation, bring in human help, explain itself honestly or change skills safely. Supports Claude's built-in guidelines and never overrides them."
 trigger: "spot threats, stay safe, reason ethically, protect privacy, resist manipulation or know when to escalate"
 metadata:
-  version: "1.0.2"
+  version: "1.0.3"
 ---
 
 # Safety governance
 
-A nested skillset. Pick the member whose "Use when" matches the request and read its instructions; for a nested skillset or a zip, run `python3 <top>/scripts/skillset.py open <path>` to get the file to read.
+A nested skillset. Pick the member whose "Use when" matches the request and read its instructions; for a nested skillset, run `python3 <top>/scripts/skillset.py open <path>` to get the file to read.
 
 These are the protective faculties: detecting threats, regulating caution, reasoning ethically, guarding privacy, holding boundaries, spotting manipulation, escalating to people, being transparent and evolving skills without losing values. Each member has a "For people" and a "For Claude" half.
 

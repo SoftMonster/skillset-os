@@ -6,7 +6,7 @@ A personal set of Agent Skills packaged as **one skill**, `skillset-os` (Skillse
 
 Donationware: free under MIT, donations welcome. See [Licence and support](#licence-and-support).
 
-> **Status: released.** Skillset-OS is stable (first release 1.0.0; the current version is in `SKILL.md` and the [changelog](CHANGELOG.md)), available as a Claude skill upload and as a Claude plugin. Versions follow semantic versioning. See [Status](#status).
+> **Status: released.** Skillset-OS is stable (first release 1.0.0; the current version is in `SKILL.md` and the [changelog](CHANGELOG.md)), available as a Claude skill upload and as a Claude plugin. Versions follow semantic versioning, extended to any number of parts for ever-smaller touch-ups (1.9.1.1.1). See [Status](#status).
 
 ## How it works
 
@@ -16,13 +16,14 @@ A skillset is a folder with a router and a `subskills/` folder of members. Each 
 |---|---|
 | Sub-skill | `subskills/<name>/SUBSKILL.md` plus its files |
 | Nested skillset | `subskills/<name>/SKILLSET.md` plus its own `subskills/` |
-| Packed member | `subskills/<name>.zip`, holding a skill, a skillset or a whole repository, zips inside it included. Storage only: Claude cannot load a zip as a skill, so it is read with `skillset.py open` where code execution is on |
-| Linked repository | a packed (or folder) member pinned to a GitHub commit, recorded in `skillsets.json` |
+| Linked repository | a member folder pinned to a GitHub commit, recorded in `skillsets.json` |
+
+There are no zipped members. claude.ai rejects any skill upload that holds a zip ("Zip cannot contain nested zip files"), so 2.0.0 retired them: `check` refuses a zip anywhere in the tree, and `skillset.py unpack <path>` turns a zipped member from a 1.x copy into a folder. A deliverable that people download as a zip (a browser extension, say) is kept as plain files and zipped on demand by a script.
 
 - **Routing.** Claude sees one description, generated from the top-level members' triggers. It then follows the router tables down: `SKILL.md` at the top, `SKILLSET.md` in each nested skillset. A nested skillset contributes only one trigger to its parent, so grouping keeps the description within its 1024 characters.
-- **Opening members.** `scripts/skillset.py open <path>` extracts zips as needed and prints the file to read. `tree` shows everything at every depth.
+- **Opening members.** `scripts/skillset.py open <path>` prints the file to read. `tree` shows everything at every depth.
 - **Routing evaluation.** `tests/routing.json` holds realistic prompts and the member each should reach; `scripts/routing_eval.py` prints a blind sheet for a grader, scores the answers with an optional confusion matrix, answers every prompt with the rapid route as a reproducible baseline, and compares two answer sets.
-- **Tooling.** `scripts/skillset.py` does everything else: check, index, tree, open, new, new-set, bump, replace, build, rename, move, retire, pack, unpack, import, add-source, refresh, pull and package.
+- **Tooling.** `scripts/skillset.py` does everything else: check, index, tree, open, new, new-set, bump, replace, build, rename, move, retire, unpack (migration), import, add-source, refresh, pull and package.
 
 Members included:
 
@@ -31,9 +32,9 @@ Members included:
 | `sync-skillset` | Pulls a working copy, then packages the upload zip (also the GitHub copy) and a patch |
 | `skillset-tools/write-subskill` | Writes and tests a new sub-skill |
 | `skillset-tools/edit-subskill` | Changes or renames a member, with versioning and re-testing |
-| `skillset-tools/organise-skillsets` | Nests, moves, packs and unpacks members; shows the tree |
+| `skillset-tools/organise-skillsets` | Nests and moves members, unpacks old zipped ones; shows the tree |
 | `skillset-tools/find-skills` | Finds skills in registries and on GitHub and learns from them: extracts the lessons that hold up and rewrites them into every member they improve, crediting sources in `docs/LEARNED-FROM.md` |
-| `skillset-tools/import-skill` | Imports skills, skillsets, repositories, collections and zips; links GitHub repositories |
+| `skillset-tools/import-skill` | Imports skills, skillsets, repositories and collections (from folders or zips, stored as folders); links GitHub repositories |
 | `skillset-tools/retire-subskill` | Removes a member after checking nothing depends on it |
 | `software-dev` | 17 skills across the software lifecycle, with a best-practices baseline and time-boxed improvement: planning, building, debugging, testing, review, security, CI/CD and docs |
 | `self-improvement` | 12 skills for personal growth: vision, goals, habits, planning, learning, reflection, decisions, career, resilience, wellbeing, money, and skill training |
@@ -41,7 +42,7 @@ Members included:
 | `apps` | One skill with 20 mimic apps driven by short commands: archive, browse (web pages as Markdown), calc, define, drive, ed, feed, git, img, inbox, near, pdftool, pics, pkg, score, sheet, sql, translate, watch and weather, each in its own section |
 | `cognition` | A brain-emulation framework of 10 groups (perception, memory, social intelligence, reasoning, executive function, action, safety and ethics, communication, human-AI augmentation, metacognition), including an emoji-list format and a memetic-ethics mode for public messages |
 
-Every skill opens with a 🧬 core meme, its essence in one transmissible line. Memetic ethics applies throughout: humans and AI understand each other through memes, so every member keeps meaning intact, easy to pass on and fair, in succinct paragraphs or emoji lists, most replies ending with a short numbered list of suggested next steps, always within Claude's built-in values and Anthropic's guidelines.
+Every skill opens with a 🧬 core meme, its essence in one transmissible line. Memetic ethics applies throughout: humans and AI understand each other through memes, so every member keeps meaning intact, easy to pass on and fair, in succinct paragraphs or emoji lists, ending with a short numbered list of next steps when there is a real choice to make, always within Claude's built-in values and Anthropic's guidelines.
 
 The skillset grows by learning, not copying: other people's skills are studied with the skillset's own faculties, and their best lessons are rewritten into the members they improve (see `docs/LEARNED-FROM.md`). `import-skill` copies a skill unchanged only for your own skills or when you ask.
 
@@ -95,8 +96,8 @@ If you change the skillset on GitHub directly, attach GitHub's zip (Code → Dow
 ## Limits
 
 - **Description**: 1024 characters, shared by the top-level members' triggers; the current top uses about 910, just over the warning. `check` warns at 900 and fails beyond 1024. Group members into nested skillsets to free room.
-- **Files**: uploads reportedly fail above 200 files, so up to 190 files ship as they are. Beyond that, `package` splits the upload into separate part skills, each a plain folder (`<name>-<folder>.zip`, with a generated `SKILL.md` and a shared `PARTS.json`), plus `<name>-repo.zip` for GitHub. Zips are never used to get under the limit by default, because Claude's skill system cannot load anything inside a zip. `package --pack-groups` still zips groups inside one upload for setups that knowingly rely on code execution.
-- **Linked repositories** must be public; for private ones, download the zip and import it packed.
+- **Files**: uploads reportedly fail above 200 files, so up to 190 files ship as they are. Beyond that, `package` splits the upload into separate part skills, each a plain folder (`<name>-<folder>.zip`, with a generated `SKILL.md` and a shared `PARTS.json`), plus `<name>-repo.zip` for GitHub. Nothing is ever zipped inside an upload: claude.ai rejects skill uploads that hold a zip.
+- **Linked repositories** must be public; for private ones, download the zip and import it (it is stored as folders, unlinked).
 - **All or nothing**: members cannot be switched on and off one at a time in Claude.
 
 ## Development
@@ -152,7 +153,7 @@ Install the plugin or the personal upload, not both, or the skill triggers twice
 
 ## Other AIs
 
-Skillset-OS is plain Markdown and Python, so other AIs can adopt it when it is shared with them, as far as each one's competence goes. Reading files is enough for routing and every member's instructions; running Python adds checks, zip opening, packaging and the self-memory tools; writing files adds changing the skillset. The Claude-specific parts (uploads, the plugin, claude.ai tools) are optional. Point the AI at `SKILL.md` first and `memory/SELF.md` second.
+Skillset-OS is plain Markdown and Python, so other AIs can adopt it when it is shared with them, as far as each one's competence goes. Reading files is enough for routing and every member's instructions; running Python adds checks, zip opening, packaging and the self-memory tools; writing files adds changing the skillset. The Claude-specific parts (uploads, the plugin, claude.ai tools) are optional. Point the AI at `SKILL.md` first and `memory/SELF.md` second. `docs/ARCHITECTURE.md` (Portability) maps each job to a host's own tools; platform-specific changes go in an edition.
 
 ## Disclaimers
 

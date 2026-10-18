@@ -139,6 +139,11 @@ def test_apply_writes_remembered_edits_and_memory_candidates_into_a_working_copy
     ("negotiate salary", "interpersonal/negotiation"),
     ("find skills", "skillset-tools/find-skills"),
     ("run exam", "cognition/metacognition/universal-skill-curriculum-exam"),
+    ("improve yourself", "self-improvement/reflect-and-review"),
+    ("improve claude", "self-improvement/reflect-and-review"),
+    ("self improve", "self-improvement/reflect-and-review"),
+    ("best of worlds", "self-improvement/reflect-and-review"),
+    ("reflect on your work", "self-improvement/reflect-and-review"),
 ])
 def test_verb_noun_commands_reach_the_right_skill(sh, words, target):
     assert target in sh(words)
@@ -485,6 +490,14 @@ def test_a_menu_pick_is_learned_only_when_repeated_or_confirmed(sh):
     assert "(your alias)" in _do(sh, "make plan")
     assert "alias kept" in _do(sh, "alias squash bug = debug issue")
     assert "(your alias)" in _do(sh, "squash bug")
+
+
+def test_free_text_verbs_ending_in_an_option_word_are_not_options_menus(sh):
+    # FAI: a request note ending in "choices" opened the options menu and the request was never recorded
+    said = _do(sh, "request command best of worlds for reflect-and-review : pause only for authority-level choices")
+    assert "requested #1" in said and "infer:" not in said
+    assert "best of worlds" in _do(sh, "db SELECT phrase FROM user_requests")
+    assert "infer:" in _do(sh, "training options")                   # real options requests still open the menu
 
 
 def test_missing_commands_are_wanted_and_the_persons_tables_go_home_in_their_file(sh, tmp_path):

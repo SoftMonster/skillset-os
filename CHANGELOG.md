@@ -1,5 +1,136 @@
 # Changelog
 
+## 2.0.0 — 2026-10-18
+
+- Zipped members retired: claude.ai rejects skill uploads that hold a zip.
+- Updated `skillset-tools/publish-plugin` to 1.2.1: zip wording corrected: zips are retired
+- Updated `skillset-tools/write-subskill` to 1.4.1: zip wording corrected: zips are retired
+- Updated `skillset-tools/edit-subskill` to 1.4.1: zip wording corrected: zips are retired
+- Updated `command-line` to 1.5.2: zip wording corrected: zips are retired
+- Updated `sync-skillset` to 1.9.1: zip wording corrected: zips are retired
+- Updated `skillset-tools/retire-subskill` to 1.1.1: zip wording corrected: zips are retired
+- Updated `skillset-tools/import-skill` to 2.0.0: zipped members retired (claude.ai rejects nested zips)
+- Updated `skillset-tools/organise-skillsets` to 2.0.0: zipped members retired (claude.ai rejects nested zips)
+
+### Core stats
+
+- 🎯 **Effect:** Uploads always work: every member is a plain folder, check refuses any zip, and unpack migrates 1.x zipped members.
+- 📦 **Version:** 1.14.0 → 2.0.0 (major)
+- 🧩 **Members:** 129 → 129 (±0)
+- 📄 **Files:** 183 → 183 (±0) of 190 before the upload splits
+- 🗜️ **Archive:** 611.6 KB → 612.0 KB (+0.4 KB) of 30 MB upload limit
+- 🧪 **Tests:** 161 → 160 (-1) test functions; suite run outside package
+- 🧠 **Self-memory:** 175 → 178 (+3) approved items, of which lessons 72 → 74 (+2)
+- 📝 **Description:** 901 → 900 (-1) of 1024 characters
+- ✅ **Check:** 0 errors, 0 warnings (was 0 and 1)
+
+## 1.14.0 — 2026-09-27
+
+- Harvest from a same-numbered fork: fingerprint to tell builds apart, portability mapping and adoption states, review copies stay data.
+- Updated `sync-skillset` to 1.9.0: fingerprint tells same-numbered builds apart; other lineages are harvested under the next version
+
+### Core stats
+
+- 🎯 **Effect:** Two copies claiming the same version can now be told apart in one command, and other AIs get a clear, safe way to adopt Skillset-OS.
+- 📦 **Version:** 1.13.0 → 1.14.0 (minor)
+- 🧩 **Members:** 129 → 129 (±0)
+- 📄 **Files:** 183 → 183 (±0) of 190 before the upload splits
+- 🗜️ **Archive:** 608.8 KB → 611.6 KB (+2.8 KB) of 30 MB upload limit
+- 🧪 **Tests:** 160 → 161 (+1) test functions; suite run outside package
+- 🧠 **Self-memory:** 173 → 175 (+2) approved items, of which lessons 70 → 72 (+2)
+- 📝 **Description:** 901 → 901 (±0) of 1024 characters
+- ✅ **Check:** 0 errors, 1 warning (was 0 and 1)
+
+## 1.13.0 — 2026-09-27
+
+- Consolidate files below the split limit: member-script tests merged, memetic examples folded in, stale exam README retired.
+- Updated `cognition/metacognition/universal-skill-curriculum-exam` to 1.3.4: Retire the stale standalone README (wrong file name and install steps; timing and marking already in SUBSKILL.md)
+- Updated `cognition/communication-regulation/memetic-ethics` to 1.2.1: Worked examples folded in from references/examples.md; overlapping ones dropped
+
+### Core stats
+
+- 🎯 **Effect:** The upload has headroom again (183 of 190 files), so the next few additions stay a single skill upload.
+- 📦 **Version:** 1.12.0 → 1.13.0 (minor)
+- 🧩 **Members:** 129 → 129 (±0)
+- 📄 **Files:** 188 → 183 (-5) of 190 before the upload splits
+- 🗜️ **Archive:** 611.3 KB → 608.8 KB (-2.5 KB) of 30 MB upload limit
+- 🧪 **Tests:** 160 → 160 (±0) test functions; suite run outside package
+- 🧠 **Self-memory:** 172 → 173 (+1) approved items, of which lessons 69 → 70 (+1)
+- 📝 **Description:** 901 → 901 (±0) of 1024 characters
+- ✅ **Check:** 0 errors, 1 warning (was 0 and 1)
+
+## 1.12.0 — 2026-09-27
+
+- best of worlds command; request notes no longer hijacked by the options menu; baseline-comparison and config-stamp maintenance from an outside lineage review.
+- Updated `command-line` to 1.5.1: request command notes ending in an option word are no longer read as an options menu
+- Updated `self-improvement/reflect-and-review` to 1.3.0: best of worlds: carry out proposed improvements with standing agreement
+
+### Core stats
+
+- 🎯 **Effect:** You can tell Claude to carry out its proposed improvements in one phrase, and requesting commands with notes works reliably.
+- 📦 **Version:** 1.11.0 → 1.12.0 (minor)
+- 🧩 **Members:** 129 → 129 (±0)
+- 📄 **Files:** 188 → 188 (±0) of 190 before the upload splits
+- 🗜️ **Archive:** 609.4 KB → 611.3 KB (+1.9 KB) of 30 MB upload limit
+- 🧪 **Tests:** 159 → 160 (+1) test functions; suite run outside package
+- 🧠 **Self-memory:** 168 → 172 (+4) approved items, of which lessons 68 → 69 (+1)
+- 📝 **Description:** 901 → 901 (±0) of 1024 characters
+- ✅ **Check:** 0 errors, 1 warning (was 0 and 1)
+
+## 1.11.0 — 2026-09-27
+
+- Core stats include the upload archive size; version line says unchanged instead of first; check line pluralised.
+- Updated `sync-skillset` to 1.8.0: Core stats include the upload archive size
+
+### Core stats
+
+- 🎯 **Effect:** Release notes now show how big the upload is and how much each release grows or shrinks it, measured on the real zip.
+- 📦 **Version:** 1.10.0 → 1.11.0 (minor)
+- 🧩 **Members:** 129 → 129 (±0)
+- 📄 **Files:** 188 → 188 (±0) of 190 before the upload splits
+- 🗜️ **Archive:** 608.6 KB → 609.4 KB (+0.8 KB) of 30 MB upload limit
+- 🧪 **Tests:** 159 → 159 (±0) test functions; suite run outside package
+- 🧠 **Self-memory:** 168 → 168 (±0) approved items, of which lessons 68 → 68 (±0)
+- 📝 **Description:** 901 → 901 (±0) of 1024 characters
+- ✅ **Check:** 0 errors, 1 warning (was 0 and 1)
+
+## 1.10.0 — 2026-09-27
+
+- Release notes end with a core-stats emoji list, before and after, with an effect line.
+- Updated `sync-skillset` to 1.7.0: Every release carries the core-stats emoji list and an effect line
+
+### Core stats
+
+- 🎯 **Effect:** Every release now shows what changed and its measurable effect at a glance, without anyone having to remember to write it.
+- 📦 **Version:** 1.9.1.1.1 → 1.10.0 (minor)
+- 🧩 **Members:** 129 → 129 (±0)
+- 📄 **Files:** 188 → 188 (±0) of 190 before the upload splits
+- 🧪 **Tests:** 157 → 159 (+2) test functions; suite run outside package
+- 🧠 **Self-memory:** 167 → 168 (+1) approved items, of which lessons 68 → 68 (±0)
+- 📝 **Description:** 904 → 901 (-3) of 1024 characters
+- ✅ **Check:** 0 errors, 1 warnings (was 0 and 1)
+
+## 1.9.1.1.1 — 2026-09-27
+
+- Versions of any number of parts: bump or package by part name or position; IP screen ignores longer dotted versions.
+- Updated `skillset-tools/edit-subskill` to 1.4.0: Document bumping any part by position
+- Updated `sync-skillset` to 1.6.0: Document --bump N for any version part
+
+## 1.9.1.1 — 2026-09-27
+
+- Four-part versions (revision part); edit-subskill gotchas: check editions and tests first, Commands-tree rules, shell comments.
+- Updated `skillset-tools/edit-subskill` to 1.3.0: Document the revision part
+- Updated `sync-skillset` to 1.5.0: Document --bump revision for four-part versions
+- Updated `skillset-tools/edit-subskill` to 1.2.1: Gotchas: check editions and tests before editing; Commands-tree rules; shell comments
+
+## 1.9.0 — 2026-09-27
+
+- Audit fixes: route self-improvement, check scans secrets, exam 70% smaller, numbered lists only when useful.
+- Updated `cognition/metacognition/exam-regression-battery` to 1.1.1: Split the synthetic key fixture so secret scanners do not flag it
+- Updated `cognition/metacognition/universal-skill-curriculum-exam` to 1.3.3: State repeated card boilerplate once; exam reference 4,540 to 1,388 lines, every card kept
+- Updated `cognition/communication-regulation/memetic-ethics` to 1.2.0: Offer numbered next steps only when there is a real choice
+- Updated `self-improvement/reflect-and-review` to 1.2.0: Route requests to improve Claude or review its own work here
+
 ## 1.8.5 — 2026-09-27
 
 - Self-memory: design principles confirmed as the tie-breaker (DEC-0026); one-call test run replaces the three-part split (MNT-0013 supersedes MNT-0009).

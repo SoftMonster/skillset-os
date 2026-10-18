@@ -1432,6 +1432,7 @@ def pick_from_menu(text: str, state: dict) -> str | None:
 # ---------------------------------------------------------------- options menus: "<topic> options"
 
 OPTION_WORDS = {"options", "option", "choices", "choice", "menu"}
+OWN_TEXT_VERBS = {"request", "alias", "db", "why", "focus", "unfocus", "enable", "disable", "prefer", "unprefer"}
 OPTION_FILLER = {"what", "are", "is", "show", "give", "list", "any", "all", "which", "can", "do", "have", "i", "we",
                  "there", "please", "get", "see", "available", "possible", "m", "s"}
 MODIFIERS = {"quick": "quick: the shortest useful version of each", "deep": "deep: the full version of each",
@@ -1442,6 +1443,8 @@ MAX_OPTIONS = 9
 def options_request(text: str, words: list[str], state: dict, view: View) -> str | None:
     """`training options`, `options for habits`, `what are my options`, `options 2`: a described numbered menu."""
     if not words or not set(words) & OPTION_WORDS or not (words[0] in OPTION_WORDS or words[-1] in OPTION_WORDS):
+        return None
+    if words[0] in OWN_TEXT_VERBS:                                 # `request command x : ... choices` carries free text
         return None
     if words == ["menu"]:
         return None                                                # the opener menu owns a bare `menu`

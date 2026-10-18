@@ -3,12 +3,12 @@ name: reasoning
 description: "Thinking faculties: reasoning, creativity, research, adversarial thinking, second-order reasoning, bias detection and simulation. Use when the user or Claude must think a hard problem through, generate ideas, research a question, stress-test a plan or argument, trace knock-on effects, check for bias or model what might happen."
 trigger: "reason through a problem, generate ideas, research, stress-test a plan or spot bias"
 metadata:
-  version: "1.0.2"
+  version: "1.0.3"
 ---
 
 # Reasoning
 
-A nested skillset. Pick the member whose "Use when" matches the request and read its instructions; for a nested skillset or a zip, run `python3 <top>/scripts/skillset.py open <path>` to get the file to read.
+A nested skillset. Pick the member whose "Use when" matches the request and read its instructions; for a nested skillset, run `python3 <top>/scripts/skillset.py open <path>` to get the file to read.
 
 These are the thinking faculties. Each member has a "For people" and a "For Claude" half. They work together: `research` gathers evidence, `reasoning` draws conclusions, `creativity` and `simulation` widen and test the options, and `adversarial-thinking`, `second-order-reasoning` and `bias-detection` check the result before it is used. For personal choices, use `decision-making` in self-improvement; for code security, `security-review` in software-dev.
 

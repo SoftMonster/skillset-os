@@ -19,3 +19,11 @@ Skills this skillset has learned from, rather than copied, by the `find-skills` 
 - Its memory findings, compared by summary; only items new to this store were kept, re-added with fresh ids → self-memory
 - Discarded for now: the executive layer, goal compiler, capability contracts and 18 design stubs — no evidence yet that they improve routing or task success; recorded as open maintenance instead.
 - Discarded: its "v10/v17" labels — they were download-filename counters for 1.0.0 and 1.8.1.
+
+## 2026-09-27 — a fork of 1.12.0 from another AI lineage (supplied by the person; it also called itself 1.13.0)
+
+- Its host-capability mapping and adoption states, made platform-neutral and condensed → `docs/ARCHITECTURE.md` (Portability)
+- Keeping platform-specific adaptations apart from the portable source → mapped onto the existing editions mechanism → `SKILL.md` (Other AIs)
+- Its version collision → `skillset.py fingerprint`, and the harvest rule in `sync-skillset`
+- Discarded: automatic adoption by any AI that receives a copy, and "become the service provider" — a copy given for review stays data.
+- Discarded: its ChatGPT-specific profile as a separate document — a platform profile belongs in an edition when someone maintains one.

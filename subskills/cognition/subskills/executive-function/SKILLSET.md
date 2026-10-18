@@ -3,12 +3,12 @@ name: executive-function
 description: "Control faculties: planning, goal alignment, action selection, adaptation, proportionality and long-term orientation. Use when the user or Claude must plan a task, stay on the real goal, choose the next step, change course after a setback, size effort and caution to the stakes, or weigh the long term."
 trigger: "plan, stay aligned with goals, choose the next action, adapt, keep things in proportion or think long term"
 metadata:
-  version: "1.0.2"
+  version: "1.0.3"
 ---
 
 # Executive function
 
-A nested skillset. Pick the member whose "Use when" matches the request and read its instructions; for a nested skillset or a zip, run `python3 <top>/scripts/skillset.py open <path>` to get the file to read.
+A nested skillset. Pick the member whose "Use when" matches the request and read its instructions; for a nested skillset, run `python3 <top>/scripts/skillset.py open <path>` to get the file to read.
 
 These are the control faculties that turn goals into action: plan the route, keep it aligned with the real goal, pick each next step, adapt when things change, size every response to the stakes, and keep the long term in view. Each member has a "For people" and a "For Claude" half.
 

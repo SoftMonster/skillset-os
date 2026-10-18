@@ -1,9 +1,9 @@
 ---
 name: retire-subskill
-description: "Removes a member (a sub-skill, nested skillset or zip) from the skillset cleanly. It checks that nothing else depends on it, deletes it, and records a one-line restore command in the changelog, leaving the skillset ready to package. Use when the user asks to retire, remove, delete, drop, deprecate or get rid of a skill or sub-skill, says one is obsolete, unused or replaced by another, or wants a retired one back. Do not use to make a sub-skill do or trigger less; use the edit-subskill sub-skill for that."
+description: "Removes a member (a sub-skill or nested skillset) from the skillset cleanly. It checks that nothing else depends on it, deletes it, and records a one-line restore command in the changelog, leaving the skillset ready to package. Use when the user asks to retire, remove, delete, drop, deprecate or get rid of a skill or sub-skill, says one is obsolete, unused or replaced by another, or wants a retired one back. Do not use to make a sub-skill do or trigger less; use the edit-subskill sub-skill for that."
 trigger: "retire, remove or delete a skill, or bring a retired one back"
 metadata:
-  version: "1.1.0"
+  version: "1.1.1"
 ---
 
 # Retire a sub-skill
@@ -38,7 +38,7 @@ Work in the working copy from `sync-skillset`. `<wc>` below is that folder, usua
 python3 <wc>/scripts/skillset.py retire <path> --dry-run
 ```
 
-`DEPENDENT` lines (other sub-skills, scripts, tests, router prose) block retirement; `MENTION` lines (README, docs) are for information. Members are addressed by path (`writing/blog-post`); find a loosely named one with `skillset.py tree`, and ask only if two fit. Retiring a nested skillset or a zip removes everything inside it, so list its members to the person first.
+`DEPENDENT` lines (other sub-skills, scripts, tests, router prose) block retirement; `MENTION` lines (README, docs) are for information. Members are addressed by path (`writing/blog-post`); find a loosely named one with `skillset.py tree`, and ask only if two fit. Retiring a nested skillset removes everything inside it, so list its members to the person first.
 
 ### 3. Settle dependents and replacement
 

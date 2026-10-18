@@ -4,7 +4,7 @@ description: "Runs Skillset-OS as a command line as well as in plain English: na
 trigger: "use a shell (ls, cd), commands like review code or X options; say hi, start or I am bored"
 command: "shell mode"
 metadata:
-  version: "1.5.0"
+  version: "1.5.2"
 ---
 
 # Command line
@@ -102,7 +102,7 @@ If they ask Skillset-OS to "just remember" their list permanently, explain why i
 
 ## Gotchas
 
-- `shell.py` reads the installed skill through `skillset.py`, so part skills and any zipped member open transparently. Zips need code execution, because Claude cannot load a zip as a skill; without it, answer the command in words from what you can read.
+- `shell.py` reads the installed skill through `skillset.py`, so part skills open transparently as one tree. Without code execution, answer the command in words from what you can read.
 - Keep command output honest: show what `shell.py` printed. Don't invent listings or file contents.
 - A command that is also an English word (`find`, `type`, `open`, `more`, `display`, `view`) is run as a shell command when its argument is a path, and as a verb-noun command otherwise ("find skills" → `skillset-tools/find-skills`). Member names count as paths, so `open research` opens the member; `open a pull request` is a verb-noun command.
 - An unknown verb is never guessed: unless the noun alone strongly matches a command, the shell says it doesn't know the command rather than picking the nearest one.

@@ -4,7 +4,7 @@ description: "Publishes the skillset as a Claude plugin and lists it in the Clau
 trigger: "publish, release or submit the skillset as a Claude plugin"
 command: "publish plugin"
 metadata:
-  version: "1.2.0"
+  version: "1.2.1"
 ---
 
 # Publish plugin
@@ -76,7 +76,7 @@ Fixes and contributions to the plugin repository are edits to the shared edition
 - `git tag` fails in the sandbox without an identity. Leave tags to the GitHub release, or pass `-c user.name=... -c user.email=...` for a local-only tag.
 - A skill cannot contain a plugin manifest: the Skills page rejects any zip with `.claude-plugin/plugin.json`. A plugin zip goes to Customize → Plugins, with the manifest at `.claude-plugin/plugin.json` inside at most one top folder and nothing beside that folder.
 - Test each install route in the real product before promising it works; the validator checks the manifest, not what each uploader accepts.
-- Over 190 files, editions are refused rather than zipped, because Claude cannot load a zip as a skill. Trim or split the members first.
+- Over 190 files, editions are refused, and nothing is ever zipped inside an upload (claude.ai rejects it). Trim or split the members first.
 - Uploads and the plugin install into different places. Say which one the person has before debugging "it doesn't trigger".
 
 ## Commands

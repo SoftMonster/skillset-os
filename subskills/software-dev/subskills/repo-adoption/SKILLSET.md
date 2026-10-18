@@ -3,12 +3,12 @@ name: repo-adoption
 description: "Adopts other repositories and apps into the skillset so Claude can develop them: the adopt-repository member turns a zip, folder or GitHub repository into a develop-PROJECT sub-skill that keeps the project's source, its own checks and a release workflow applying the rest of the skillset, and each develop-PROJECT member then handles changes to its project. Use when the user wants to bring a codebase, app or repository into the skillset, make a develop skill for a project, or fix, change, improve or release an adopted project."
 trigger: "adopt a repository or app so Claude can develop it, or develop an adopted one"
 metadata:
-  version: "1.0.2"
+  version: "1.0.3"
 ---
 
 # Repository adoption
 
-A nested skillset. Pick the member whose "Use when" matches the request and read its instructions; for a nested skillset or a zip, run `python3 <top>/scripts/skillset.py open <path>` to get the file to read.
+A nested skillset. Pick the member whose "Use when" matches the request and read its instructions; for a nested skillset, run `python3 <top>/scripts/skillset.py open <path>` to get the file to read.
 
 It has two kinds of member:
 

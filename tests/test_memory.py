@@ -44,6 +44,15 @@ def test_screen_refuses_secrets_and_identifiers(text):
     assert any(sev == "error" for sev, _ in mem.screen(text))
 
 
+@pytest.mark.parametrize("text", ["The server is at 10.0.0.1", "Reach it at 192.168.1.20.", "ip=8.8.8.8, then retry"])
+def test_screen_still_catches_ip_addresses(text):
+    assert any("IP address" in why for _, why in mem.screen(text))
+
+
+@pytest.mark.parametrize("text", ["Shipped as version 1.9.1.1.1", "Bump the sixth part: 2.0.0.0.0.1"])
+def test_screen_lets_versions_longer_than_four_parts_through(text):
+    assert not any("IP address" in why for _, why in mem.screen(text))
+
 def test_screen_tells_a_user_fact_from_an_ai_lesson():
     wrong = "The user owns a particular repository and previously experienced a particular problem."
     assert any(sev == "warning" for sev, _ in mem.screen(wrong))
